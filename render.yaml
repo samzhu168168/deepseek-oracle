@@ -25,10 +25,7 @@ services:
       - key: DEBUG
         value: false
       - key: REDIS_URL
-        fromService:
-          name: deepseek-oracle-redis
-          type: pserv
-          property: connectionString
+        value: redis://deepseek-oracle-redis:6379
 
   - type: pserv
     name: deepseek-oracle-redis
