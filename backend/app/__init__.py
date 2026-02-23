@@ -23,7 +23,11 @@ def create_app() -> Flask:
     app.config.from_object(Config)
 
     setup_logging(app)
-    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=False)
+    CORS(
+        app,
+        resources={r"/*": {"origins": app.config["CORS_ORIGINS"]}},
+        supports_credentials=False,
+    )
 
     init_db(app.config["DATABASE_PATH"])
     app.extensions["system_log_repo"] = SystemLogRepo(app.config["DATABASE_PATH"])

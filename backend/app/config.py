@@ -35,7 +35,12 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me")
     DEBUG = _to_bool(os.getenv("DEBUG", "false"))
 
-    CORS_ORIGINS = _normalize_origins(os.getenv("CORS_ORIGINS", "http://localhost:5173"))
+    CORS_ORIGINS = _normalize_origins(
+        os.getenv(
+            "CORS_ORIGINS",
+            "https://deepseek-oracle.vercel.app,https://*.vercel.app,http://localhost:5173,http://localhost:3000",
+        )
+    )
 
     DATABASE_PATH = os.getenv("DATABASE_PATH", str(BASE_DIR / "data.db"))
     REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
