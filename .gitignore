@@ -1,0 +1,56 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+.env
+.env.docker
+.env.production
+backend/.env
+
+# SQLite database
+*.db
+
+node_modules/
+frontend/.npm_cache/
+backend/iztro_service/.npm_cache/
+
+# Logs
+*.log
+
+# IDE files
+.idea/
+*.swp
+*.swo
+
+# Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# 环境文件
+.env
+
+# 数据库文件
+data.db
+
+# Python 缓存文件
+__pycache__/
+*.pyc
+
+# 生成的 Markdown 文件
+fortune_result.md
+
+# IDE 配置文件
+.idea/
+.vscode/
+.history/
+
+docs/
+docker-compose.public.yml
