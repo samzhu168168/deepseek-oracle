@@ -20,4 +20,4 @@ const unwrap = <T>(response: { data: ApiResponse<T> }) => {
 };
 
 export const analyzeBond = async (payload: BondAnalysisRequest) =>
-  unwrap(await api.post<ApiResponse<BondAnalysisResponse>>("/divination/analyze", payload));
+  unwrap(await api.post<ApiResponse<BondAnalysisResponse>>("/api/divination/analyze", payload));
