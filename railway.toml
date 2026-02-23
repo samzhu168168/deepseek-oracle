@@ -1,5 +1,17 @@
 [build]
-builder = "NIXPACKS"
+builder = "nixpacks"
 
-[deploy]
-startCommand = "python backend/run.py"
+[[services]]
+name = "backend"
+source = "backend"
+startCommand = "python run.py"
+
+[[services]]
+name = "scheduler"
+source = "backend"
+startCommand = "python scheduler.py"
+
+[[services]]
+name = "worker"
+source = "backend"
+startCommand = "python worker.py"
