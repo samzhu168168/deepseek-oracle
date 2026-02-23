@@ -1,7 +1,6 @@
-from flask import Blueprint, g, request
+from flask import Blueprint, request
 
 from app.services import get_analysis_service, get_divination_service
-from app.utils.auth import require_auth
 from app.utils.errors import validation_error
 from app.utils.response import success_response
 
@@ -10,7 +9,6 @@ history_bp = Blueprint("history", __name__)
 
 
 @history_bp.get("/history")
-@require_auth()
 def get_history():
     try:
         page = int(request.args.get("page", 1))
@@ -19,45 +17,39 @@ def get_history():
         raise validation_error("page", "page and page_size must be integer") from exc
 
     service = get_analysis_service()
-    current_user = getattr(g, "current_user", None) or {}
     data = service.get_history(
         page=page,
         page_size=page_size,
-        user_id=int(current_user.get("id", 0)),
-        is_admin=str(current_user.get("role", "")) == "admin",
+        user_id=0,
+        is_admin=False,
     )
     return success_response(data=data)
 
 
 @history_bp.get("/result/<int:result_id>")
-@require_auth()
 def get_result(result_id: int):
     service = get_analysis_service()
-    current_user = getattr(g, "current_user", None) or {}
     data = service.get_result(
         result_id,
-        user_id=int(current_user.get("id", 0)),
-        is_admin=str(current_user.get("role", "")) == "admin",
+        user_id=0,
+        is_admin=False,
     )
     return success_response(data=data)
 
 
 @history_bp.get("/result/<int:result_id>/<analysis_type>")
-@require_auth()
 def get_result_item(result_id: int, analysis_type: str):
     service = get_analysis_service()
-    current_user = getattr(g, "current_user", None) or {}
     data = service.get_result_item(
         result_id=result_id,
         analysis_type=analysis_type,
-        user_id=int(current_user.get("id", 0)),
-        is_admin=str(current_user.get("role", "")) == "admin",
+        user_id=0,
+        is_admin=False,
     )
     return success_response(data=data)
 
 
 @history_bp.get("/history/divinations")
-@require_auth()
 def get_divination_history():
     try:
         page = int(request.args.get("page", 1))
@@ -71,9 +63,8 @@ def get_divination_history():
     if divination_type == "all":
         divination_type = ""
 
-    current_user = getattr(g, "current_user", None) or {}
     data = get_divination_service().list_records(
-        user_id=int(current_user.get("id", 0)),
+        user_id=0,
         page=page,
         page_size=page_size,
         divination_type=divination_type or None,
@@ -82,12 +73,10 @@ def get_divination_history():
 
 
 @history_bp.get("/history/divinations/<int:record_id>")
-@require_auth()
 def get_divination_history_detail(record_id: int):
-    current_user = getattr(g, "current_user", None) or {}
     data = get_divination_service().get_record(
         record_id=record_id,
-        user_id=int(current_user.get("id", 0)),
-        is_admin=str(current_user.get("role", "")) == "admin",
+        user_id=0,
+        is_admin=False,
     )
     return success_response(data=data)

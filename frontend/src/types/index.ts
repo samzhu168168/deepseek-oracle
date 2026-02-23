@@ -7,6 +7,30 @@ export interface BirthInfo {
   calendar: "solar" | "lunar";
 }
 
+export interface BondPersonInput {
+  date: string;
+  time: string;
+  gender: "Male" | "Female";
+}
+
+export interface BondAnalysisRequest {
+  person_a: BondPersonInput;
+  person_b: BondPersonInput;
+  license_key?: string;
+}
+
+export interface BondTeaser {
+  summary: string;
+  five_element_compatibility: string;
+  radar_scores: Record<string, number>;
+}
+
+export interface BondAnalysisResponse {
+  teaser: BondTeaser;
+  full_report?: string | null;
+  license_valid: boolean;
+}
+
 export interface AnalyzeAcceptedData {
   task_id: string;
   status: TaskStatus;

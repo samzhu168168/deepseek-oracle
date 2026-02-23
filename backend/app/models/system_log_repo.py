@@ -25,8 +25,6 @@ class SystemLogRepo:
         duration_ms: int | None,
         level: str = "info",
         message: str = "",
-        user_id: int | None = None,
-        user_email: str | None = None,
         ip: str | None = None,
         user_agent: str | None = None,
     ) -> None:
@@ -35,8 +33,8 @@ class SystemLogRepo:
                 """
                 INSERT INTO system_logs (
                   request_id, method, path, status_code, duration_ms,
-                  level, message, user_id, user_email, ip, user_agent
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                  level, message, ip, user_agent
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     request_id,
@@ -46,8 +44,6 @@ class SystemLogRepo:
                     duration_ms,
                     level,
                     message,
-                    user_id,
-                    user_email,
                     ip,
                     user_agent,
                 ),
@@ -64,7 +60,7 @@ class SystemLogRepo:
             cursor.execute(
                 """
                 SELECT id, request_id, method, path, status_code, duration_ms, level, message,
-                       user_id, user_email, ip, user_agent, created_at
+                       ip, user_agent, created_at
                 FROM system_logs
                 ORDER BY id DESC
                 LIMIT ? OFFSET ?

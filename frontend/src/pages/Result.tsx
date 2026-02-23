@@ -1,268 +1,260 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { exportReport, getInsightOverview, getResult } from "../api";
-import { ExecutionTimeChart } from "../components/ExecutionTimeChart";
+import { analyzeBond } from "../api";
 import { InkButton } from "../components/InkButton";
-import { InkCard } from "../components/InkCard";
-import { LifeKlineChart } from "../components/LifeKlineChart";
-import { LoadingAnimation } from "../components/LoadingAnimation";
-import type { AnalysisResult, InsightOverviewData } from "../types";
+import type { BondAnalysisRequest, BondAnalysisResponse } from "../types";
 
-
-const ANALYSIS_CONFIG: Record<string, { label: string; desc: string }> = {
-  marriage_path: {
-    label: "Marriage Path",
-    desc: "Interprets partner palace dynamics to outline relationship direction and key phases.",
-  },
-  challenges: {
-    label: "Challenges",
-    desc: "Identifies common sources of friction and suggests pragmatic responses.",
-  },
-  partner_character: {
-    label: "Partner Profile",
-    desc: "Analyzes likely temperament patterns and interaction pace.",
-  },
+type StoredReport = {
+  payload: BondAnalysisRequest;
+  report: BondAnalysisResponse;
 };
 
+const RADAR_DIMENSIONS = [
+  "Elemental Harmony",
+  "Soul Resonance",
+  "Growth Catalyst",
+  "Karmic Bond",
+];
+
+const readStoredReport = (): StoredReport | null => {
+  try {
+    const raw = window.sessionStorage.getItem("bond:last_report");
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw) as StoredReport;
+    if (!parsed?.payload || !parsed?.report) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
+const clampScore = (value: number) => Math.max(0, Math.min(100, value));
+
+const normalizeKey = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+const buildRadarEntries = (scores: Record<string, number> | undefined) => {
+  const scoreEntries = Object.entries(scores || {}).map(([label, value]) => ({
+    label,
+    value: clampScore(Number(value)),
+  }));
+  const fallbackAverage =
+    scoreEntries.length > 0
+      ? Math.round(scoreEntries.reduce((sum, item) => sum + item.value, 0) / scoreEntries.length)
+      : 72;
+  return RADAR_DIMENSIONS.map((label) => {
+    const normalizedLabel = normalizeKey(label);
+    const match = scoreEntries.find((item) => normalizeKey(item.label).includes(normalizedLabel));
+    return {
+      label,
+      value: match?.value ?? fallbackAverage,
+    };
+  });
+};
+
+const buildPolygonPoints = (values: number[], radius: number, center: number) => {
+  const count = values.length;
+  return values
+    .map((value, index) => {
+      const angle = (Math.PI * 2 * index) / count - Math.PI / 2;
+      const ratio = value / 100;
+      const x = center + Math.cos(angle) * radius * ratio;
+      const y = center + Math.sin(angle) * radius * ratio;
+      return `${x.toFixed(2)},${y.toFixed(2)}`;
+    })
+    .join(" ");
+};
+
+const getRelationshipLabel = (score: number) => {
+  if (score >= 85) {
+    return "⚡ Electric Tension Pair";
+  }
+  if (score >= 70) {
+    return "✨ Balanced Harmony Pair";
+  }
+  if (score >= 55) {
+    return "🌙 Growth-Oriented Pair";
+  }
+  return "🌑 Karmic Challenge Pair";
+};
+
+const getTeaserPreview = (summary: string) => {
+  const trimmed = summary.trim();
+  if (!trimmed) {
+    return "Your elemental and soul resonance summary is being prepared...";
+  }
+  if (trimmed.endsWith("...")) {
+    return trimmed;
+  }
+  return `${trimmed.replace(/\.*$/, "")}...`;
+};
 
 export default function ResultPage() {
-  const { id = "" } = useParams();
-  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const initial = (location.state as StoredReport | null) || readStoredReport();
+  const [payload, setPayload] = useState<BondAnalysisRequest | null>(initial?.payload ?? null);
+  const [report, setReport] = useState<BondAnalysisResponse | null>(initial?.report ?? null);
+  const [licenseKey, setLicenseKey] = useState("");
+  const [unlocking, setUnlocking] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [insight, setInsight] = useState<InsightOverviewData | null>(null);
-  const [insightError, setInsightError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id) {
+    if (!initial) {
       return;
     }
+    setPayload(initial.payload);
+    setReport(initial.report);
+  }, [initial]);
 
-    (async () => {
-      try {
-        const response = await getResult(Number(id));
-        if (!response.data) {
-          throw new Error("result not found");
-        }
-        setResult(response.data);
+  const radarEntries = useMemo(() => buildRadarEntries(report?.teaser?.radar_scores), [report]);
+  const radarPoints = useMemo(() => buildPolygonPoints(radarEntries.map((item) => item.value), 74, 100), [radarEntries]);
+  const radarGrid = useMemo(
+    () => [0.33, 0.66, 1].map((ratio) => buildPolygonPoints(radarEntries.map(() => ratio * 100), 74, 100)),
+    [radarEntries],
+  );
+  const radarAxes = useMemo(() => {
+    const count = radarEntries.length;
+    return radarEntries.map((item, index) => {
+      const angle = (Math.PI * 2 * index) / count - Math.PI / 2;
+      const x = 100 + Math.cos(angle) * 82;
+      const y = 100 + Math.sin(angle) * 82;
+      return { label: item.label, x, y };
+    });
+  }, [radarEntries]);
 
-        try {
-          const insightRes = await getInsightOverview(Number(id));
-          setInsight(insightRes.data || null);
-        } catch (insightErr) {
-          setInsightError(insightErr instanceof Error ? insightErr.message : "Failed to load calendar and K-line.");
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load result.");
+  const averageScore = Math.round(
+    radarEntries.reduce((sum, item) => sum + item.value, 0) / radarEntries.length,
+  );
+  const relationshipLabel = getRelationshipLabel(averageScore);
+  const teaserPreview = getTeaserPreview(report?.teaser?.summary || "");
+  const isUnlocked = Boolean(report?.license_valid && report?.full_report);
+
+  const handleUnlock = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!payload || unlocking) {
+      return;
+    }
+    if (!licenseKey.trim()) {
+      setError("Please enter a Gumroad license key.");
+      return;
+    }
+    setError(null);
+    setUnlocking(true);
+    try {
+      const response = await analyzeBond({
+        ...payload,
+        license_key: licenseKey.trim(),
+      });
+      const nextReport = response.data;
+      if (!nextReport) {
+        throw new Error("License verification failed.");
       }
-    })();
-  }, [id]);
-
-  const download = async (scope: string) => {
-    if (!id) {
-      return;
+      const stored = { payload, report: nextReport };
+      window.sessionStorage.setItem("bond:last_report", JSON.stringify(stored));
+      setReport(nextReport);
+      setLicenseKey("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to verify license.");
+    } finally {
+      setUnlocking(false);
     }
-    const response = await exportReport(Number(id), scope);
-    const blob = new Blob([response.data], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = `analysis_${id}_${scope}.md`;
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-    URL.revokeObjectURL(url);
   };
 
-  if (error) {
+  if (!payload || !report) {
     return (
-      <InkCard title="Failed to load result">
-        <p className="error-text">{error}</p>
-      </InkCard>
-    );
-  }
-
-  if (!result) {
-    return (
-      <div className="loading-container loading-container--page">
-        <LoadingAnimation size="large" />
-        <p className="loading-state-text">Loading analysis result...</p>
+      <div className="result-empty">
+        <p className="error-text">Submit two birth profiles on the homepage to generate your Elemental Bond report.</p>
+        <InkButton type="button" onClick={() => navigate("/")}>
+          Back to input
+        </InkButton>
       </div>
     );
   }
 
-  const calendarLabel = result.birth_info.calendar === "solar" ? "Solar" : "Lunar";
-  const genderLabel = result.birth_info.gender === "男" ? "Male" : result.birth_info.gender === "女" ? "Female" : result.birth_info.gender;
-
   return (
-    <div className="fade-in">
-      <InkCard title="Chart Overview">
-        <div className="meta-grid">
-          <div className="meta-item">
-            <div className="meta-item__label">Birth date</div>
-            <div className="meta-item__value">{result.birth_info.date}</div>
-          </div>
-          <div className="meta-item">
-            <div className="meta-item__label">Hour</div>
-            <div className="meta-item__value">Hour {result.birth_info.timezone}</div>
-          </div>
-          <div className="meta-item">
-            <div className="meta-item__label">Gender</div>
-            <div className="meta-item__value">{genderLabel}</div>
-          </div>
-          <div className="meta-item">
-            <div className="meta-item__label">Calendar</div>
-            <div className="meta-item__value">{calendarLabel}</div>
-          </div>
-          <div className="meta-item">
-            <div className="meta-item__label">AI model</div>
-            <div className="meta-item__value">{result.model}</div>
-          </div>
-          <div className="meta-item">
-            <div className="meta-item__label">Total time</div>
-            <div className="meta-item__value">{result.total_execution_time.toFixed(1)}s</div>
-          </div>
-          <div className="meta-item">
-            <div className="meta-item__label">Total tokens</div>
-            <div className="meta-item__value">{result.total_token_count.toLocaleString()}</div>
-          </div>
-          <div className="meta-item">
-            <div className="meta-item__label">Provider</div>
-            <div className="meta-item__value">{result.provider}</div>
+    <div className="result-page fade-in">
+      <section className="result-scorecard">
+        <div className="result-scorecard__summary">
+          <p className="result-scorecard__label">Total Score</p>
+          <p className="result-scorecard__score">{averageScore} / 100</p>
+          <p className="result-scorecard__type">{relationshipLabel}</p>
+        </div>
+        <div className="result-scorecard__radar">
+          <svg viewBox="0 0 200 200" className="radar-chart">
+            {radarGrid.map((points) => (
+              <polygon key={points} points={points} className="radar-chart__grid" />
+            ))}
+            {radarAxes.map((axis) => (
+              <line key={axis.label} x1={100} y1={100} x2={axis.x} y2={axis.y} className="radar-chart__axis" />
+            ))}
+            <polygon points={radarPoints} className="radar-chart__shape" />
+          </svg>
+          <div className="radar-legend">
+            {radarEntries.map((item) => (
+              <div key={item.label} className="radar-legend__item">
+                <span className="radar-legend__label">{item.label}</span>
+                <span className="radar-legend__value">{item.value}</span>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
 
-        {result.text_description && (
-          <>
-            <hr className="ink-divider" />
-            <details>
-              <summary className="details-toggle">Expand chart description</summary>
-              <div className="pre-wrap">{result.text_description}</div>
-            </details>
-          </>
-        )}
+      <section className="result-teaser">
+        <p className="result-teaser__text">{teaserPreview}</p>
+        <p className="result-teaser__hint">
+          Full analysis includes palace readings, 2026 timing windows, and growth protocol...
+        </p>
+      </section>
 
-        <div className="actions-row">
-          <InkButton type="button" onClick={() => download("full")}>
-            Download full report
-          </InkButton>
-          <Link to="/insights">
-            <InkButton type="button" kind="ghost">
-              Open Life Line / Calendar
-            </InkButton>
-          </Link>
-          <Link to="/history">
-            <InkButton type="button" kind="ghost">
-              View history
-            </InkButton>
-          </Link>
-        </div>
-      </InkCard>
-
-      <InkCard title="Reasoning Time Distribution">
-        <ExecutionTimeChart
-          rows={Object.entries(result.analysis).map(([analysisType, item]) => ({
-            key: analysisType,
-            label: ANALYSIS_CONFIG[analysisType]?.label || analysisType,
-            seconds: Number(item.execution_time || 0),
-          }))}
-        />
-      </InkCard>
-
-      <InkCard title="Zi Wei Calendar: Next 30 Days">
-        {insightError ? <p className="error-text">{insightError}</p> : null}
-        {!insight ? (
-          <p className="loading-state-text">Generating or loading calendar...</p>
-        ) : (
-          <>
-            <p className="home-search__hint">
-              Current month: {insight.calendar.current_month.month_key} · Theme: {insight.calendar.current_month.dominant_focus}
-            </p>
-            <div className="calendar-grid">
-              {insight.calendar.near_30_days.map((day) => (
-                <article key={day.date} className="calendar-day-card">
-                  <p className="calendar-day-card__date">{day.date}</p>
-                  <p className="calendar-day-card__score">{day.level} · {day.score}</p>
-                  <p className="calendar-day-card__text">Good for: {day.yi.join(" • ")}</p>
-                  <p className="calendar-day-card__text">Avoid: {day.ji.join(" • ")}</p>
-                  <p className="calendar-day-card__text">{day.note}</p>
-                </article>
-              ))}
+      {isUnlocked ? (
+        <section className="result-full">
+          <div className="pre-wrap">{report.full_report}</div>
+        </section>
+      ) : (
+        <section className="result-paywall">
+          <div className="result-paywall__blur">
+            {"Your full report reveals elemental architecture, palace dynamics, karmic history, and actionable growth rituals tailored to the two of you."}
+          </div>
+          <div className="result-paywall__overlay">
+            <div className="paywall-card">
+              <p className="paywall-card__title">🔮 Unlock Your Complete Soul Blueprint</p>
+              <ul className="paywall-card__list">
+                <li>✓ Full Palace & Star Configuration Reading</li>
+                <li>✓ 2026 Activation Windows & Timing Guide</li>
+                <li>✓ Karmic Growth Protocol & Action Steps</li>
+              </ul>
+              <a
+                className="paywall-card__buy"
+                href="https://samzhu168.gumroad.com/l/bhpmxr"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Get Your Full Report — $19.90
+              </a>
+              <div className="paywall-card__divider" />
+              <p className="paywall-card__hint">Already purchased?</p>
+              <form className="paywall-card__form" onSubmit={handleUnlock}>
+                <input
+                  type="text"
+                  value={licenseKey}
+                  onChange={(event) => setLicenseKey(event.target.value)}
+                  placeholder="Enter your license key..."
+                />
+                <InkButton type="submit" disabled={unlocking}>
+                  {unlocking ? "Unlocking..." : "Unlock Full Report"}
+                </InkButton>
+              </form>
+              {error ? <p className="error-text">{error}</p> : null}
             </div>
-          </>
-        )}
-      </InkCard>
-
-      <InkCard title="Life K-Line (Milestones Every 5 Years)">
-        {!insight ? (
-          <p className="loading-state-text">Generating or loading life K-line...</p>
-        ) : (
-          <>
-            <div className="meta-grid meta-grid--compact">
-              <div className="meta-item">
-                <div className="meta-item__label">Average score</div>
-                <div className="meta-item__value">{insight.life_kline.summary.averageScore}</div>
-              </div>
-              <div className="meta-item">
-                <div className="meta-item__label">Peak ages</div>
-                <div className="meta-item__value">{insight.life_kline.summary.bestYears.join(" / ")}</div>
-              </div>
-              <div className="meta-item">
-                <div className="meta-item__label">Low ages</div>
-                <div className="meta-item__value">{insight.life_kline.summary.worstYears.join(" / ")}</div>
-              </div>
-            </div>
-            <p className="home-search__hint">{insight.life_kline.summary.overallTrend}</p>
-            <LifeKlineChart
-              points={insight.life_kline.sparse.years}
-              bestYears={insight.life_kline.summary.bestYears}
-              worstYears={insight.life_kline.summary.worstYears}
-            />
-            <div className="kline-list">
-              {insight.life_kline.sparse.years.map((item) => (
-                <article key={`${item.age}-${item.year}`} className="kline-item">
-                  <p className="kline-item__title">Age {item.age} · {item.year} · {item.yearGanZhi}</p>
-                  <p className="kline-item__meta">Score {item.score} · {item.summary} · Luck cycle {item.daYun}</p>
-                </article>
-              ))}
-            </div>
-          </>
-        )}
-      </InkCard>
-
-      {Object.entries(result.analysis).map(([analysisType, item], idx) => {
-        const config = ANALYSIS_CONFIG[analysisType] || {
-          label: analysisType,
-          desc: "",
-        };
-
-        return (
-          <section
-            key={analysisType}
-            className="analysis-card fade-in-up"
-            style={{ animationDelay: `${(idx + 1) * 0.06}s` }}
-          >
-            <div className="analysis-card__header">
-              <h2 className="analysis-card__title">{config.label}</h2>
-              <div className="analysis-card__stats">
-                <span className="analysis-card__stat">{item.execution_time.toFixed(1)}s</span>
-                <span className="analysis-card__stat">{item.token_count.toLocaleString()} tokens</span>
-              </div>
-            </div>
-
-            {config.desc && <p className="analysis-card__summary">{config.desc}</p>}
-
-            <div className="analysis-card__actions">
-              <Link to={`/result/${id}/${analysisType}`}>
-                <InkButton type="button">View details</InkButton>
-              </Link>
-              <InkButton type="button" kind="ghost" onClick={() => download(analysisType)}>
-                Download this analysis
-              </InkButton>
-            </div>
-          </section>
-        );
-      })}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

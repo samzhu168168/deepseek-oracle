@@ -578,3 +578,34 @@ def get_divination_service() -> DivinationService:
     )
     current_app.extensions["divination_service"] = service
     return service
+
+
+def _build_bond_prompt(person_a: dict[str, Any], person_b: dict[str, Any], full: bool) -> str:
+    mode = "FULL" if full else "TEASER"
+    return (
+        "You are an expert relationship astrologer and BaZi advisor. "
+        "Generate a relationship compatibility report. "
+        f"Mode: {mode}. "
+        "The teaser must be about 150 words. "
+        "The full report must be about 800 words only when Mode is FULL. "
+        "Use English. "
+        f"Person A birth info: {person_a}. "
+        f"Person B birth info: {person_b}."
+    )
+
+
+def _generate_bond_report(person_a: dict[str, Any], person_b: dict[str, Any], full: bool) -> str:
+    provider_name = str(current_app.config.get("LLM_PROVIDER", ""))
+    model = str(current_app.config.get("LLM_MODEL", ""))
+    provider = create_provider(provider_name, model, app_config=current_app.config)
+    prompt = _build_bond_prompt(person_a, person_b, full)
+    result = provider.generate(prompt)
+    return str(result.content or "").strip()
+
+
+def generate_free_report(person_a: dict[str, Any], person_b: dict[str, Any]) -> str:
+    return _generate_bond_report(person_a, person_b, False)
+
+
+def generate_full_report(person_a: dict[str, Any], person_b: dict[str, Any]) -> str:
+    return _generate_bond_report(person_a, person_b, True)

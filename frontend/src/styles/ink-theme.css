@@ -1495,6 +1495,272 @@ select:focus {
   gap: 0.75rem;
 }
 
+.bond-hero {
+  max-width: 60rem;
+  margin: 0 auto 2rem;
+  text-align: center;
+  padding: 2.5rem 1.5rem 0;
+}
+
+.bond-hero__title {
+  font-size: clamp(2.4rem, 2vw + 1.6rem, 3.6rem);
+}
+
+.bond-hero__subtitle {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  margin-top: 0.75rem;
+}
+
+.bond-form {
+  max-width: 64rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+  padding: 0 1.5rem 2rem;
+}
+
+.bond-form__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.bond-form__panel {
+  background: rgba(255, 253, 248, 0.82);
+  border: 1px solid rgba(110, 62, 39, 0.2);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  display: grid;
+  gap: 1rem;
+  backdrop-filter: blur(8px);
+}
+
+.bond-form__label {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  color: rgba(47, 34, 29, 0.7);
+}
+
+.bond-form__fields {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.bond-submit {
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  padding: 0.95rem 1.25rem;
+  background: linear-gradient(110deg, #2c0e40 0%, #5a2b74 45%, #b47b3c 100%);
+  color: #fff6e8;
+  box-shadow: 0 1rem 2.2rem rgba(62, 23, 86, 0.35);
+}
+
+.radar-chart {
+  width: 100%;
+  max-width: 16rem;
+}
+
+.radar-chart__grid {
+  fill: none;
+  stroke: rgba(157, 43, 29, 0.18);
+  stroke-width: 1;
+}
+
+.radar-chart__axis {
+  stroke: rgba(157, 43, 29, 0.22);
+  stroke-width: 1;
+}
+
+.radar-chart__shape {
+  fill: rgba(157, 43, 29, 0.28);
+  stroke: rgba(157, 43, 29, 0.6);
+  stroke-width: 1.5;
+}
+
+.radar-legend {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.radar-legend__item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.radar-legend__label {
+  font-weight: 600;
+}
+
+.result-page {
+  display: grid;
+  gap: 1.75rem;
+  padding: 1.5rem 1.5rem 3rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.result-scorecard {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 1.5rem;
+  align-items: center;
+  background: rgba(255, 252, 248, 0.86);
+  border: 1px solid rgba(120, 61, 36, 0.16);
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  box-shadow: 0 1.25rem 2rem rgba(120, 61, 36, 0.12);
+}
+
+.result-scorecard__label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  color: rgba(47, 34, 29, 0.6);
+}
+
+.result-scorecard__score {
+  font-size: clamp(2.4rem, 2vw + 1.6rem, 3.5rem);
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.result-scorecard__type {
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+.result-scorecard__radar {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+}
+
+.result-teaser {
+  background: rgba(255, 253, 249, 0.84);
+  border: 1px solid rgba(120, 61, 36, 0.16);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.result-teaser__text {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.result-teaser__hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.result-full {
+  background: rgba(255, 253, 249, 0.84);
+  border: 1px solid rgba(120, 61, 36, 0.16);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.result-full .pre-wrap {
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+.result-paywall {
+  position: relative;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  min-height: 18rem;
+  background: rgba(47, 34, 29, 0.12);
+  border: 1px solid rgba(120, 61, 36, 0.2);
+}
+
+.result-paywall__blur {
+  padding: 2rem;
+  color: rgba(47, 34, 29, 0.6);
+  filter: blur(6px);
+  user-select: none;
+  min-height: 100%;
+}
+
+.result-paywall__overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.paywall-card {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  display: grid;
+  gap: 0.75rem;
+  width: min(30rem, 100%);
+  box-shadow: 0 1.25rem 2.5rem rgba(58, 28, 15, 0.2);
+}
+
+.paywall-card__title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.paywall-card__list {
+  list-style: none;
+  display: grid;
+  gap: 0.4rem;
+  padding: 0;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.paywall-card__buy {
+  text-align: center;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(112deg, #c5892c, #e1b560);
+  color: #29160a;
+  font-weight: 700;
+  box-shadow: 0 0.75rem 1.5rem rgba(117, 73, 24, 0.25);
+}
+
+.paywall-card__divider {
+  height: 1px;
+  background: rgba(31, 18, 14, 0.12);
+}
+
+.paywall-card__hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.paywall-card__form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.result-empty {
+  padding: 2rem;
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+
+@media (max-width: 900px) {
+  .bond-form__columns,
+  .result-scorecard {
+    grid-template-columns: 1fr;
+  }
+}
+
 .ink-button {
   border: 1px solid transparent;
   border-radius: var(--radius-full);

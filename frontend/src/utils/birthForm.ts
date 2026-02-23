@@ -1,4 +1,3 @@
-import type { ZiweiFortuneFormState } from "../stores/ziweiFortuneSession";
 import type { BirthInfo } from "../types";
 
 const pad2 = (value: number) => String(value).padStart(2, "0");
@@ -12,6 +11,21 @@ const hourToTimezone = (hour: number) => {
   }
   return Math.floor((hour + 1) / 2);
 };
+
+export interface ZiweiFortuneFormState {
+  question?: string;
+  calendar: BirthInfo["calendar"];
+  year: string;
+  month: string;
+  day: string;
+  hour: string;
+  minute: string;
+  timeUnknown: boolean;
+  gender: BirthInfo["gender"];
+  provinceCode: string;
+  cityCode: string;
+  enableTrueSolar: boolean;
+}
 
 interface TrueSolarCityOption {
   code: string;

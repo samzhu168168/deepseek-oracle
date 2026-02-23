@@ -1,56 +1,164 @@
-import { Link } from "react-router-dom";
+import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+import { analyzeBond } from "../api";
 import { InkButton } from "../components/InkButton";
-import { InkCard } from "../components/InkCard";
-import { getAccessToken, getStoredUser } from "../utils/auth";
+
+type PersonInput = {
+  date: string;
+  time: string;
+  gender: "Male" | "Female";
+};
+
+const createInitialPerson = (gender: "Male" | "Female"): PersonInput => ({
+  date: "",
+  time: "",
+  gender,
+});
 
 export default function HomePage() {
-  const user = getStoredUser();
-  const isLoggedIn = Boolean(getAccessToken()) && Boolean(user);
+  const navigate = useNavigate();
+  const [personA, setPersonA] = useState<PersonInput>(() => createInitialPerson("Male"));
+  const [personB, setPersonB] = useState<PersonInput>(() => createInitialPerson("Female"));
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (loading) {
+      return;
+    }
+    setError(null);
+    if (!personA.date) {
+      setError("Person A: Birth date is required.");
+      return;
+    }
+    if (!personB.date) {
+      setError("Person B: Birth date is required.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const payload = {
+        person_a: {
+          date: personA.date,
+          time: personA.time,
+          gender: personA.gender,
+        },
+        person_b: {
+          date: personB.date,
+          time: personB.time,
+          gender: personB.gender,
+        },
+      };
+      const response = await analyzeBond(payload);
+      const report = response.data;
+      if (!report) {
+        throw new Error("Analysis result is empty.");
+      }
+      const stored = {
+        payload,
+        report,
+      };
+      window.sessionStorage.setItem("bond:last_report", JSON.stringify(stored));
+      navigate("/result", { state: stored });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to analyze bond.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="landing-page fade-in">
-      <section className="landing-hero fade-in-up">
-        <p className="landing-hero__badge">Elemental Bond</p>
-        <h1 className="landing-hero__title">Elemental Bond</h1>
-        <p className="landing-hero__subtitle">
-          An Eastern consultation experience that blends Zi Wei Dou Shu, Mei Hua, and mindset guidance into actionable, reviewable insights.
-        </p>
-        <div className="actions-row landing-hero__actions">
-          {isLoggedIn ? (
-            <>
-              <Link to="/oracle">
-                <InkButton type="button">Enter Oracle Chat</InkButton>
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link to="/login">
-                <InkButton type="button">Sign In</InkButton>
-              </Link>
-              <Link to="/register">
-                <InkButton type="button" kind="secondary">Register with Email</InkButton>
-              </Link>
-            </>
-          )}
+      <section className="bond-hero">
+        <h1 className="bond-hero__title">Elemental Bond</h1>
+        <p className="bond-hero__subtitle">Ancient Chinese Astrology Meets Modern Relationship Science</p>
+      </section>
+
+      <form className="bond-form" onSubmit={onSubmit}>
+        <div className="bond-form__columns">
+          <section className="bond-form__panel">
+            <p className="bond-form__label">YOU</p>
+            <div className="bond-form__fields">
+              <div className="field">
+                <label className="field__label" htmlFor="person-a-date">Birth Date</label>
+                <input
+                  id="person-a-date"
+                  type="date"
+                  value={personA.date}
+                  onChange={(event) => setPersonA((prev) => ({ ...prev, date: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="field">
+                <label className="field__label" htmlFor="person-a-time">Birth Time</label>
+                <input
+                  id="person-a-time"
+                  type="time"
+                  value={personA.time}
+                  onChange={(event) => setPersonA((prev) => ({ ...prev, time: event.target.value }))}
+                  placeholder="Unknown? Leave blank"
+                />
+              </div>
+              <div className="field">
+                <label className="field__label" htmlFor="person-a-gender">Gender</label>
+                <select
+                  id="person-a-gender"
+                  value={personA.gender}
+                  onChange={(event) => setPersonA((prev) => ({ ...prev, gender: event.target.value as "Male" | "Female" }))}
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section className="bond-form__panel">
+            <p className="bond-form__label">YOUR PERSON</p>
+            <div className="bond-form__fields">
+              <div className="field">
+                <label className="field__label" htmlFor="person-b-date">Birth Date</label>
+                <input
+                  id="person-b-date"
+                  type="date"
+                  value={personB.date}
+                  onChange={(event) => setPersonB((prev) => ({ ...prev, date: event.target.value }))}
+                  required
+                />
+              </div>
+              <div className="field">
+                <label className="field__label" htmlFor="person-b-time">Birth Time</label>
+                <input
+                  id="person-b-time"
+                  type="time"
+                  value={personB.time}
+                  onChange={(event) => setPersonB((prev) => ({ ...prev, time: event.target.value }))}
+                  placeholder="Unknown? Leave blank"
+                />
+              </div>
+              <div className="field">
+                <label className="field__label" htmlFor="person-b-gender">Gender</label>
+                <select
+                  id="person-b-gender"
+                  value={personB.gender}
+                  onChange={(event) => setPersonB((prev) => ({ ...prev, gender: event.target.value as "Male" | "Female" }))}
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+            </div>
+          </section>
         </div>
-      </section>
 
-      <section className="landing-grid">
-        <InkCard title="Zi Wei Dou Shu: Long-Range Reading" icon="Z">
-          <p>Maps life phases, relationship architecture, and career direction with long-range trends and key windows.</p>
-        </InkCard>
-        <InkCard title="Mei Hua: Short-Term Decisions" icon="M">
-          <p>Focuses on near-term events and timing to surface key variables and response strategies.</p>
-        </InkCard>
-        <InkCard title="Mindset Guidance & Actionability" icon="H">
-          <p>Turns insights into concrete steps, reducing anxiety with verification and review loops.</p>
-        </InkCard>
-      </section>
+        {error ? <p className="error-text">{error}</p> : null}
 
-      <section className="landing-footnote">
-        <p>Note: Insights are for reference only and do not replace medical, legal, or financial advice.</p>
-      </section>
+        <InkButton type="submit" full className="bond-submit" disabled={loading}>
+          {loading ? "Analyzing..." : "✦ Analyze Our Bond ✦"}
+        </InkButton>
+      </form>
     </div>
   );
 }

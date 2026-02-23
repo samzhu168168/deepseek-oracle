@@ -1,9 +1,8 @@
 from datetime import datetime
 
-from flask import Blueprint, g, request
+from flask import Blueprint, request
 
 from app.services import get_insight_service
-from app.utils.auth import require_auth
 from app.utils.errors import AppError
 from app.utils.errors import validation_error
 from app.utils.response import success_response
@@ -51,7 +50,6 @@ def _validate_birth_info(payload: dict) -> dict:
 
 
 @insights_bp.get("/insights/overview")
-@require_auth()
 def get_insight_overview():
     result_id_raw = request.args.get("result_id")
     result_id: int | None = None
@@ -61,12 +59,11 @@ def get_insight_overview():
         except ValueError as exc:
             raise validation_error("result_id", "result_id must be integer") from exc
 
-    current_user = getattr(g, "current_user", None) or {}
     service = get_insight_service()
     try:
         data = service.get_overview(
-            user_id=int(current_user.get("id", 0)),
-            is_admin=str(current_user.get("role", "")) == "admin",
+            user_id=0,
+            is_admin=False,
             result_id=result_id,
         )
     except AppError as exc:
@@ -78,15 +75,13 @@ def get_insight_overview():
 
 
 @insights_bp.post("/insights/overview")
-@require_auth()
 def generate_insight_overview_by_birth_info():
     payload = request.get_json(silent=True) or {}
     birth_info = _validate_birth_info(payload)
 
-    current_user = getattr(g, "current_user", None) or {}
     data = get_insight_service().get_overview(
-        user_id=int(current_user.get("id", 0)),
-        is_admin=str(current_user.get("role", "")) == "admin",
+        user_id=0,
+        is_admin=False,
         birth_info_override=birth_info,
     )
     return success_response(data=data)

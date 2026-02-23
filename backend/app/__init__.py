@@ -63,7 +63,6 @@ def create_app() -> Flask:
             try:
                 started_at = getattr(g, "request_started_at", None)
                 duration_ms = int((time.perf_counter() - started_at) * 1000) if started_at else None
-                user = getattr(g, "current_user", None) or {}
                 log_level = "error" if int(response.status_code) >= 500 else "info"
 
                 app.extensions["system_log_repo"].create_log(
@@ -74,8 +73,6 @@ def create_app() -> Flask:
                     duration_ms=duration_ms,
                     level=log_level,
                     message=response.status,
-                    user_id=user.get("id"),
-                    user_email=user.get("email"),
                     ip=request.headers.get("X-Forwarded-For") or request.remote_addr,
                     user_agent=request.headers.get("User-Agent"),
                 )

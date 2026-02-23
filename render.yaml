@@ -2,7 +2,6 @@ services:
   - type: web
     name: deepseek-oracle-backend
     env: python
-    plan: free
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: python run.py
@@ -21,19 +20,5 @@ services:
         value: false
       - key: INVITE_ONLY
         value: false
-      - key: ORACLE_EAST_ONLY_MVP
-        value: true
       - key: DEBUG
         value: false
-      - key: CORS_ORIGINS
-        value: https://deepseek-oracle.vercel.app,http://localhost:5173
-      - key: REDIS_URL
-        fromService:
-          name: deepseek-oracle-redis
-          type: redis
-          property: connectionString
-
-  - type: redis
-    name: deepseek-oracle-redis
-    plan: free
-    ipAllowList: []
