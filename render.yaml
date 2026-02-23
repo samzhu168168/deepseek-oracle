@@ -2,6 +2,7 @@ services:
   - type: web
     name: deepseek-oracle-backend
     env: python
+    plan: free
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: python run.py
@@ -25,13 +26,12 @@ services:
       - key: DEBUG
         value: false
       - key: REDIS_URL
-        value: redis://deepseek-oracle-redis:6379
+        fromService:
+          name: deepseek-oracle-redis
+          type: redis
+          property: connectionString
 
-  - type: pserv
+  - type: redis
     name: deepseek-oracle-redis
-    env: docker
-    dockerCommand: redis-server
-    disk:
-      name: redis-data
-      mountPath: /data
-      sizeGB: 1
+    plan: free
+    ipAllowList: []
