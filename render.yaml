@@ -27,9 +27,14 @@ services:
       - key: REDIS_URL
         fromService:
           name: deepseek-oracle-redis
-          type: redis
+          type: pserv
           property: connectionString
 
-  - type: redis
+  - type: pserv
     name: deepseek-oracle-redis
-    plan: free
+    env: docker
+    dockerCommand: redis-server
+    disk:
+      name: redis-data
+      mountPath: /data
+      sizeGB: 1
