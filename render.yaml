@@ -25,6 +25,8 @@ services:
         value: true
       - key: DEBUG
         value: false
+      - key: CORS_ORIGINS
+        value: https://deepseek-oracle.vercel.app,http://localhost:5173
       - key: REDIS_URL
         fromService:
           name: deepseek-oracle-redis

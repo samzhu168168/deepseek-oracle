@@ -3,6 +3,7 @@ import time
 
 from flask import Flask, g, jsonify, request
 from flask_cors import CORS
+from werkzeug.exceptions import HTTPException
 from redis import Redis
 from rq import Queue
 
@@ -93,6 +94,15 @@ def create_app() -> Flask:
             status=exc.http_status,
             details=exc.details,
             retryable=exc.retryable,
+        )
+
+    @app.errorhandler(HTTPException)
+    def handle_http_exception(exc: HTTPException):
+        return error_response(
+            code=f"HTTP_{exc.code}",
+            message=exc.description or exc.name,
+            status=exc.code or 500,
+            retryable=False,
         )
 
     @app.errorhandler(Exception)
