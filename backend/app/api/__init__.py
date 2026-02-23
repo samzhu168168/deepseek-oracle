@@ -13,6 +13,7 @@ from .task import task_bp
 
 def register_blueprints(app: Flask) -> None:
     app.register_blueprint(auth_bp, url_prefix="/api")
+    app.register_blueprint(auth_bp, url_prefix="", name="auth_compat")
     app.register_blueprint(divination_bp, url_prefix="/api")
     app.register_blueprint(admin_bp, url_prefix="/api")
     app.register_blueprint(analyze_bp, url_prefix="/api")
