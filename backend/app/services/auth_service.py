@@ -94,6 +94,9 @@ class AuthService:
         if self.user_repo.get_by_email(email):
             raise business_error("A4009", "email already registered", 409, False)
 
+        if not self.email_verify_required:
+            return {"sent": False, "expire_minutes": self.email_code_expire_minutes, "skipped": True}
+
         code = self._generate_verification_code()
         self.verification_code_repo.create_code(
             email=email,
