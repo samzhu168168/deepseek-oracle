@@ -6,7 +6,7 @@ const apiBaseUrl = import.meta.env.VITE_API_URL || "/api";
 
 const api = axios.create({
   baseURL: apiBaseUrl,
-  timeout: 30_000,
+  timeout: 120_000,
 });
 
 const isSuccessCode = (code: number | string) => code === 0;
