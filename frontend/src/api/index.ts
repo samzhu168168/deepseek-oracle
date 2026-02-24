@@ -19,5 +19,11 @@ const unwrap = <T>(response: { data: ApiResponse<T> }) => {
   return payload;
 };
 
-export const analyzeBond = async (payload: BondAnalysisRequest) =>
-  unwrap(await api.post<ApiResponse<BondAnalysisResponse>>("/api/divination/analyze", payload));
+export const analyzeBond = async (payload: BondAnalysisRequest) => {
+  try {
+    await axios.get(`${apiBaseUrl}/health`, { timeout: 60_000 });
+  } catch {
+    // ignore warm-up errors
+  }
+  return unwrap(await api.post<ApiResponse<BondAnalysisResponse>>("/api/divination/analyze", payload));
+};

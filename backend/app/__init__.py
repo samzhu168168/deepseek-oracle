@@ -120,6 +120,10 @@ def create_app() -> Flask:
     def healthz():
         return success_response(data={"status": "ok"})
 
+    @app.get("/health")
+    def health():
+        return jsonify({"status": "ok"}), 200
+
     @app.get("/readyz")
     def readyz():
         if not app.extensions.get("redis_available"):
