@@ -52,7 +52,7 @@ export default function HomePage() {
         },
       };
       const response = await analyzeBond(payload);
-      const report = response.data;
+      const report = response?.data ?? response?.report ?? response;
       if (!report) {
         throw new Error("Analysis result is empty.");
       }
@@ -63,7 +63,11 @@ export default function HomePage() {
       window.sessionStorage.setItem("bond:last_report", JSON.stringify(stored));
       navigate("/result", { state: stored });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to analyze bond.");
+      const message =
+        (err as { response?: { data?: { error?: string } } })?.response?.data?.error ||
+        (err as Error).message ||
+        "请求超时，请重试";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -156,7 +160,7 @@ export default function HomePage() {
         {error ? <p className="error-text">{error}</p> : null}
 
         <InkButton type="submit" full className="bond-submit" disabled={loading}>
-          {loading ? "Analyzing..." : "✦ Analyze Our Bond ✦"}
+          {loading ? "正在分析中，请稍候（约30-60秒）..." : "✦ Analyze Our Bond ✦"}
         </InkButton>
       </form>
     </div>

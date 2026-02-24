@@ -19,7 +19,7 @@ class LLMService:
         provider_name: str,
         model: str,
         provider_config: dict[str, Any] | None = None,
-        timeout_s: int = 1800,
+        timeout_s: int = 60,
         max_retries: int = 2,
     ):
         self.provider_name = provider_name
@@ -53,8 +53,13 @@ class LLMService:
                 if attempt < self.max_retries:
                     time.sleep(2**attempt)
                     continue
-                raise business_error("A3001", f"llm timeout: {exc}", 504, True) from exc
+                raise business_error("A3001", "llm request timed out", 504, True) from exc
             except Exception as exc:  # pragma: no cover
+                if "timeout" in str(exc).lower():
+                    if attempt < self.max_retries:
+                        time.sleep(2**attempt)
+                        continue
+                    raise business_error("A3001", "llm request timed out", 504, True) from exc
                 if attempt < self.max_retries:
                     time.sleep(2**attempt)
                     continue

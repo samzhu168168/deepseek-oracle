@@ -7,7 +7,7 @@ import type { BondAnalysisRequest, BondAnalysisResponse } from "../types";
 
 type StoredReport = {
   payload: BondAnalysisRequest;
-  report: BondAnalysisResponse;
+  report: any;
 };
 
 const RADAR_DIMENSIONS = [
@@ -98,7 +98,7 @@ export default function ResultPage() {
   const navigate = useNavigate();
   const initial = (location.state as StoredReport | null) || readStoredReport();
   const [payload, setPayload] = useState<BondAnalysisRequest | null>(initial?.payload ?? null);
-  const [report, setReport] = useState<BondAnalysisResponse | null>(initial?.report ?? null);
+  const [report, setReport] = useState<any>(initial?.report ?? null);
   const [licenseKey, setLicenseKey] = useState("");
   const [unlocking, setUnlocking] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -111,7 +111,38 @@ export default function ResultPage() {
     setReport(initial.report);
   }, [initial]);
 
-  const radarEntries = useMemo(() => buildRadarEntries(report?.teaser?.radar_scores), [report]);
+  const normalizedReport = useMemo(() => {
+    if (!report) {
+      return null;
+    }
+    if (typeof report === "string") {
+      return {
+        teaser: {
+          summary: report,
+          five_element_compatibility: "",
+          radar_scores: {},
+        },
+        full_report: null,
+        license_valid: false,
+      } as BondAnalysisResponse;
+    }
+    const reportText = typeof report?.report === "string" ? report.report : "";
+    if (reportText) {
+      const isFull = report?.type === "full";
+      return {
+        teaser: {
+          summary: reportText,
+          five_element_compatibility: "",
+          radar_scores: {},
+        },
+        full_report: isFull ? reportText : null,
+        license_valid: isFull,
+      } as BondAnalysisResponse;
+    }
+    return report as BondAnalysisResponse;
+  }, [report]);
+
+  const radarEntries = useMemo(() => buildRadarEntries(normalizedReport?.teaser?.radar_scores), [normalizedReport]);
   const radarPoints = useMemo(() => buildPolygonPoints(radarEntries.map((item) => item.value), 74, 100), [radarEntries]);
   const radarGrid = useMemo(
     () => [0.33, 0.66, 1].map((ratio) => buildPolygonPoints(radarEntries.map(() => ratio * 100), 74, 100)),
@@ -131,8 +162,8 @@ export default function ResultPage() {
     radarEntries.reduce((sum, item) => sum + item.value, 0) / radarEntries.length,
   );
   const relationshipLabel = getRelationshipLabel(averageScore);
-  const teaserPreview = getTeaserPreview(report?.teaser?.summary || "");
-  const isUnlocked = Boolean(report?.license_valid && report?.full_report);
+  const teaserPreview = getTeaserPreview(normalizedReport?.teaser?.summary || "");
+  const isUnlocked = Boolean(normalizedReport?.license_valid && normalizedReport?.full_report);
 
   const handleUnlock = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -150,7 +181,7 @@ export default function ResultPage() {
         ...payload,
         license_key: licenseKey.trim(),
       });
-      const nextReport = response.data;
+      const nextReport = response?.data ?? response?.report ?? response;
       if (!nextReport) {
         throw new Error("License verification failed.");
       }
@@ -159,13 +190,17 @@ export default function ResultPage() {
       setReport(nextReport);
       setLicenseKey("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to verify license.");
+      const message =
+        (err as { response?: { data?: { error?: string } } })?.response?.data?.error ||
+        (err as Error).message ||
+        "请求超时，请重试";
+      setError(message);
     } finally {
       setUnlocking(false);
     }
   };
 
-  if (!payload || !report) {
+  if (!payload || !normalizedReport) {
     return (
       <div className="result-empty">
         <p className="error-text">Submit two birth profiles on the homepage to generate your Elemental Bond report.</p>
@@ -214,7 +249,7 @@ export default function ResultPage() {
 
       {isUnlocked ? (
         <section className="result-full">
-          <div className="pre-wrap">{report.full_report}</div>
+          <div className="pre-wrap">{normalizedReport.full_report}</div>
         </section>
       ) : (
         <section className="result-paywall">
