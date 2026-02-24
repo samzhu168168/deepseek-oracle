@@ -8,7 +8,7 @@ services:
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
-      timeout: 3s
+      timeout: 60s
       retries: 5
       start_period: 5s
 
@@ -43,7 +43,7 @@ services:
       ANALYSIS_QUEUE: "${ANALYSIS_QUEUE:-analysis}"
       IZTHON_SRC_PATH: "${IZTHON_SRC_PATH:-}"
       IZTRO_SERVICE_URL: "${IZTRO_SERVICE_URL:-http://iztro:3000}"
-      REQUEST_TIMEOUT_S: "${REQUEST_TIMEOUT_S:-1800}"
+      REQUEST_TIMEOUT_S: "${REQUEST_TIMEOUT_S:-60}"
       MAX_TASK_RETRY: "${MAX_TASK_RETRY:-2}"
       LLM_MAX_RETRIES: "${LLM_MAX_RETRIES:-2}"
       ORACLE_EAST_ONLY_MVP: "${ORACLE_EAST_ONLY_MVP:-true}"
@@ -61,7 +61,7 @@ services:
       SMTP_PASSWORD: "${SMTP_PASSWORD:-}"
       SMTP_FROM_EMAIL: "${SMTP_FROM_EMAIL:-}"
       SMTP_FROM_NAME: "${SMTP_FROM_NAME:-DeepSeek Oracle}"
-      SMTP_TIMEOUT_S: "${SMTP_TIMEOUT_S:-20}"
+      SMTP_TIMEOUT_S: "${SMTP_TIMEOUT_S:-60}"
       LLM_PROVIDER: "${LLM_PROVIDER:-volcano}"
       LLM_MODEL: "${LLM_MODEL:-doubao-seed-1-8-251228}"
       PROMPT_VERSION: "${PROMPT_VERSION:-v1}"
@@ -83,7 +83,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/healthz"]
       interval: 10s
-      timeout: 3s
+      timeout: 60s
       retries: 5
       start_period: 10s
 
@@ -110,7 +110,7 @@ services:
       ANALYSIS_QUEUE: "${ANALYSIS_QUEUE:-analysis}"
       IZTHON_SRC_PATH: "${IZTHON_SRC_PATH:-}"
       IZTRO_SERVICE_URL: "${IZTRO_SERVICE_URL:-http://iztro:3000}"
-      REQUEST_TIMEOUT_S: "${REQUEST_TIMEOUT_S:-1800}"
+      REQUEST_TIMEOUT_S: "${REQUEST_TIMEOUT_S:-60}"
       MAX_TASK_RETRY: "${MAX_TASK_RETRY:-2}"
       LLM_MAX_RETRIES: "${LLM_MAX_RETRIES:-2}"
       ORACLE_EAST_ONLY_MVP: "${ORACLE_EAST_ONLY_MVP:-true}"
@@ -128,7 +128,7 @@ services:
       SMTP_PASSWORD: "${SMTP_PASSWORD:-}"
       SMTP_FROM_EMAIL: "${SMTP_FROM_EMAIL:-}"
       SMTP_FROM_NAME: "${SMTP_FROM_NAME:-DeepSeek Oracle}"
-      SMTP_TIMEOUT_S: "${SMTP_TIMEOUT_S:-20}"
+      SMTP_TIMEOUT_S: "${SMTP_TIMEOUT_S:-60}"
       LLM_PROVIDER: "${LLM_PROVIDER:-volcano}"
       LLM_MODEL: "${LLM_MODEL:-doubao-seed-1-8-251228}"
       PROMPT_VERSION: "${PROMPT_VERSION:-v1}"
@@ -169,7 +169,7 @@ services:
       ANALYSIS_QUEUE: "${ANALYSIS_QUEUE:-analysis}"
       IZTHON_SRC_PATH: "${IZTHON_SRC_PATH:-}"
       IZTRO_SERVICE_URL: "${IZTRO_SERVICE_URL:-http://iztro:3000}"
-      REQUEST_TIMEOUT_S: "${REQUEST_TIMEOUT_S:-1800}"
+      REQUEST_TIMEOUT_S: "${REQUEST_TIMEOUT_S:-60}"
       MAX_TASK_RETRY: "${MAX_TASK_RETRY:-2}"
       LLM_MAX_RETRIES: "${LLM_MAX_RETRIES:-2}"
       ORACLE_EAST_ONLY_MVP: "${ORACLE_EAST_ONLY_MVP:-true}"
@@ -187,7 +187,7 @@ services:
       SMTP_PASSWORD: "${SMTP_PASSWORD:-}"
       SMTP_FROM_EMAIL: "${SMTP_FROM_EMAIL:-}"
       SMTP_FROM_NAME: "${SMTP_FROM_NAME:-DeepSeek Oracle}"
-      SMTP_TIMEOUT_S: "${SMTP_TIMEOUT_S:-20}"
+      SMTP_TIMEOUT_S: "${SMTP_TIMEOUT_S:-60}"
       LLM_PROVIDER: "${LLM_PROVIDER:-volcano}"
       LLM_MODEL: "${LLM_MODEL:-doubao-seed-1-8-251228}"
       PROMPT_VERSION: "${PROMPT_VERSION:-v1}"

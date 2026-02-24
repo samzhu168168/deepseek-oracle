@@ -8,9 +8,9 @@ from .base import BaseLLMProvider, LLMResult, LLMUsage, UnsupportedToolCallingEr
 class VolcanoProvider(BaseLLMProvider):
     def __init__(self, api_key: str, model: str):
         super().__init__(model=model)
-        self.client = Ark(api_key=api_key, timeout=1800)
+        self.client = Ark(api_key=api_key, timeout=60)
 
-    def generate(self, user_message: str, timeout_s: int = 1800) -> LLMResult:
+    def generate(self, user_message: str, timeout_s: int = 60) -> LLMResult:
         start = time.perf_counter()
         response = self.client.chat.completions.create(
             model=self.model,
@@ -42,6 +42,6 @@ class VolcanoProvider(BaseLLMProvider):
             finish_reason=finish_reason,
         )
 
-    def chat_with_tools(self, messages: list[dict], tools: list[dict], timeout_s: int = 1800):
+    def chat_with_tools(self, messages: list[dict], tools: list[dict], timeout_s: int = 60):
         _ = (messages, tools, timeout_s)
         raise UnsupportedToolCallingError("provider volcano does not support tool calling in current integration")

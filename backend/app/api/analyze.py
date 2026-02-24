@@ -10,7 +10,7 @@ def verify_gumroad_key(license_key: str) -> bool:
         resp = http_requests.post(
             "https://api.gumroad.com/v2/licenses/verify",
             data={"product_permalink": GUMROAD_PRODUCT, "license_key": license_key},
-            timeout=10,
+            timeout=60,
         )
         return resp.json().get("success", False)
     except Exception:

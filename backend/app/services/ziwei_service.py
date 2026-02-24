@@ -234,7 +234,7 @@ class ZiweiService:
         endpoint = "/api/astro/solar" if calendar == "solar" else "/api/astro/lunar"
         payload = {"date": date, "timezone": timezone, "gender": gender}
         try:
-            response = requests.post(f"{base_url}{endpoint}", json=payload, timeout=6)
+            response = requests.post(f"{base_url}{endpoint}", json=payload, timeout=60)
             if response.status_code != 200:
                 return None
             data = response.json()

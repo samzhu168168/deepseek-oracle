@@ -12,7 +12,7 @@ class DeepSeekProvider(BaseLLMProvider):
         super().__init__(model=model)
         self.client = OpenAI(api_key=api_key, base_url=base_url)
 
-    def generate(self, user_message: str, timeout_s: int = 1800) -> LLMResult:
+    def generate(self, user_message: str, timeout_s: int = 60) -> LLMResult:
         start = time.perf_counter()
         response = self.client.chat.completions.create(
             model=self.model,
@@ -50,7 +50,7 @@ class DeepSeekProvider(BaseLLMProvider):
         self,
         messages: list[dict],
         tools: list[dict],
-        timeout_s: int = 1800,
+        timeout_s: int = 60,
     ) -> ToolChatResult:
         start = time.perf_counter()
         response = self.client.chat.completions.create(

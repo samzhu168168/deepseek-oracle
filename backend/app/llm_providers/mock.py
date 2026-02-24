@@ -7,7 +7,7 @@ class MockProvider(BaseLLMProvider):
     def __init__(self, model: str = "mock-v1"):
         super().__init__(model=model)
 
-    def generate(self, user_message: str, timeout_s: int = 1800) -> LLMResult:
+    def generate(self, user_message: str, timeout_s: int = 60) -> LLMResult:
         start = time.perf_counter()
         content = (
             "[mock response] this is a placeholder analysis result for local architecture testing.\n\n"
@@ -24,6 +24,6 @@ class MockProvider(BaseLLMProvider):
             finish_reason="stop",
         )
 
-    def chat_with_tools(self, messages: list[dict], tools: list[dict], timeout_s: int = 1800):
+    def chat_with_tools(self, messages: list[dict], tools: list[dict], timeout_s: int = 60):
         _ = (messages, tools, timeout_s)
         raise UnsupportedToolCallingError("provider mock does not support tool calling")

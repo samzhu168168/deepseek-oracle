@@ -47,7 +47,7 @@ class Config:
     ANALYSIS_QUEUE = os.getenv("ANALYSIS_QUEUE", "analysis")
 
     IZTHON_SRC_PATH = os.getenv("IZTHON_SRC_PATH", "")
-    REQUEST_TIMEOUT_S = int(os.getenv("REQUEST_TIMEOUT_S", "1800"))
+    REQUEST_TIMEOUT_S = int(os.getenv("REQUEST_TIMEOUT_S", "60"))
     MAX_TASK_RETRY = int(os.getenv("MAX_TASK_RETRY", "2"))
     LLM_MAX_RETRIES = int(os.getenv("LLM_MAX_RETRIES", "2"))
     ORACLE_EAST_ONLY_MVP = _to_bool(os.getenv("ORACLE_EAST_ONLY_MVP", "true"))
@@ -67,7 +67,7 @@ class Config:
     SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
     SMTP_FROM_EMAIL = os.getenv("SMTP_FROM_EMAIL", "")
     SMTP_FROM_NAME = os.getenv("SMTP_FROM_NAME", "DeepSeek Oracle")
-    SMTP_TIMEOUT_S = int(os.getenv("SMTP_TIMEOUT_S", "20"))
+    SMTP_TIMEOUT_S = int(os.getenv("SMTP_TIMEOUT_S", "60"))
 
     LLM_PROVIDER = os.getenv("LLM_PROVIDER", "volcano")
     LLM_MODEL = os.getenv("LLM_MODEL", "doubao-seed-1-8-251228")

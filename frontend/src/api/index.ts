@@ -9,7 +9,7 @@ const api = axios.create({
 
 export async function warmup() {
   try {
-    await axios.get(`${apiBaseUrl}/health`, { timeout: 10000 });
+    await axios.get(`${apiBaseUrl}/health`, { timeout: 120000 });
   } catch (e) {}
 }
 

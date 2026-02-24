@@ -37,7 +37,7 @@ def create_app() -> Flask:
     try:
         redis_conn = Redis.from_url(
             app.config["REDIS_URL"],
-            socket_connect_timeout=2,
+            socket_connect_timeout=60,
         )
         redis_conn.ping()
         redis_available = True

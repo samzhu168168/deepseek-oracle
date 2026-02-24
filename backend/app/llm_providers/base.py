@@ -68,13 +68,13 @@ class BaseLLMProvider(ABC):
         return self._usage_from_text(message_text, content)
 
     @abstractmethod
-    def generate(self, user_message: str, timeout_s: int = 1800) -> LLMResult:
+    def generate(self, user_message: str, timeout_s: int = 60) -> LLMResult:
         raise NotImplementedError
 
     def chat_with_tools(
         self,
         messages: list[dict[str, Any]],
         tools: list[dict[str, Any]],
-        timeout_s: int = 1800,
+        timeout_s: int = 60,
     ) -> ToolChatResult:
         raise UnsupportedToolCallingError(f"provider {self.__class__.__name__} does not support tool calling")
