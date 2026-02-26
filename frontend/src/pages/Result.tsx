@@ -219,7 +219,7 @@ export default function ResultPage() {
     <div className="result-page fade-in">
       <section className="result-scorecard">
         <div className="result-scorecard__summary">
-          <p className="result-scorecard__label">Total Score</p>
+          <p className="result-scorecard__label">Soul Resonance Score</p>
           <p className="result-scorecard__score">{averageScore} / 100</p>
           <p className="result-scorecard__type">{relationshipLabel}</p>
         </div>
@@ -256,15 +256,20 @@ export default function ResultPage() {
       {isUnlocked ? (
         <section className="result-full">
           <div className="pre-wrap">{normalizedReport.full_report}</div>
+          <p className="result-full__note">
+            ✨ Your Elemental Signature and 2026 Activation Windows are included in your full reading.
+          </p>
         </section>
       ) : (
         <section className="result-paywall">
           <div className="result-paywall__blur">
-            {"Your full report reveals elemental architecture, palace dynamics, karmic history, and actionable growth rituals tailored to the two of you."}
+            {
+              "Unlock the complete karmic map of this connection — including the hidden wound, the growth contract, and your 2026 activation windows."
+            }
           </div>
           <div className="result-paywall__overlay">
             <div className="paywall-card">
-              <p className="paywall-card__title">🔮 Unlock Your Complete Soul Blueprint</p>
+              <p className="paywall-card__title">Your souls have met before.</p>
               <ul className="paywall-card__list">
                 <li>✓ Full Palace & Star Configuration Reading</li>
                 <li>✓ 2026 Activation Windows & Timing Guide</li>
@@ -276,7 +281,7 @@ export default function ResultPage() {
                 target="_blank"
                 rel="noreferrer"
               >
-                Get Your Full Report — $19.90
+                Reveal My Full Blueprint — $24.90
               </a>
               <div className="paywall-card__divider" />
               <p className="paywall-card__hint">Already purchased?</p>

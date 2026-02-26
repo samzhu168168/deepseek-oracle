@@ -163,7 +163,7 @@ export default function HomePage() {
         {error ? <p className="error-text">{error}</p> : null}
 
         <InkButton type="submit" full className="bond-submit" disabled={loading}>
-          {loading ? "正在分析中，请稍候（约30-60秒）..." : "✦ Analyze Our Bond ✦"}
+          {loading ? "正在分析中，请稍候（约30-60秒）..." : "✦ Reveal Our Destiny ✦"}
         </InkButton>
       </form>
     </div>

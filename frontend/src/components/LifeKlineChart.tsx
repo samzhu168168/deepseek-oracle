@@ -141,7 +141,7 @@ export function LifeKlineChart({ points, bestYears = [], worstYears = [] }: Life
                 className={`kline-chart__dot${isBest ? " kline-chart__dot--best" : ""}${isWorst ? " kline-chart__dot--worst" : ""}${isActive ? " kline-chart__dot--active" : ""}`}
                 onMouseEnter={() => setHoveredIndex(index)}
               >
-                <title>{`${item.age} yrs | Score ${item.score} | ${item.summary} | ${item.daYun}`}</title>
+                <title>{`${item.age} yrs | Resonance Level ${item.score} | ${item.summary} | ${item.daYun}`}</title>
               </circle>
               {item.age % 10 === 1 || item.age === maxAge ? (
                 <text className="kline-chart__age" x={item.cx} y={HEIGHT - PAD_BOTTOM + 16}>
@@ -161,7 +161,7 @@ export function LifeKlineChart({ points, bestYears = [], worstYears = [] }: Life
           }}
         >
           <p className="kline-chart__tooltip-title">{hoveredPoint.age} yrs · {hoveredPoint.year} · {hoveredPoint.yearGanZhi}</p>
-          <p className="kline-chart__tooltip-text">Score: {hoveredPoint.score} ({hoveredPoint.summary})</p>
+          <p className="kline-chart__tooltip-text">Resonance Level: {hoveredPoint.score} ({hoveredPoint.summary})</p>
           <p className="kline-chart__tooltip-text">Major cycle: {hoveredPoint.daYun}</p>
           {hoveredPoint.focus ? <p className="kline-chart__tooltip-text">Focus: {hoveredPoint.focus}</p> : null}
         </div>
