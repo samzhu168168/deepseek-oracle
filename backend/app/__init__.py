@@ -25,8 +25,12 @@ def create_app() -> Flask:
     setup_logging(app)
     CORS(
         app,
-        resources={r"/*": {"origins": app.config["CORS_ORIGINS"]}},
-        supports_credentials=False,
+        origins=[
+            "https://deepseek-oracle.vercel.app",
+            "http://localhost:5173",
+            "http://localhost:3000",
+        ],
+        supports_credentials=True,
     )
 
     init_db(app.config["DATABASE_PATH"])
