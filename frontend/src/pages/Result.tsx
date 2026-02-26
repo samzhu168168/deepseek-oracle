@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 import { analyzeBond } from "../api";
 import { InkButton } from "../components/InkButton";
@@ -115,6 +116,9 @@ export default function ResultPage() {
     if (!report) {
       return null;
     }
+    if (report?.teaser?.summary) {
+      return report as BondAnalysisResponse;
+    }
     if (typeof report === "string") {
       return {
         teaser: {
@@ -133,7 +137,7 @@ export default function ResultPage() {
         teaser: {
           summary: reportText,
           five_element_compatibility: "",
-          radar_scores: {},
+          radar_scores: report?.radar_scores ?? {},
         },
         full_report: isFull ? reportText : null,
         license_valid: isFull,
@@ -241,7 +245,9 @@ export default function ResultPage() {
       </section>
 
       <section className="result-teaser">
-        <p className="result-teaser__text">{teaserPreview}</p>
+        <div className="result-teaser__text">
+          <ReactMarkdown>{teaserPreview}</ReactMarkdown>
+        </div>
         <p className="result-teaser__hint">
           Full analysis includes palace readings, 2026 timing windows, and growth protocol...
         </p>
