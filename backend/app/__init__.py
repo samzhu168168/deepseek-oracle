@@ -22,16 +22,24 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    setup_logging(app)
     CORS(
         app,
-        origins=[
-            "https://deepseek-oracle.vercel.app",
-            "http://localhost:5173",
-            "http://localhost:3000",
-        ],
-        supports_credentials=True,
+        resources={r"/api/*": {"origins": "*"}},
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "OPTIONS"],
+        supports_credentials=False,
     )
+
+    @app.before_request
+    def handle_preflight():
+        if request.method == "OPTIONS":
+            response = app.make_default_options_response()
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+            return response
+
+    setup_logging(app)
 
     init_db(app.config["DATABASE_PATH"])
     app.extensions["system_log_repo"] = SystemLogRepo(app.config["DATABASE_PATH"])
