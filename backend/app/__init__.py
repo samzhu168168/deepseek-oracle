@@ -124,6 +124,10 @@ def create_app() -> Flask:
     def health():
         return jsonify({"status": "ok"}), 200
 
+    @app.get("/api/health")
+    def api_health():
+        return {"status": "ok"}
+
     @app.get("/readyz")
     def readyz():
         if not app.extensions.get("redis_available"):

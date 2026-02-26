@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { analyzeBond } from "../api";
@@ -22,6 +22,9 @@ export default function HomePage() {
   const [personB, setPersonB] = useState<PersonInput>(() => createInitialPerson("Female"));
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/api/health`, { method: "GET" }).catch(() => {});
+  }, []);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

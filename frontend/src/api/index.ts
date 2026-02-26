@@ -4,12 +4,12 @@ const apiBaseUrl = import.meta.env.VITE_API_URL || "https://deepseek-oracle-back
 
 const api = axios.create({
   baseURL: apiBaseUrl,
-  timeout: 120000,
+  timeout: 60000,
 });
 
 export async function warmup() {
   try {
-    await axios.get(`${apiBaseUrl}/health`, { timeout: 120000 });
+    await axios.get(`${apiBaseUrl}/health`, { timeout: 60000 });
   } catch (e) {}
 }
 
