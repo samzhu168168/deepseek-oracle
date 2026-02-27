@@ -16,15 +16,34 @@ const createInitialPerson = (gender: "Male" | "Female"): PersonInput => ({
   gender,
 });
 
+const LOADING_MESSAGES = [
+  "Scanning elemental frequencies...",
+  "Calculating karmic resonance...",
+  "Mapping your 2026 activation windows...",
+  "Decoding the hidden bond pattern...",
+  "Preparing your Soul Blueprint...",
+];
+
 export default function HomePage() {
   const navigate = useNavigate();
   const [personA, setPersonA] = useState<PersonInput>(() => createInitialPerson("Male"));
   const [personB, setPersonB] = useState<PersonInput>(() => createInitialPerson("Female"));
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/health`, { method: "GET" }).catch(() => {});
   }, []);
+  useEffect(() => {
+    if (!loading) {
+      setLoadingMessageIndex(0);
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setLoadingMessageIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+    }, 3000);
+    return () => window.clearInterval(timer);
+  }, [loading]);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -161,6 +180,7 @@ export default function HomePage() {
         </div>
 
         {error ? <p className="error-text">{error}</p> : null}
+        {loading ? <p className="bond-form__loading-text">{LOADING_MESSAGES[loadingMessageIndex]}</p> : null}
 
         <InkButton type="submit" full className="bond-submit" disabled={loading}>
           {loading ? "正在分析中，请稍候（约30-60秒）..." : "✦ Reveal Our Destiny ✦"}

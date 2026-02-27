@@ -263,9 +263,17 @@ export default function ResultPage() {
       ) : (
         <section className="result-paywall">
           <div className="result-paywall__blur">
-            {
-              "Unlock the complete karmic map of this connection — including the hidden wound, the growth contract, and your 2026 activation windows."
-            }
+            <div className="paywall-blur__titles">
+              <p>## Chapter 2: The Hidden Wound Pattern</p>
+              <p>## Chapter 3: Your 2026 Activation Windows</p>
+              <p>## Chapter 4: The Karmic Growth Contract</p>
+              <p>## Chapter 5: Action Steps for This Month</p>
+            </div>
+            <div className="paywall-blur__body" style={{ filter: "blur(6px)" }}>
+              {
+                "Unlock the complete karmic map of this connection — including the hidden wound, the growth contract, and your 2026 activation windows."
+              }
+            </div>
           </div>
           <div className="result-paywall__overlay">
             <div className="paywall-card">
@@ -301,6 +309,21 @@ export default function ResultPage() {
           </div>
         </section>
       )}
+
+      <section className="result-testimonials">
+        <div className="result-testimonials__card">
+          <p>"It felt like a mirror to our real dynamic — eerily precise and deeply grounding."</p>
+          <p>— M.L., Seattle</p>
+        </div>
+        <div className="result-testimonials__card">
+          <p>"The 2026 window timing was the exact clarity I needed to plan our next steps."</p>
+          <p>— J.K., Toronto</p>
+        </div>
+        <div className="result-testimonials__card">
+          <p>"I finally understood the hidden pattern behind our push-pull cycle."</p>
+          <p>— A.R., Singapore</p>
+        </div>
+      </section>
     </div>
   );
 }
