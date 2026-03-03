@@ -38,7 +38,7 @@ class Config:
     CORS_ORIGINS = _normalize_origins(
         os.getenv(
             "CORS_ORIGINS",
-            "https://deepseek-oracle.vercel.app,https://*.vercel.app,http://localhost:5173,http://localhost:3000",
+            "https://elemental.bond,https://*.vercel.app,http://localhost:5173,http://localhost:3000",
         )
     )
 

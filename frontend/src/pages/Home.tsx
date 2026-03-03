@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 import { analyzeBond } from "../api";
 import { InkButton } from "../components/InkButton";
@@ -95,8 +96,82 @@ export default function HomePage() {
     }
   };
 
+  const softwareJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Elemental Bond",
+    applicationCategory: "LifestyleApplication",
+    operatingSystem: "Web",
+    url: "https://elemental.bond",
+    description:
+      "An advanced astrological compatibility calculator merging ancient BaZi, five elements, and modern relationship dynamics to decode karmic bonds.",
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "How does BaZi compatibility work?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "BaZi compatibility compares the five-element balance and timing of two birth charts to reveal harmony, tension, and growth potential.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is a karmic bond?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "A karmic bond describes a connection shaped by past-life lessons, often felt as intense attraction, challenge, and mutual evolution.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Do I need an exact birth time?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Exact time improves precision, but the calculator still delivers meaningful insights using birth date and core elemental patterns.",
+        },
+      },
+    ],
+  };
+
   return (
     <div className="landing-page fade-in">
+      <Helmet>
+        <title>BaZi Compatibility Calculator — Free Soul Resonance Test</title>
+        <meta
+          name="description"
+          content="Discover your elemental compatibility through ancient Chinese BaZi astrology. Free soul resonance score + karmic relationship reading."
+        />
+        <meta
+          name="keywords"
+          content="bazi compatibility, chinese astrology compatibility, soul resonance test, karmic relationship, twin flame calculator"
+        />
+        <link rel="canonical" href="https://elemental.bond" />
+        <meta property="og:title" content="BaZi Compatibility Calculator — Free Soul Resonance Test" />
+        <meta
+          property="og:description"
+          content="Discover your elemental compatibility through ancient Chinese BaZi astrology. Free soul resonance score + karmic relationship reading."
+        />
+        <meta property="og:url" content="https://elemental.bond" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://elemental.bond/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="BaZi Compatibility Calculator — Free Soul Resonance Test" />
+        <meta
+          name="twitter:description"
+          content="Discover your elemental compatibility through ancient Chinese BaZi astrology. Free soul resonance score + karmic relationship reading."
+        />
+        <meta name="twitter:image" content="https://elemental.bond/og-image.png" />
+        <script type="application/ld+json">{JSON.stringify(softwareJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
+      </Helmet>
       <section className="bond-hero">
         <h1 className="bond-hero__title">Elemental Bond</h1>
         <p className="bond-hero__subtitle">Ancient Chinese Astrology Meets Modern Relationship Science</p>
@@ -186,6 +261,17 @@ export default function HomePage() {
           {loading ? "正在分析中，请稍候（约30-60秒）..." : "✦ Reveal Our Destiny ✦"}
         </InkButton>
       </form>
+      <section className="landing-footnote">
+        <details>
+          <summary>FAQ: BaZi Compatibility</summary>
+          <p>How does BaZi compatibility work?</p>
+          <p>BaZi compatibility compares the five-element balance and timing of two birth charts to reveal harmony, tension, and growth potential.</p>
+          <p>What is a karmic bond?</p>
+          <p>A karmic bond describes a connection shaped by past-life lessons, often felt as intense attraction, challenge, and mutual evolution.</p>
+          <p>Do I need an exact birth time?</p>
+          <p>Exact time improves precision, but the calculator still delivers meaningful insights using birth date and core elemental patterns.</p>
+        </details>
+      </section>
     </div>
   );
 }

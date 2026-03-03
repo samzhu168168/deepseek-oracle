@@ -1,6 +1,8 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import { toPng } from "html-to-image";
+import { Helmet } from "react-helmet-async";
 
 import { analyzeBond } from "../api";
 import { InkButton } from "../components/InkButton";
@@ -10,6 +12,10 @@ type StoredReport = {
   payload: BondAnalysisRequest;
   report: any;
 };
+
+const EMAIL_CAPTURE_STORAGE_KEY = "bond:email_forecast_submissions";
+const EMAIL_CAPTURE_COUNT_KEY = "bond:email_forecast_count";
+const DEFAULT_FORECAST_COUNT = 247;
 
 const RADAR_DIMENSIONS = [
   "Elemental Harmony",
@@ -94,6 +100,79 @@ const getTeaserPreview = (summary: string) => {
   return `${trimmed.replace(/\.*$/, "")}...`;
 };
 
+const readForecastCount = () => {
+  if (typeof window === "undefined") {
+    return DEFAULT_FORECAST_COUNT;
+  }
+  const stored = window.localStorage.getItem(EMAIL_CAPTURE_COUNT_KEY);
+  const parsed = stored ? Number(stored) : DEFAULT_FORECAST_COUNT;
+  return Number.isFinite(parsed) ? parsed : DEFAULT_FORECAST_COUNT;
+};
+
+const EmailCapture = () => {
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [forecastCount, setForecastCount] = useState(DEFAULT_FORECAST_COUNT);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setForecastCount(readForecastCount());
+  }, []);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const normalized = email.trim();
+    if (!normalized) {
+      setError("Please enter your email address.");
+      return;
+    }
+    setError(null);
+    const payload = {
+      email: normalized,
+      submitted_at: new Date().toISOString(),
+    };
+    try {
+      const raw = window.localStorage.getItem(EMAIL_CAPTURE_STORAGE_KEY);
+      const items = raw ? (JSON.parse(raw) as Array<{ email: string }>) : [];
+      items.push(payload);
+      window.localStorage.setItem(EMAIL_CAPTURE_STORAGE_KEY, JSON.stringify(items));
+      const nextCount = (readForecastCount() || DEFAULT_FORECAST_COUNT) + 1;
+      window.localStorage.setItem(EMAIL_CAPTURE_COUNT_KEY, String(nextCount));
+      setForecastCount(nextCount);
+      setSubmitted(true);
+      setEmail("");
+    } catch {
+      setSubmitted(true);
+    }
+  };
+
+  return (
+    <div className="email-capture">
+      <p className="email-capture__count">{forecastCount} souls already received their forecast</p>
+      {submitted ? (
+        <p className="email-capture__success">
+          Your forecast is being prepared. Check your inbox in 24 hours.
+        </p>
+      ) : (
+        <form className="email-capture__form" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="Enter your email address"
+            required
+          />
+          <InkButton type="submit">Send My Forecast →</InkButton>
+          {error ? <p className="error-text">{error}</p> : null}
+          <p className="email-capture__note">
+            No spam. One email. Your cosmic timing, decoded.
+          </p>
+        </form>
+      )}
+    </div>
+  );
+};
+
 export default function ResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -103,6 +182,7 @@ export default function ResultPage() {
   const [licenseKey, setLicenseKey] = useState("");
   const [unlocking, setUnlocking] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const shareCardRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!initial) {
@@ -168,6 +248,34 @@ export default function ResultPage() {
   const relationshipLabel = getRelationshipLabel(averageScore);
   const teaserPreview = getTeaserPreview(normalizedReport?.teaser?.summary || "");
   const isUnlocked = Boolean(normalizedReport?.license_valid && normalizedReport?.full_report);
+  const elementCombo = normalizedReport?.teaser?.five_element_compatibility || "Water meets Wood";
+  const elementPair = elementCombo.replace(/\s*meets\s*/i, "-").replace(/\s+/g, " ").trim();
+  const resultTitle = `${elementPair} Elemental Bond — Your BaZi Compatibility Reading`;
+  const resultDescription = `Your ${elementPair} connection carries a rare dynamic. Discover the hidden pattern...`;
+
+  const handleShare = async () => {
+    if (!shareCardRef.current) {
+      return;
+    }
+    try {
+      const dataUrl = await toPng(shareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        width: 1080,
+        height: 1920,
+        style: {
+          width: "1080px",
+          height: "1920px",
+        },
+      });
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = "soul-resonance.png";
+      link.click();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to generate share image.");
+    }
+  };
 
   const handleUnlock = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -217,6 +325,24 @@ export default function ResultPage() {
 
   return (
     <div className="result-page fade-in">
+      <Helmet>
+        <title>{resultTitle}</title>
+        <meta name="description" content={resultDescription} />
+        <meta
+          name="keywords"
+          content="bazi compatibility, chinese astrology compatibility, soul resonance test, karmic relationship, twin flame calculator"
+        />
+        <link rel="canonical" href="https://elemental.bond" />
+        <meta property="og:title" content={resultTitle} />
+        <meta property="og:description" content={resultDescription} />
+        <meta property="og:url" content="https://elemental.bond" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="https://elemental.bond/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={resultTitle} />
+        <meta name="twitter:description" content={resultDescription} />
+        <meta name="twitter:image" content="https://elemental.bond/og-image.png" />
+      </Helmet>
       <section className="result-scorecard">
         <div className="result-scorecard__summary">
           <p className="result-scorecard__label">Soul Resonance Score</p>
@@ -241,6 +367,11 @@ export default function ResultPage() {
               </div>
             ))}
           </div>
+        </div>
+        <div className="result-scorecard__share">
+          <InkButton type="button" onClick={handleShare}>
+            Share Your Soul Reading
+          </InkButton>
         </div>
       </section>
 
@@ -310,6 +441,122 @@ export default function ResultPage() {
         </section>
       )}
 
+      <section className="result-email-capture">
+        <div className="email-capture__intro">
+          <p>Not ready yet?</p>
+          <p>Get your free 2026 Karmic Forecast delivered to your inbox.</p>
+        </div>
+        <EmailCapture />
+      </section>
+
+      <div
+        ref={shareCardRef}
+        style={{
+          position: "fixed",
+          left: "-9999px",
+          top: 0,
+          width: "1080px",
+          height: "1920px",
+          background:
+            "radial-gradient(920px circle at 50% -18%, rgba(143, 96, 214, 0.32), transparent 60%), radial-gradient(840px circle at 20% 20%, rgba(92, 56, 132, 0.38), transparent 60%), radial-gradient(520px circle at 80% 82%, rgba(139, 98, 186, 0.24), transparent 60%), linear-gradient(180deg, #0a0a16 0%, #151124 55%, #0e0b1a 100%)",
+          color: "#f7f2ff",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "120px 90px",
+          textAlign: "center",
+          gap: "40px",
+          borderRadius: "48px",
+          border: "1px solid rgba(210, 187, 255, 0.18)",
+          boxShadow: "0 40px 120px rgba(5, 2, 16, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.04)",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: "28px",
+            borderRadius: "40px",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            boxShadow: "inset 0 0 60px rgba(111, 76, 154, 0.25)",
+            pointerEvents: "none",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(520px circle at 50% 12%, rgba(187, 143, 255, 0.18), transparent 60%), radial-gradient(460px circle at 18% 62%, rgba(104, 70, 168, 0.24), transparent 60%)",
+            opacity: 0.9,
+            pointerEvents: "none",
+            mixBlendMode: "screen",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 3px)",
+            opacity: 0.16,
+            pointerEvents: "none",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.12) 0.5px, transparent 1.2px), radial-gradient(circle at 86% 22%, rgba(255, 255, 255, 0.14) 0.6px, transparent 1.4px), radial-gradient(circle at 32% 78%, rgba(255, 255, 255, 0.1) 0.5px, transparent 1.3px)",
+            opacity: 0.35,
+            pointerEvents: "none",
+          }}
+        />
+        <div style={{ minHeight: "220px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {averageScore > 80 ? (
+            <div style={{ fontSize: "72px", fontWeight: 700, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
+              Rare Cosmic Match 🪐
+            </div>
+          ) : averageScore < 60 ? (
+            <div style={{ fontSize: "72px", fontWeight: 700, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
+              Karmic Lesson Detected 🌪️
+            </div>
+          ) : (
+            <div style={{ fontSize: "64px", fontWeight: 600, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
+              Cosmic Connection
+            </div>
+          )}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", zIndex: 1 }}>
+          <div style={{ fontSize: "28px", letterSpacing: "3px", textTransform: "uppercase", opacity: 0.8 }}>
+            Magnetic Connection ✨
+          </div>
+          <div style={{ fontSize: "160px", fontWeight: 700, textShadow: "0 24px 80px rgba(70, 32, 120, 0.6)" }}>
+            {averageScore}
+          </div>
+          <div style={{ fontSize: "36px", letterSpacing: "2px", opacity: 0.8 }}>{elementCombo}</div>
+        </div>
+        <div
+          style={{
+            width: "100%",
+            padding: "26px 32px",
+            borderRadius: "999px",
+            background:
+              "linear-gradient(90deg, rgba(116, 73, 168, 0.95), rgba(186, 142, 255, 0.95))",
+            color: "#0b0714",
+            fontSize: "26px",
+            fontWeight: 600,
+            letterSpacing: "0.5px",
+            boxShadow: "0 24px 60px rgba(20, 8, 35, 0.55), inset 0 0 24px rgba(255, 255, 255, 0.2)",
+            zIndex: 1,
+          }}
+        >
+          Curious about your person? Decode your dynamic at elemental.bond
+        </div>
+      </div>
+
       <section className="result-testimonials">
         <div className="result-testimonials__card">
           <p>"It felt like a mirror to our real dynamic — eerily precise and deeply grounding."</p>
@@ -324,6 +571,9 @@ export default function ResultPage() {
           <p>— A.R., Singapore</p>
         </div>
       </section>
+      <p className="result-share-footer">
+        Want to know what your score means? Share and tag us — we read every one.
+      </p>
     </div>
   );
 }

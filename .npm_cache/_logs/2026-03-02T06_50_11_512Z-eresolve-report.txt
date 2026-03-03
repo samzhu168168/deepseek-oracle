@@ -1,0 +1,18 @@
+'Log files:
+F:\MyTraeProjects\DeepSeek-Oracle-main\.npm_cache\_logs\2026-03-02T06_50_11_512Z-debug-0.log
+
+# npm resolution error report
+
+While resolving: deepseek-oracle-frontend@0.1.0
+Found: react@19.2.4
+node_modules/react
+  react@"^19.0.0" from the root project
+
+Could not resolve dependency:
+peer react@"^16.6.0 || ^17.0.0 || ^18.0.0" from react-helmet-async@2.0.5
+node_modules/react-helmet-async
+  react-helmet-async@"*" from the root project
+
+Fix the upstream dependency conflict, or retry
+this command with --force or --legacy-peer-deps
+to accept an incorrect (and potentially broken) dependency resolution.
