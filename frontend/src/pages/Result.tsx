@@ -182,6 +182,8 @@ export default function ResultPage() {
   const [licenseKey, setLicenseKey] = useState("");
   const [unlocking, setUnlocking] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [shareImageUrl, setShareImageUrl] = useState("https://elemental.bond/og-image.png");
+  const [paywallModalOpen, setPaywallModalOpen] = useState(false);
   const shareCardRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -252,10 +254,11 @@ export default function ResultPage() {
   const elementPair = elementCombo.replace(/\s*meets\s*/i, "-").replace(/\s+/g, " ").trim();
   const resultTitle = `${elementPair} Elemental Bond — Your BaZi Compatibility Reading`;
   const resultDescription = `Your ${elementPair} connection carries a rare dynamic. Discover the hidden pattern...`;
+  const shareText = `My elemental bond score: ${averageScore}/100\nElement: ${elementCombo}\nTest yours → elemental.bond`;
 
-  const handleShare = async () => {
+  const generateShareImage = async () => {
     if (!shareCardRef.current) {
-      return;
+      return null;
     }
     try {
       const dataUrl = await toPng(shareCardRef.current, {
@@ -268,14 +271,37 @@ export default function ResultPage() {
           height: "1920px",
         },
       });
-      const link = document.createElement("a");
-      link.href = dataUrl;
-      link.download = "soul-resonance.png";
-      link.click();
+      setShareImageUrl(dataUrl);
+      return dataUrl;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to generate share image.");
+      return null;
     }
   };
+
+  const handleShare = async () => {
+    const dataUrl = await generateShareImage();
+    if (!dataUrl) {
+      return;
+    }
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = "soul-resonance.png";
+    link.click();
+  };
+
+  const handleShareToX = async () => {
+    await generateShareImage();
+    const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+    window.open(intentUrl, "_blank", "noopener,noreferrer");
+  };
+
+  useEffect(() => {
+    const updateOgImage = async () => {
+      await generateShareImage();
+    };
+    updateOgImage();
+  }, [averageScore, elementCombo]);
 
   const handleUnlock = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -337,11 +363,11 @@ export default function ResultPage() {
         <meta property="og:description" content={resultDescription} />
         <meta property="og:url" content="https://elemental.bond" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://elemental.bond/og-image.png" />
+        <meta property="og:image" content={shareImageUrl} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={resultTitle} />
         <meta name="twitter:description" content={resultDescription} />
-        <meta name="twitter:image" content="https://elemental.bond/og-image.png" />
+        <meta name="twitter:image" content={shareImageUrl} />
       </Helmet>
       <section className="result-scorecard">
         <div className="result-scorecard__summary">
@@ -371,6 +397,9 @@ export default function ResultPage() {
         <div className="result-scorecard__share">
           <InkButton type="button" onClick={handleShare}>
             Share Your Soul Reading
+          </InkButton>
+          <InkButton type="button" kind="secondary" onClick={handleShareToX}>
+            Share to X / Twitter
           </InkButton>
         </div>
       </section>
@@ -414,14 +443,13 @@ export default function ResultPage() {
                 <li>✓ 2026 Activation Windows & Timing Guide</li>
                 <li>✓ Karmic Growth Protocol & Action Steps</li>
               </ul>
-              <a
+              <button
                 className="paywall-card__buy"
-                href="https://samzhu168.gumroad.com/l/bhpmxr"
-                target="_blank"
-                rel="noreferrer"
+                type="button"
+                onClick={() => setPaywallModalOpen(true)}
               >
                 Reveal My Full Blueprint — $24.90
-              </a>
+              </button>
               <div className="paywall-card__divider" />
               <p className="paywall-card__hint">Already purchased?</p>
               <form className="paywall-card__form" onSubmit={handleUnlock}>
@@ -440,6 +468,33 @@ export default function ResultPage() {
           </div>
         </section>
       )}
+      {paywallModalOpen ? (
+        <div className="paywall-modal">
+          <div className="paywall-modal__backdrop" onClick={() => setPaywallModalOpen(false)} />
+          <div className="paywall-modal__panel" role="dialog" aria-modal="true">
+            <button className="paywall-modal__close" type="button" onClick={() => setPaywallModalOpen(false)}>
+              ×
+            </button>
+            <p className="paywall-modal__title">Your Full Blueprint Is Ready</p>
+            <p className="paywall-modal__subtitle">One-time payment. Instant delivery to your email.</p>
+            <p className="paywall-modal__score">Soul Resonance Score: {averageScore} / 100</p>
+            <ul className="paywall-modal__list">
+              <li>✓ 800-word personalized BaZi analysis</li>
+              <li>✓ 2026 timing windows for your relationship</li>
+              <li>✓ Specific action steps for your element pair</li>
+            </ul>
+            <a
+              className="paywall-modal__cta"
+              href="https://samzhu168.gumroad.com/l/bhpmxr"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Yes, Reveal My Blueprint — $24.90
+            </a>
+            <p className="paywall-modal__note">Secure payment via Gumroad</p>
+          </div>
+        </div>
+      ) : null}
 
       <section className="result-email-capture">
         <div className="email-capture__intro">
