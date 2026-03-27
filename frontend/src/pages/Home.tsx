@@ -24,6 +24,7 @@ const LOADING_MESSAGES = [
   "Decoding the hidden bond pattern...",
   "Preparing your Soul Blueprint...",
 ];
+const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -102,7 +103,7 @@ export default function HomePage() {
     name: "Elemental Bond",
     applicationCategory: "LifestyleApplication",
     operatingSystem: "Web",
-    url: "https://elemental.bond",
+    url: SITE_URL,
     description:
       "An advanced astrological compatibility calculator merging ancient BaZi, five elements, and modern relationship dynamics to decode karmic bonds.",
   };
@@ -153,22 +154,22 @@ export default function HomePage() {
           name="keywords"
           content="bazi compatibility, chinese astrology compatibility, soul resonance test, karmic relationship, twin flame calculator"
         />
-        <link rel="canonical" href="https://elemental.bond" />
+        <link rel="canonical" href={SITE_URL} />
         <meta property="og:title" content="BaZi Compatibility Calculator — Free Soul Resonance Test" />
         <meta
           property="og:description"
           content="Discover your elemental compatibility through ancient Chinese BaZi astrology. Free soul resonance score + karmic relationship reading."
         />
-        <meta property="og:url" content="https://elemental.bond" />
+        <meta property="og:url" content={SITE_URL} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://elemental.bond/og-image.png" />
+        <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="BaZi Compatibility Calculator — Free Soul Resonance Test" />
         <meta
           name="twitter:description"
           content="Discover your elemental compatibility through ancient Chinese BaZi astrology. Free soul resonance score + karmic relationship reading."
         />
-        <meta name="twitter:image" content="https://elemental.bond/og-image.png" />
+        <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
         <script type="application/ld+json">{JSON.stringify(softwareJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       </Helmet>

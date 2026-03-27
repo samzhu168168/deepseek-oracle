@@ -4,8 +4,10 @@ import ReactMarkdown from "react-markdown";
 import { toPng } from "html-to-image";
 import { Helmet } from "react-helmet-async";
 
-import { analyzeBond } from "../api";
 import { InkButton } from "../components/InkButton";
+import { LicenseKeyModal, FullReportData } from "../components/LicenseKeyModal";
+import { FullReport } from "../components/FullReport";
+import { EmailGateModal } from "../components/EmailGateModal";
 import type { BondAnalysisRequest, BondAnalysisResponse } from "../types";
 
 type StoredReport = {
@@ -16,6 +18,7 @@ type StoredReport = {
 const EMAIL_CAPTURE_STORAGE_KEY = "bond:email_forecast_submissions";
 const EMAIL_CAPTURE_COUNT_KEY = "bond:email_forecast_count";
 const DEFAULT_FORECAST_COUNT = 247;
+const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
 
 const RADAR_DIMENSIONS = [
   "Elemental Harmony",
@@ -179,11 +182,12 @@ export default function ResultPage() {
   const initial = (location.state as StoredReport | null) || readStoredReport();
   const [payload, setPayload] = useState<BondAnalysisRequest | null>(initial?.payload ?? null);
   const [report, setReport] = useState<any>(initial?.report ?? null);
-  const [licenseKey, setLicenseKey] = useState("");
-  const [unlocking, setUnlocking] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [shareImageUrl, setShareImageUrl] = useState("https://elemental.bond/og-image.png");
+  const [fullReportData, setFullReportData] = useState<FullReportData | null>(null);
+  const [licenseModalOpen, setLicenseModalOpen] = useState(false);
+  const [emailGateModalOpen, setEmailGateModalOpen] = useState(false);
+  const [emailUnlocked, setEmailUnlocked] = useState(false);
   const [paywallModalOpen, setPaywallModalOpen] = useState(false);
+  const [shareImageUrl, setShareImageUrl] = useState(`${SITE_URL}/og-image.png`);
   const shareCardRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -249,12 +253,12 @@ export default function ResultPage() {
   );
   const relationshipLabel = getRelationshipLabel(averageScore);
   const teaserPreview = getTeaserPreview(normalizedReport?.teaser?.summary || "");
-  const isUnlocked = Boolean(normalizedReport?.license_valid && normalizedReport?.full_report);
+  const isUnlocked = Boolean(fullReportData || (normalizedReport?.license_valid && normalizedReport?.full_report));
   const elementCombo = normalizedReport?.teaser?.five_element_compatibility || "Water meets Wood";
   const elementPair = elementCombo.replace(/\s*meets\s*/i, "-").replace(/\s+/g, " ").trim();
   const resultTitle = `${elementPair} Elemental Bond — Your BaZi Compatibility Reading`;
   const resultDescription = `Your ${elementPair} connection carries a rare dynamic. Discover the hidden pattern...`;
-  const shareText = `My elemental bond score: ${averageScore}/100\nElement: ${elementCombo}\nTest yours → elemental.bond`;
+  const shareText = `My elemental bond score: ${averageScore}/100\nElement: ${elementCombo}\nTest yours → ${SITE_URL.replace(/^https?:\/\//, "")}`;
 
   const generateShareImage = async () => {
     if (!shareCardRef.current) {
@@ -274,7 +278,7 @@ export default function ResultPage() {
       setShareImageUrl(dataUrl);
       return dataUrl;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to generate share image.");
+      console.error('Failed to generate share image:', err);
       return null;
     }
   };
@@ -296,47 +300,37 @@ export default function ResultPage() {
     window.open(intentUrl, "_blank", "noopener,noreferrer");
   };
 
+  const handleLicenseSuccess = (data: FullReportData) => {
+    setFullReportData(data);
+    setLicenseModalOpen(false);
+  };
+
+  const handleEmailGateSuccess = (_email: string) => {
+    setEmailUnlocked(true);
+    setEmailGateModalOpen(false);
+    
+    // 3 秒后自动显示 upsell 弹窗
+    setTimeout(() => {
+      setPaywallModalOpen(true);
+    }, 3000);
+  };
+
+  // 页面加载 5 秒后自动显示 Email Gate（如果还没解锁）
+  useEffect(() => {
+    if (!emailUnlocked && normalizedReport) {
+      const timer = setTimeout(() => {
+        setEmailGateModalOpen(true);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [emailUnlocked, normalizedReport]);
+
   useEffect(() => {
     const updateOgImage = async () => {
       await generateShareImage();
     };
     updateOgImage();
   }, [averageScore, elementCombo]);
-
-  const handleUnlock = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!payload || unlocking) {
-      return;
-    }
-    if (!licenseKey.trim()) {
-      setError("Please enter a Gumroad license key.");
-      return;
-    }
-    setError(null);
-    setUnlocking(true);
-    try {
-      const response = await analyzeBond({
-        ...payload,
-        license_key: licenseKey.trim(),
-      });
-      const nextReport = response?.data ?? response?.report ?? response;
-      if (!nextReport) {
-        throw new Error("License verification failed.");
-      }
-      const stored = { payload, report: nextReport };
-      window.sessionStorage.setItem("bond:last_report", JSON.stringify(stored));
-      setReport(nextReport);
-      setLicenseKey("");
-    } catch (err) {
-      const message =
-        (err as { response?: { data?: { error?: string } } })?.response?.data?.error ||
-        (err as Error).message ||
-        "请求超时，请重试";
-      setError(message);
-    } finally {
-      setUnlocking(false);
-    }
-  };
 
   if (!payload || !normalizedReport) {
     return (
@@ -358,10 +352,10 @@ export default function ResultPage() {
           name="keywords"
           content="bazi compatibility, chinese astrology compatibility, soul resonance test, karmic relationship, twin flame calculator"
         />
-        <link rel="canonical" href="https://elemental.bond" />
+        <link rel="canonical" href={SITE_URL} />
         <meta property="og:title" content={resultTitle} />
         <meta property="og:description" content={resultDescription} />
-        <meta property="og:url" content="https://elemental.bond" />
+        <meta property="og:url" content={SITE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={shareImageUrl} />
         <meta name="twitter:card" content="summary_large_image" />
@@ -408,6 +402,57 @@ export default function ResultPage() {
         <div className="result-teaser__text">
           <ReactMarkdown>{teaserPreview}</ReactMarkdown>
         </div>
+        {!emailUnlocked && (
+          <div style={{ textAlign: 'center', margin: '32px 0' }}>
+            <button
+              onClick={() => setEmailGateModalOpen(true)}
+              style={{
+                padding: '16px 32px',
+                background: 'linear-gradient(135deg, #8b7a9f, #c4a7ff)',
+                color: '#1a1a2e',
+                border: 'none',
+                borderRadius: '12px',
+                fontSize: '16px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 8px 24px rgba(196, 167, 255, 0.3)',
+                transition: 'all 0.2s',
+              }}
+            >
+              🔮 Unlock Complete Preview →
+            </button>
+          </div>
+        )}
+        {emailUnlocked && (
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(196, 167, 255, 0.1), rgba(139, 122, 159, 0.1))',
+            border: '1px solid rgba(196, 167, 255, 0.3)',
+            borderRadius: '12px',
+            padding: '20px',
+            margin: '24px 0',
+            textAlign: 'center',
+          }}>
+            <p style={{ margin: '0 0 12px', color: '#c4a7ff', fontSize: '14px' }}>
+              ✨ Preview unlocked! Want the full cosmic map?
+            </p>
+            <button
+              onClick={() => setPaywallModalOpen(true)}
+              style={{
+                padding: '14px 28px',
+                background: 'linear-gradient(135deg, #c4956a, #a67c52)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '10px',
+                fontSize: '15px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              Get Full Blueprint — $24.90
+            </button>
+          </div>
+        )}
         <p className="result-teaser__hint">
           Full analysis includes palace readings, 2026 timing windows, and growth protocol...
         </p>
@@ -415,10 +460,20 @@ export default function ResultPage() {
 
       {isUnlocked ? (
         <section className="result-full">
-          <div className="pre-wrap">{normalizedReport.full_report}</div>
-          <p className="result-full__note">
-            ✨ Your Elemental Signature and 2026 Activation Windows are included in your full reading.
-          </p>
+          {fullReportData ? (
+            <FullReport 
+              data={fullReportData} 
+              elementPair={elementPair} 
+              score={averageScore} 
+            />
+          ) : (
+            <>
+              <div className="pre-wrap">{normalizedReport.full_report}</div>
+              <p className="result-full__note">
+                ✨ Your Elemental Signature and 2026 Activation Windows are included in your full reading.
+              </p>
+            </>
+          )}
         </section>
       ) : (
         <section className="result-paywall">
@@ -452,18 +507,25 @@ export default function ResultPage() {
               </button>
               <div className="paywall-card__divider" />
               <p className="paywall-card__hint">Already purchased?</p>
-              <form className="paywall-card__form" onSubmit={handleUnlock}>
-                <input
-                  type="text"
-                  value={licenseKey}
-                  onChange={(event) => setLicenseKey(event.target.value)}
-                  placeholder="Enter your license key..."
-                />
-                <InkButton type="submit" disabled={unlocking}>
-                  {unlocking ? "Unlocking..." : "Unlock Full Report"}
-                </InkButton>
-              </form>
-              {error ? <p className="error-text">{error}</p> : null}
+              <button
+                className="paywall-card__unlock-btn"
+                type="button"
+                onClick={() => setLicenseModalOpen(true)}
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  background: 'linear-gradient(135deg, #8b7a9f, #6d5d7f)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+              >
+                Enter License Key →
+              </button>
             </div>
           </div>
         </section>
@@ -629,6 +691,34 @@ export default function ResultPage() {
       <p className="result-share-footer">
         Want to know what your score means? Share and tag us — we read every one.
       </p>
+
+      <EmailGateModal
+        isOpen={emailGateModalOpen}
+        onClose={() => setEmailGateModalOpen(false)}
+        onSuccess={handleEmailGateSuccess}
+        score={averageScore}
+        elementPair={elementPair}
+      />
+
+      <LicenseKeyModal
+        isOpen={licenseModalOpen}
+        onClose={() => setLicenseModalOpen(false)}
+        onSuccess={handleLicenseSuccess}
+        resultPayload={{
+          person1: {
+            date: payload.person_a?.date || '',
+            time: payload.person_a?.time || '',
+            gender: payload.person_a?.gender || 'Male',
+          },
+          person2: {
+            date: payload.person_b?.date || '',
+            time: payload.person_b?.time || '',
+            gender: payload.person_b?.gender || 'Male',
+          },
+          score: averageScore,
+          elementPair: elementPair,
+        }}
+      />
     </div>
   );
 }
