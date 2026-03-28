@@ -8,6 +8,7 @@ import hashlib
 import requests
 from datetime import datetime
 from flask import Blueprint, request, jsonify
+from flask_cors import cross_origin
 
 license_bp = Blueprint('license', __name__)
 
@@ -21,7 +22,8 @@ _report_cache: dict[str, dict] = {}
 
 
 # ── Route 1: 验证 Gumroad License Key ───────────────────
-@license_bp.route('/api/verify-license', methods=['POST'])
+@license_bp.route('/api/verify-license', methods=['POST', 'OPTIONS'])
+@cross_origin()
 def verify_license():
     data = request.get_json()
     license_key = (data.get('license_key') or '').strip()
@@ -58,7 +60,8 @@ def verify_license():
 
 
 # ── Route 2: 生成完整报告 ─────────────────────────────────
-@license_bp.route('/api/generate-full-report', methods=['POST'])
+@license_bp.route('/api/generate-full-report', methods=['POST', 'OPTIONS'])
+@cross_origin()
 def generate_full_report():
     data = request.get_json()
     license_key = (data.get('license_key') or '').strip()
