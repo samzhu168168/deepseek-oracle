@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiBaseUrl = import.meta.env.VITE_API_URL || "https://deepseek-oracle-backend.onrender.com";
+const apiBaseUrl = import.meta.env.VITE_API_URL || "https://deepseek-oracle-backend-production.up.railway.app";
 
 const api = axios.create({
   baseURL: apiBaseUrl,
