@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production API Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #f7f2ff;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #16213e;
+            border-radius: 8px;
+            border: 1px solid #c4a7ff;
+        }
+        button {
+            padding: 10px 20px;
+            background: #c4a7ff;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+        }
+        button:hover {
+            background: #d2bbff;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #0a0a16;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success { color: #4ade80; }
+        .error { color: #ff6b9d; }
+        .info { color: #60a5fa; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Production API Diagnostic Tool</h1>
+    
+    <div class="test-section">
+        <h2>Step 1: Find Backend URL</h2>
+        <p>Check your Railway dashboard for the backend URL</p>
+        <input type="text" id="backendUrl" placeholder="https://your-backend.railway.app" 
+               style="width: 400px; padding: 8px; background: #0a0a16; color: #f7f2ff; border: 1px solid #c4a7ff; border-radius: 5px;">
+        <button onclick="saveBackendUrl()">Save URL</button>
+        <div id="urlResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 2: Test Health Check</h2>
+        <button onclick="testHealth()">Test /api/health</button>
+        <div id="healthResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 3: Test Email Capture API</h2>
+        <button onclick="testEmailCapture()">Test /api/capture-email</button>
+        <div id="emailResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 4: Test Email Stats API</h2>
+        <button onclick="testEmailStats()">Test /api/email-stats</button>
+        <div id="statsResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 5: Test License Verify API</h2>
+        <button onclick="testLicenseVerify()">Test /api/verify-license</button>
+        <div id="licenseResult" class="result"></div>
+    </div>
+
+    <script>
+        let backendUrl = '';
+
+        function saveBackendUrl() {
+            const input = document.getElementById('backendUrl');
+            backendUrl = input.value.trim().replace(/\/$/, '');
+            const result = document.getElementById('urlResult');
+            
+            if (!backendUrl) {
+                result.innerHTML = '<span class="error">❌ Please enter a backend URL</span>';
+                return;
+            }
+            
+            result.innerHTML = `<span class="success">✅ Backend URL saved: ${backendUrl}</span>`;
+            localStorage.setItem('backendUrl', backendUrl);
+        }
+
+        async function testHealth() {
+            const result = document.getElementById('healthResult');
+            result.innerHTML = '<span class="info">⏳ Testing...</span>';
+            
+            if (!backendUrl) {
+                backendUrl = localStorage.getItem('backendUrl') || '';
+                if (!backendUrl) {
+                    result.innerHTML = '<span class="error">❌ Please set backend URL first</span>';
+                    return;
+                }
+            }
+            
+            try {
+                const response = await fetch(`${backendUrl}/api/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `<span class="success">✅ Success!</span>\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`;
+                } else {
+                    result.innerHTML = `<span class="error">❌ Failed</span>\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ Network Error</span>\n\n${error.message}\n\nPossible causes:\n- Backend is not running\n- CORS is blocking the request\n- URL is incorrect`;
+            }
+        }
+
+        async function testEmailCapture() {
+            const result = document.getElementById('emailResult');
+            result.innerHTML = '<span class="info">⏳ Testing...</span>';
+            
+            if (!backendUrl) {
+                backendUrl = localStorage.getItem('backendUrl') || '';
+                if (!backendUrl) {
+                    result.innerHTML = '<span class="error">❌ Please set backend URL first</span>';
+                    return;
+                }
+            }
+            
+            try {
+                const response = await fetch(`${backendUrl}/api/capture-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'test@example.com',
+                        source: 'email_gate',
+                        score: 80,
+                        element_pair: 'Water-Wood'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    result.innerHTML = `<span class="success">✅ Success! Email API is working!</span>\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`;
+                } else {
+                    result.innerHTML = `<span class="error">❌ Failed</span>\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ Network Error</span>\n\n${error.message}\n\nThis is the same error you're seeing in production!\n\nPossible causes:\n- email_routes.py not deployed\n- Blueprint not registered\n- CORS blocking`;
+            }
+        }
+
+        async function testEmailStats() {
+            const result = document.getElementById('statsResult');
+            result.innerHTML = '<span class="info">⏳ Testing...</span>';
+            
+            if (!backendUrl) {
+                backendUrl = localStorage.getItem('backendUrl') || '';
+                if (!backendUrl) {
+                    result.innerHTML = '<span class="error">❌ Please set backend URL first</span>';
+                    return;
+                }
+            }
+            
+            try {
+                const response = await fetch(`${backendUrl}/api/email-stats`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    result.innerHTML = `<span class="success">✅ Success!</span>\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`;
+                } else {
+                    result.innerHTML = `<span class="error">❌ Failed</span>\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`;
+                }
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ Network Error</span>\n\n${error.message}`;
+            }
+        }
+
+        async function testLicenseVerify() {
+            const result = document.getElementById('licenseResult');
+            result.innerHTML = '<span class="info">⏳ Testing...</span>';
+            
+            if (!backendUrl) {
+                backendUrl = localStorage.getItem('backendUrl') || '';
+                if (!backendUrl) {
+                    result.innerHTML = '<span class="error">❌ Please set backend URL first</span>';
+                    return;
+                }
+            }
+            
+            try {
+                const response = await fetch(`${backendUrl}/api/verify-license`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        license_key: 'test-key-12345'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // This should fail with "License key not found" which is expected
+                result.innerHTML = `<span class="info">ℹ️ Response received (failure is expected for test key)</span>\n\nStatus: ${response.status}\nResponse: ${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.innerHTML = `<span class="error">❌ Network Error</span>\n\n${error.message}`;
+            }
+        }
+
+        // Auto-load saved URL
+        window.onload = function() {
+            const saved = localStorage.getItem('backendUrl');
+            if (saved) {
+                document.getElementById('backendUrl').value = saved;
+                backendUrl = saved;
+                document.getElementById('urlResult').innerHTML = `<span class="success">✅ Loaded saved URL: ${saved}</span>`;
+            }
+        };
+    </script>
+</body>
+</html>
