@@ -2,6 +2,7 @@ from flask import Flask
 
 from .analyze import analyze_bp
 from .divination import divination_bp
+from .divination_stream import divination_stream_bp
 from .email import email_bp
 from .export import export_bp
 from .history import history_bp
@@ -15,6 +16,7 @@ def register_blueprints(app: Flask) -> None:
     """Register all API blueprints with the Flask app."""
     blueprints = [
         (divination_bp, "/api"),
+        (divination_stream_bp, None),  # Streaming endpoints
         (analyze_bp, "/api/divination"),
         (task_bp, "/api"),
         (history_bp, "/api"),
