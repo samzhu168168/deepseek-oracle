@@ -1,24 +1,26 @@
+# Render Blueprint - 自动化部署配置
+# 这个文件让 Render 自动读取配置，减少手动操作
+
 services:
+  # Backend API Service
   - type: web
     name: deepseek-oracle-backend
-    env: python
+    runtime: python
+    region: singapore
+    plan: free
+    branch: main
     rootDir: backend
     buildCommand: pip install -r requirements.txt
-    startCommand: python run.py
+    startCommand: gunicorn run:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
     envVars:
-      - key: SECRET_KEY
-        generateValue: true
-      - key: LLM_PROVIDER
-        value: deepseek
-      - key: LLM_MODEL
-        value: deepseek-chat
-      - key: DEEPSEEK_API_KEY
-        sync: false
-      - key: DEEPSEEK_BASE_URL
-        value: https://api.deepseek.com/v1
-      - key: EMAIL_VERIFY_REQUIRED
-        value: false
-      - key: INVITE_ONLY
-        value: false
-      - key: DEBUG
-        value: false
+      - key: ANTHROPIC_API_KEY
+        value: sk-kEznPpu5i1dHx8EZ0aD4Fc6c3bA347E8993e331e20E347D1
+      - key: ANTHROPIC_BASE_URL
+        value: https://api.laozhang.ai
+      - key: GUMROAD_PRODUCT_ID
+        value: bhpmxr
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    healthCheckPath: /health
