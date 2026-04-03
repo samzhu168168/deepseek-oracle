@@ -29,11 +29,11 @@ export const useReportStore = create<ReportState>((set) => ({
   paywallModalOpen: false,
   
   // Actions
-  setEmailUnlocked: (unlocked) => set({ emailUnlocked: unlocked }),
-  setFullReportData: (data) => set({ fullReportData: data }),
-  setLicenseModalOpen: (open) => set({ licenseModalOpen: open }),
-  setEmailGateModalOpen: (open) => set({ emailGateModalOpen: open }),
-  setPaywallModalOpen: (open) => set({ paywallModalOpen: open }),
+  setEmailUnlocked: (unlocked: boolean) => set({ emailUnlocked: unlocked }),
+  setFullReportData: (data: FullReportData | null) => set({ fullReportData: data }),
+  setLicenseModalOpen: (open: boolean) => set({ licenseModalOpen: open }),
+  setEmailGateModalOpen: (open: boolean) => set({ emailGateModalOpen: open }),
+  setPaywallModalOpen: (open: boolean) => set({ paywallModalOpen: open }),
   
   resetModals: () => set({
     licenseModalOpen: false,
