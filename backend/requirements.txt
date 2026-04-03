@@ -10,3 +10,4 @@ jieba
 redis
 rq
 tiktoken==0.5.2
+gunicorn==21.2.0
