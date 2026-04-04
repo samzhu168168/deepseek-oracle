@@ -1,0 +1,37 @@
+.naonai-input-guide {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-md, 12px);
+  border-left: 3px solid var(--naonai-primary, #C0392B);
+}
+
+.naonai-input-guide-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.naonai-input-guide-text {
+  margin: 0;
+  font-family: var(--font-serif, 'Noto Serif SC', Georgia, serif);
+  font-size: 1rem;
+  color: var(--naonai-text, #2C1810);
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .naonai-input-guide {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .naonai-input-guide-icon {
+    font-size: 1.25rem;
+  }
+  
+  .naonai-input-guide-text {
+    font-size: 0.9rem;
+  }
+}

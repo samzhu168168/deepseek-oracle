@@ -1,0 +1,37 @@
+/* 打字动画样式 */
+
+.typing-text {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: var(--naonai-text);
+  margin: var(--spacing-md) 0;
+  min-height: 2em;
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: var(--naonai-primary);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .typing-text {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}

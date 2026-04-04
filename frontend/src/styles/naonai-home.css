@@ -1,0 +1,86 @@
+/* Nǎi Nai 首页特定样式 */
+
+.naonai-hero {
+  text-align: center;
+  padding: var(--spacing-xl, 3rem) var(--spacing-lg, 2rem);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 248, 240, 0.9),
+    rgba(255, 255, 255, 0.95)
+  );
+  border-radius: var(--radius-xl, 24px);
+  margin-bottom: var(--spacing-xl, 3rem);
+}
+
+.naonai-welcome {
+  font-family: var(--font-serif, 'Noto Serif SC', Georgia, serif);
+  font-size: 1.2rem;
+  line-height: 1.8;
+  color: var(--naonai-text, #2C1810);
+}
+
+.naonai-form {
+  background: rgba(255, 255, 255, 0.6);
+  padding: var(--spacing-xl, 3rem);
+  border-radius: var(--radius-xl, 24px);
+  box-shadow: 0 8px 32px var(--naonai-shadow, rgba(192, 57, 43, 0.1));
+}
+
+.naonai-form .bond-form__panel {
+  background: var(--naonai-card, #FFFFFF);
+  border: 2px solid var(--naonai-border, #E8D5C4);
+  transition: all var(--transition-normal, 0.3s ease);
+}
+
+.naonai-form .bond-form__panel:hover {
+  border-color: var(--naonai-primary, #C0392B);
+  box-shadow: 0 8px 24px var(--naonai-shadow-hover, rgba(192, 57, 43, 0.2));
+}
+
+.naonai-form .field__label {
+  font-family: var(--font-serif, 'Noto Serif SC', Georgia, serif);
+  color: var(--naonai-text, #2C1810);
+  font-weight: 600;
+}
+
+.naonai-cta-button {
+  width: 100%;
+  padding: 1.25rem 2rem;
+  font-size: 1.3rem;
+  margin-top: var(--spacing-lg, 2rem);
+  box-shadow: 0 8px 24px var(--naonai-shadow-hover, rgba(192, 57, 43, 0.2));
+  animation: pulse 2s infinite;
+}
+
+.naonai-loading {
+  text-align: center;
+  padding: var(--spacing-lg, 2rem);
+  background: rgba(192, 57, 43, 0.05);
+  border-radius: var(--radius-lg, 16px);
+  margin: var(--spacing-lg, 2rem) 0;
+}
+
+.naonai-loading-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: var(--spacing-sm, 1rem);
+  animation: pulse 1.5s infinite;
+}
+
+@media (max-width: 768px) {
+  .naonai-hero {
+    padding: var(--spacing-lg, 2rem) var(--spacing-md, 1.5rem);
+  }
+  
+  .naonai-welcome {
+    font-size: 1.1rem;
+  }
+  
+  .naonai-form {
+    padding: var(--spacing-lg, 2rem);
+  }
+  
+  .naonai-cta-button {
+    font-size: 1.1rem;
+  }
+}

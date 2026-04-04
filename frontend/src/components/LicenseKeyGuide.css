@@ -1,0 +1,118 @@
+/* License Key 使用引导样式 */
+
+.license-key-guide {
+  margin: 32px 0;
+  padding: 0 20px;
+}
+
+.license-key-guide-content {
+  background: linear-gradient(135deg, 
+    rgba(192, 57, 43, 0.08) 0%, 
+    rgba(192, 57, 43, 0.04) 100%
+  );
+  border: 2px dashed rgba(192, 57, 43, 0.3);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.3s;
+}
+
+.license-key-guide-content:hover {
+  border-color: rgba(192, 57, 43, 0.5);
+  background: linear-gradient(135deg, 
+    rgba(192, 57, 43, 0.12) 0%, 
+    rgba(192, 57, 43, 0.06) 100%
+  );
+}
+
+.license-key-guide-icon {
+  font-size: 48px;
+  flex-shrink: 0;
+  animation: gentle-swing 3s ease-in-out infinite;
+}
+
+@keyframes gentle-swing {
+  0%, 100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+.license-key-guide-text {
+  flex: 1;
+}
+
+.license-key-guide-title {
+  font-family: var(--font-serif, 'Noto Serif SC', serif);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--naonai-text, #2C1810);
+  margin: 0 0 6px 0;
+}
+
+.license-key-guide-subtitle {
+  font-size: 14px;
+  color: rgba(44, 24, 16, 0.7);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.license-key-guide-btn {
+  padding: 12px 24px;
+  background: var(--naonai-primary, #C0392B);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(192, 57, 43, 0.3);
+}
+
+.license-key-guide-btn:hover {
+  background: #a83226;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(192, 57, 43, 0.4);
+}
+
+.license-key-guide-btn:active {
+  transform: translateY(0);
+}
+
+/* 移动端适配 */
+@media (max-width: 640px) {
+  .license-key-guide {
+    margin: 24px 0;
+    padding: 0 16px;
+  }
+
+  .license-key-guide-content {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .license-key-guide-icon {
+    font-size: 40px;
+  }
+
+  .license-key-guide-title {
+    font-size: 16px;
+  }
+
+  .license-key-guide-subtitle {
+    font-size: 13px;
+  }
+
+  .license-key-guide-btn {
+    width: 100%;
+    padding: 14px 24px;
+  }
+}

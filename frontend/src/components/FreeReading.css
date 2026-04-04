@@ -1,0 +1,159 @@
+/* Free Reading Component - Oracle Style */
+
+.free-reading {
+  max-width: 800px;
+  margin: 48px auto;
+  padding: 0 20px;
+}
+
+.free-reading-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.oracle-symbol {
+  font-size: 64px;
+  color: var(--oracle-cosmic-purple);
+  margin-bottom: 16px;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.free-reading-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--oracle-cosmic-purple), var(--oracle-nebula-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.free-reading-content {
+  background: var(--oracle-card-bg);
+  border: 1px solid var(--oracle-border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.free-reading-content::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 50% 50%, 
+    rgba(107, 76, 230, 0.05) 0%, 
+    transparent 50%);
+  animation: pulse 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.element-reveal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--oracle-border);
+  position: relative;
+  z-index: 1;
+}
+
+.element-pair {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--oracle-star-white);
+  letter-spacing: 0.05em;
+}
+
+.compatibility-score {
+  font-size: 36px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--oracle-cosmic-purple), var(--oracle-nebula-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.oracle-reading {
+  font-size: 18px;
+  line-height: 1.8;
+  color: var(--oracle-star-white);
+  position: relative;
+  z-index: 1;
+  white-space: pre-wrap;
+}
+
+.oracle-reading p {
+  margin-bottom: 16px;
+}
+
+.oracle-reading p:last-child {
+  margin-bottom: 0;
+}
+
+.free-reading-cta {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--oracle-border);
+}
+
+.cta-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--oracle-star-white);
+  margin: 0 0 8px 0;
+}
+
+.cta-subtext {
+  font-size: 14px;
+  color: rgba(247, 249, 252, 0.6);
+  margin: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .free-reading {
+    margin: 32px auto;
+  }
+
+  .oracle-symbol {
+    font-size: 48px;
+  }
+
+  .free-reading-title {
+    font-size: 20px;
+  }
+
+  .free-reading-content {
+    padding: 24px;
+  }
+
+  .element-reveal {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .element-pair {
+    font-size: 24px;
+  }
+
+  .compatibility-score {
+    font-size: 32px;
+  }
+
+  .oracle-reading {
+    font-size: 16px;
+  }
+
+  .cta-text {
+    font-size: 18px;
+  }
+}

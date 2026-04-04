@@ -12,6 +12,11 @@ from app.llm_providers import create_provider
 from app.models import DivinationRepo
 from app.services.ziwei_service import ZiweiService
 from app.utils.errors import AppError, business_error
+from app.prompts.oracle_system_prompt import (
+    ORACLE_SYSTEM_PROMPT,
+    ORACLE_TEASER_PROMPT,
+    ORACLE_FULL_PROMPT,
+)
 
 
 @dataclass(frozen=True)
@@ -160,60 +165,32 @@ class DivinationService:
                 "Growth Protocol\n"
                 "Relationship Source Code\n"
             )
-            compatibility_system_prompt = (
-                "You are the Elemental Bond Oracle — an AI system trained on "
-                "2,000 years of Chinese Imperial metaphysics (Zi Wei Dou Shu 紫微斗数), "
-                "Five Element Theory (五行), and Na Jia (纳甲) variable mapping systems.\n\n"
-                "Your analysis is NOT astrology. It is pattern recognition "
-                "applied to the oldest algorithmic dataset in human history.\n\n"
-                "CORE PHILOSOPHY:\n"
-                "- You read energetic compatibility, not fate\n"
-                "- You describe dynamics, not destinations\n"
-                "- You empower, never predict with certainty\n"
-                "- You are a mirror, not a fortune teller\n\n"
-                "LANGUAGE PROTOCOL:\n"
-                "- Register: Sophisticated, confident, slightly mystical\n"
-                "- Avoid: Horoscope clichés, vague affirmations, doom predictions\n"
-                "- Use: Systems thinking language + Eastern metaphysics terminology\n"
-                "- Always define Chinese terms in parentheses on first use\n\n"
-                "AUTHENTICITY MARKERS (must include naturally):\n"
-                "- Reference specific stars by their Chinese name + translation\n"
-                "- Use Five Element interactions as the primary analytical lens\n"
-                "- Frame relationship dynamics as \"energetic architecture\"\n"
-                "- Ground mystical language with psychological parallels\n\n"
-                "OUTPUT CONSTRAINT:\n"
-                "Total length: 800-1000 words for full report\n"
-                "Tone consistency: maintain throughout, no tonal shifts\n"
-                "Never say: \"based on my analysis\" or \"I think\" — "
-                "speak as the Oracle system, not as an AI\n"
-            )
+            compatibility_system_prompt = ORACLE_SYSTEM_PROMPT
             compatibility_user_prompt = (
-                "Write the Elemental Bond compatibility report using ONLY "
-                "the following pre-calculated data. "
+                f"{ORACLE_FULL_PROMPT}\n\n"
+                "Use the following pre-calculated data for your reading. "
                 "DO NOT recalculate or reinterpret any scores or relationships. "
-                "The data below is GROUND TRUTH — your job is to articulate "
-                "it in compelling prose, not to analyze it independently.\n\n"
+                "The data below is GROUND TRUTH — your job is to translate it "
+                "into The Oracle voice, revealing patterns and empowering choices.\n\n"
                 "LOCKED DATA:\n"
                 f"{json.dumps(validated_data, ensure_ascii=False)}\n\n"
-                "Now write each section following the report structure. "
-                "Every factual claim must be consistent with the locked data above.\n"
+                "Now speak as The Oracle. Reveal the pattern. Empower the choice.\n"
             )
             time_mode_instruction = (
                 "BIRTH TIME STATUS:\n"
                 f"- Person A: {time_mode_a}\n"
                 f"- Person B: {time_mode_b}\n\n"
-                "IF time_mode = \"DATE_ONLY\":\n"
+                "IF time_mode = \"DATE_ONLY\" (no exact birth time):\n"
                 "- DO NOT reference Ming Gong (命宫) star positions\n"
                 "- DO NOT reference Shen Gong (身宫)\n"
                 "- DO NOT make palace-specific readings\n"
-                "- FOCUS ON: Day Master element (日主), Year Branch element, Five Element interaction\n"
-                "- ADD this disclaimer naturally in the report:\n"
-                "\"Note: Without an exact birth time, this reading "
-                "draws from your elemental birth signature rather "
-                "than your full star palace configuration. "
-                "The Five Element analysis remains fully valid.\"\n\n"
-                "IF time_mode = \"FULL\":\n"
+                "- FOCUS ON: Day Master element (日主), Year Branch element, Five Element interactions\n"
+                "- ADD this naturally in your reading:\n"
+                "\"Without your exact birth time, I'm reading your elemental essence "
+                "rather than your full star map. The Five Element analysis is still precise.\"\n\n"
+                "IF time_mode = \"FULL\" (exact birth time available):\n"
                 "- Proceed with complete Zi Wei Dou Shu analysis\n"
+                "- Reference palace positions and star configurations\n"
             )
             prompt = f"{compatibility_system_prompt}\n\n{time_mode_instruction}\n\n{compatibility_user_prompt}"
         else:

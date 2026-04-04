@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import ReactMarkdown from "react-markdown";
 import { toPng } from "html-to-image";
 import { Helmet } from "react-helmet-async";
 
@@ -8,6 +7,9 @@ import { InkButton } from "../components/InkButton";
 import { LicenseKeyModal, FullReportData } from "../components/LicenseKeyModal";
 import { FullReport } from "../components/FullReport";
 import { EmailGateModal } from "../components/EmailGateModal";
+import { FreeReading } from "../components/FreeReading";
+import { PaidReading } from "../components/PaidReading";
+import { LicenseKeyGuide } from "../components/LicenseKeyGuide";
 import type { BondAnalysisRequest, BondAnalysisResponse } from "../types";
 
 type StoredReport = {
@@ -90,17 +92,6 @@ const getRelationshipLabel = (score: number) => {
     return "🌙 Growth-Oriented Pair";
   }
   return "🌑 Karmic Challenge Pair";
-};
-
-const getTeaserPreview = (summary: string) => {
-  const trimmed = summary.trim();
-  if (!trimmed) {
-    return "Your elemental and soul resonance summary is being prepared...";
-  }
-  if (trimmed.endsWith("...")) {
-    return trimmed;
-  }
-  return `${trimmed.replace(/\.*$/, "")}...`;
 };
 
 const readForecastCount = () => {
@@ -252,7 +243,6 @@ export default function ResultPage() {
     radarEntries.reduce((sum, item) => sum + item.value, 0) / radarEntries.length,
   );
   const relationshipLabel = getRelationshipLabel(averageScore);
-  const teaserPreview = getTeaserPreview(normalizedReport?.teaser?.summary || "");
   const isUnlocked = Boolean(fullReportData || (normalizedReport?.license_valid && normalizedReport?.full_report));
   const elementCombo = normalizedReport?.teaser?.five_element_compatibility || "Water meets Wood";
   const elementPair = elementCombo.replace(/\s*meets\s*/i, "-").replace(/\s+/g, " ").trim();
@@ -398,65 +388,15 @@ export default function ResultPage() {
         </div>
       </section>
 
-      <section className="result-teaser">
-        <div className="result-teaser__text">
-          <ReactMarkdown>{teaserPreview}</ReactMarkdown>
-        </div>
-        {!emailUnlocked && (
-          <div style={{ textAlign: 'center', margin: '32px 0' }}>
-            <button
-              onClick={() => setEmailGateModalOpen(true)}
-              style={{
-                padding: '16px 32px',
-                background: 'linear-gradient(135deg, #8b7a9f, #c4a7ff)',
-                color: '#1a1a2e',
-                border: 'none',
-                borderRadius: '12px',
-                fontSize: '16px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                boxShadow: '0 8px 24px rgba(196, 167, 255, 0.3)',
-                transition: 'all 0.2s',
-              }}
-            >
-              🔮 Unlock Complete Preview →
-            </button>
-          </div>
-        )}
-        {emailUnlocked && (
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(196, 167, 255, 0.1), rgba(139, 122, 159, 0.1))',
-            border: '1px solid rgba(196, 167, 255, 0.3)',
-            borderRadius: '12px',
-            padding: '20px',
-            margin: '24px 0',
-            textAlign: 'center',
-          }}>
-            <p style={{ margin: '0 0 12px', color: '#c4a7ff', fontSize: '14px' }}>
-              ✨ Preview unlocked! Want the full cosmic map?
-            </p>
-            <button
-              onClick={() => setPaywallModalOpen(true)}
-              style={{
-                padding: '14px 28px',
-                background: 'linear-gradient(135deg, #c4956a, #a67c52)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '10px',
-                fontSize: '15px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-            >
-              Get Full Blueprint — $24.90
-            </button>
-          </div>
-        )}
-        <p className="result-teaser__hint">
-          Full analysis includes palace readings, 2026 timing windows, and growth protocol...
-        </p>
-      </section>
+      <FreeReading 
+        summary={normalizedReport?.teaser?.summary || ""}
+        elementPair={elementPair}
+        score={averageScore}
+      />
+
+      {!isUnlocked && (
+        <LicenseKeyGuide onOpenModal={() => setLicenseModalOpen(true)} />
+      )}
 
       {isUnlocked ? (
         <section className="result-full">
@@ -476,59 +416,16 @@ export default function ResultPage() {
           )}
         </section>
       ) : (
-        <section className="result-paywall">
-          <div className="result-paywall__blur">
-            <div className="paywall-blur__titles">
-              <p>## Chapter 2: The Hidden Wound Pattern</p>
-              <p>## Chapter 3: Your 2026 Activation Windows</p>
-              <p>## Chapter 4: The Karmic Growth Contract</p>
-              <p>## Chapter 5: Action Steps for This Month</p>
-            </div>
-            <div className="paywall-blur__body" style={{ filter: "blur(6px)" }}>
-              {
-                "Unlock the complete karmic map of this connection — including the hidden wound, the growth contract, and your 2026 activation windows."
-              }
-            </div>
-          </div>
-          <div className="result-paywall__overlay">
-            <div className="paywall-card">
-              <p className="paywall-card__title">Your souls have met before.</p>
-              <ul className="paywall-card__list">
-                <li>✓ Full Palace & Star Configuration Reading</li>
-                <li>✓ 2026 Activation Windows & Timing Guide</li>
-                <li>✓ Karmic Growth Protocol & Action Steps</li>
-              </ul>
-              <button
-                className="paywall-card__buy"
-                type="button"
-                onClick={() => setPaywallModalOpen(true)}
-              >
-                Reveal My Full Blueprint — $24.90
-              </button>
-              <div className="paywall-card__divider" />
-              <p className="paywall-card__hint">Already purchased?</p>
-              <button
-                className="paywall-card__unlock-btn"
-                type="button"
-                onClick={() => setLicenseModalOpen(true)}
-                style={{
-                  width: '100%',
-                  padding: '14px',
-                  background: 'linear-gradient(135deg, #8b7a9f, #6d5d7f)',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-              >
-                Enter License Key →
-              </button>
-            </div>
-          </div>
-        </section>
+        <PaidReading 
+          onUnlock={(tier) => {
+            if (tier === 'basic') {
+              setPaywallModalOpen(true);
+            } else {
+              // 跳转到 PDF 购买页面
+              window.open('https://samzhu168.gumroad.com/l/bhpmxr', '_blank');
+            }
+          }}
+        />
       )}
       {paywallModalOpen ? (
         <div className="paywall-modal">
