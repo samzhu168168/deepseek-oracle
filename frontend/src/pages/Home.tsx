@@ -1,11 +1,12 @@
+/**
+ * Home Page - The Oracle
+ * Entry point for relationship compatibility analysis
+ */
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import { analyzeBond } from "../api";
-import { NaoNaiAvatar } from "../components/NaoNaiAvatar";
-import { TypingAnimation } from "../components/TypingAnimation";
-import { NaoNaiInputGuide } from "../components/NaoNaiInputGuide";
 import "../styles/naonai-home.css";
 
 type PersonInput = {
@@ -27,6 +28,7 @@ const LOADING_MESSAGES = [
   "Decoding the hidden bond pattern...",
   "Preparing your Soul Blueprint...",
 ];
+
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
 
 export default function HomePage() {
@@ -36,9 +38,11 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
+
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URL}/api/health`, { method: "GET" }).catch(() => {});
   }, []);
+
   useEffect(() => {
     if (!loading) {
       setLoadingMessageIndex(0);
@@ -93,7 +97,7 @@ export default function HomePage() {
       const message =
         (err as { response?: { data?: { error?: string } } })?.response?.data?.error ||
         (err as Error).message ||
-        "请求超时，请重试";
+        "Request timeout, please try again";
       setError(message);
     } finally {
       setLoading(false);
@@ -145,139 +149,133 @@ export default function HomePage() {
     ],
   };
 
-  const [showWelcome, setShowWelcome] = useState(true);
-  const welcomeMessage = "孩子们，来让奶奶看看你们的缘分吧... 我看了60年的八字，从来没看错过。";
-
   return (
     <div className="landing-page fade-in">
       <Helmet>
-        <title>Nǎi Nai 的八字姻缘测算 — 60年经验老师傅</title>
+        <title>The Oracle — Decode Your Relationship Blueprint</title>
         <meta
           name="description"
-          content="让精通八字60年的Nǎi Nai为你解读姻缘。温暖、智慧、准确的中国传统命理分析。"
+          content="Ancient BaZi wisdom meets modern clarity. Discover the hidden patterns in your relationship through elemental compatibility analysis."
         />
         <meta
           name="keywords"
-          content="八字合婚, 姻缘测算, 中国命理, 生辰八字, 婚姻配对, bazi compatibility"
+          content="relationship compatibility, bazi compatibility, elemental bond, karmic connection, soul blueprint"
         />
         <link rel="canonical" href={SITE_URL} />
-        <meta property="og:title" content="Nǎi Nai 的八字姻缘测算 — 60年经验老师傅" />
+        <meta property="og:title" content="The Oracle — Decode Your Relationship Blueprint" />
         <meta
           property="og:description"
-          content="让精通八字60年的Nǎi Nai为你解读姻缘。温暖、智慧、准确的中国传统命理分析。"
+          content="Ancient BaZi wisdom meets modern clarity. Discover the hidden patterns in your relationship."
         />
         <meta property="og:url" content={SITE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Nǎi Nai 的八字姻缘测算 — 60年经验老师傅" />
+        <meta name="twitter:title" content="The Oracle — Decode Your Relationship Blueprint" />
         <meta
           name="twitter:description"
-          content="让精通八字60年的Nǎi Nai为你解读姻缘。温暖、智慧、准确的中国传统命理分析。"
+          content="Ancient BaZi wisdom meets modern clarity. Discover the hidden patterns in your relationship."
         />
         <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
         <script type="application/ld+json">{JSON.stringify(softwareJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       </Helmet>
       
-      {/* Nǎi Nai 头像和欢迎语 */}
-      <section className="bond-hero naonai-hero">
-        <NaoNaiAvatar size="large" showTitle={true} />
-        {showWelcome && (
-          <div className="naonai-welcome" style={{ 
-            marginTop: '2rem', 
-            padding: '1.5rem',
-            background: 'rgba(255, 255, 255, 0.8)',
-            borderRadius: '12px',
-            maxWidth: '600px',
-            margin: '2rem auto'
-          }}>
-            <TypingAnimation 
-              text={welcomeMessage}
-              speed={60}
-              onComplete={() => setTimeout(() => setShowWelcome(false), 2000)}
-            />
-          </div>
-        )}
+      {/* Oracle Hero Section */}
+      <section className="bond-hero oracle-hero">
+        <div className="oracle-symbol-hero">◈</div>
+        <h1 className="oracle-hero-title">THE ORACLE</h1>
+        <p className="oracle-hero-subtitle">
+          Ancient wisdom. Modern clarity.
+        </p>
+        <p className="oracle-hero-tagline">
+          I've read patterns for 60 years. I've never been wrong.
+        </p>
       </section>
 
-      <form className="bond-form naonai-form" onSubmit={onSubmit}>
+      <form className="bond-form oracle-form" onSubmit={onSubmit}>
         <div className="bond-form__columns">
-          <section className="bond-form__panel naonai-card">
-            <NaoNaiInputGuide text="告诉奶奶，你的生辰八字是..." />
+          <section className="bond-form__panel oracle-card">
+            <div className="oracle-input-guide">
+              <span className="oracle-guide-icon">◈</span>
+              <p className="oracle-guide-text">First person's birth details</p>
+            </div>
             <div className="bond-form__fields">
               <div className="field">
-                <label className="field__label" htmlFor="person-a-date">出生日期</label>
+                <label className="field__label" htmlFor="person-a-date">Birth Date</label>
                 <input
                   id="person-a-date"
                   type="date"
-                  className="naonai-input"
+                  className="oracle-input"
                   value={personA.date}
                   onChange={(event) => setPersonA((prev) => ({ ...prev, date: event.target.value }))}
                   required
                 />
               </div>
               <div className="field">
-                <label className="field__label" htmlFor="person-a-time">出生时辰</label>
+                <label className="field__label" htmlFor="person-a-time">Birth Time (optional)</label>
                 <input
                   id="person-a-time"
                   type="time"
-                  className="naonai-input"
+                  className="oracle-input"
                   value={personA.time}
                   onChange={(event) => setPersonA((prev) => ({ ...prev, time: event.target.value }))}
-                  placeholder="不知道可以不填"
+                  placeholder="Leave blank if unknown"
                 />
               </div>
               <div className="field">
-                <label className="field__label" htmlFor="person-a-gender">性别</label>
+                <label className="field__label" htmlFor="person-a-gender">Gender</label>
                 <select
                   id="person-a-gender"
-                  className="naonai-input"
+                  className="oracle-input"
                   value={personA.gender}
                   onChange={(event) => setPersonA((prev) => ({ ...prev, gender: event.target.value as "Male" | "Female" }))}
                 >
-                  <option value="Male">男</option>
-                  <option value="Female">女</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </select>
               </div>
             </div>
           </section>
 
-          <section className="bond-form__panel naonai-card">
-            <NaoNaiInputGuide text="还有你心爱的人，他/她的生辰是..." />
+          <section className="bond-form__panel oracle-card">
+            <div className="oracle-input-guide">
+              <span className="oracle-guide-icon">◈</span>
+              <p className="oracle-guide-text">Second person's birth details</p>
+            </div>
             <div className="bond-form__fields">
               <div className="field">
-                <label className="field__label" htmlFor="person-b-date">出生日期</label>
+                <label className="field__label" htmlFor="person-b-date">Birth Date</label>
                 <input
                   id="person-b-date"
                   type="date"
-                  className="naonai-input"
+                  className="oracle-input"
                   value={personB.date}
                   onChange={(event) => setPersonB((prev) => ({ ...prev, date: event.target.value }))}
                   required
                 />
               </div>
               <div className="field">
-                <label className="field__label" htmlFor="person-b-time">出生时辰</label>
+                <label className="field__label" htmlFor="person-b-time">Birth Time (optional)</label>
                 <input
                   id="person-b-time"
                   type="time"
-                  className="naonai-input"
+                  className="oracle-input"
                   value={personB.time}
                   onChange={(event) => setPersonB((prev) => ({ ...prev, time: event.target.value }))}
-                  placeholder="不知道可以不填"
+                  placeholder="Leave blank if unknown"
                 />
               </div>
               <div className="field">
-                <label className="field__label" htmlFor="person-b-gender">性别</label>
+                <label className="field__label" htmlFor="person-b-gender">Gender</label>
                 <select
                   id="person-b-gender"
-                  className="naonai-input"
+                  className="oracle-input"
                   value={personB.gender}
                   onChange={(event) => setPersonB((prev) => ({ ...prev, gender: event.target.value as "Male" | "Female" }))}
                 >
-                  <option value="Male">男</option>
-                  <option value="Female">女</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </select>
               </div>
             </div>
@@ -286,19 +284,20 @@ export default function HomePage() {
 
         {error ? <p className="error-text">{error}</p> : null}
         {loading ? (
-          <div className="naonai-loading">
-            <span className="naonai-loading-icon">🔮</span>
+          <div className="oracle-loading">
+            <span className="oracle-loading-icon">◈</span>
             <p className="bond-form__loading-text">{LOADING_MESSAGES[loadingMessageIndex]}</p>
-            <p style={{ fontSize: '0.9rem', color: 'var(--naonai-text-muted)', marginTop: '0.5rem' }}>
-              奶奶正在仔细看你们的命盘...
+            <p style={{ fontSize: '0.9rem', color: 'var(--oracle-muted)', marginTop: '0.5rem' }}>
+              The Oracle is reading your pattern...
             </p>
           </div>
         ) : null}
 
-        <button type="submit" className="naonai-button naonai-cta-button" disabled={loading}>
-          {loading ? "奶奶正在看命盘中..." : "✨ Let Nǎi Nai Read Our Destiny"}
+        <button type="submit" className="oracle-button oracle-cta-button" disabled={loading}>
+          {loading ? "Reading your pattern..." : "✨ Reveal Our Blueprint"}
         </button>
       </form>
+
       <section className="landing-footnote">
         <details>
           <summary>FAQ: BaZi Compatibility</summary>

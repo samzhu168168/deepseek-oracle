@@ -62,7 +62,7 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
   };
 
   const tierPrices = {
-    basic: '$9.90',
+    basic: '$24.90',
     premium: '$27',
   };
 
@@ -107,7 +107,7 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
           </div>
           <div className="unlock-card-price">
             <span className="price-currency">$</span>
-            <span className="price-amount">9.90</span>
+            <span className="price-amount">24.90</span>
           </div>
           <ul className="unlock-card-features">
             <li>✓ Full pattern analysis</li>
