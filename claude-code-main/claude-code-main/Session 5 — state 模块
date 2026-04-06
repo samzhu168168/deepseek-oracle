@@ -1,0 +1,42 @@
+根据对代码的深入分析，我现在可以提供关于 state 模块的架构分析报告：
+
+# Claude Code State 模块架构分析
+
+## 1. 状态管理方案
+
+采用**自研轻量级 Store**（非 Redux/Zustand）：
+- 基于 `useSyncExternalStore`（React 18）实现响应式订阅
+- 通过 `createStore()` 创建单例，提供 `getState/setState/subscribe` 三个核心 API
+- 使用 `Object.is` 浅比较优化，避免不必要的重渲染
+- 通过 selector 函数实现细粒度订阅（类似 Zustand）
+
+## 2. 持久化存储
+
+状态分为**内存态**和**持久态**：
+- **内存态**：AppState 全部字段（任务、MCP 连接、UI 状态等）
+- **持久态**：通过 `sessionStorage.ts` 写入 `.claude/` 目录
+  - 消息历史：`{projectDir}/{sessionId}/messages.jsonl`
+  - 配置：`~/.kiro/settings/config.json`
+  - 会话元数据：`sessions.json`
+
+## 3. 读写机制
+
+- **读取**：`useAppState(selector)` 订阅切片，`getState()` 同步读取
+- **更新**：`setState(updater)` 函数式更新，触发 `onChange` 回调和订阅者通知
+- **外部同步**：`useSettingsChange` 监听文件变化，通过 `applySettingsChange` 同步到 AppState
+
+## 4. 冲突避免
+
+1. **单向数据流**：所有更新通过 `setState` 漏斗
+2. **AsyncLocalStorage**：in-process teammates 通过 ALS 隔离上下文
+3. **不可变更新**：`updater` 返回新对象，`Object.is` 检测变化
+4. **Context 隔离**：React Context 防止嵌套 Provider
+
+## 5. 设计启发
+
+1. **轻量级优先**：200 行实现完整状态管理，避免过度工程化
+2. **选择器模式**：细粒度订阅减少重渲染，性能优于全局监听
+3. **分层持久化**：内存态 + 磁盘态分离，热数据快速访问
+4. **类型安全**：`DeepImmutable` 类型保护防止意外修改
+
+【Session 5 完成】
