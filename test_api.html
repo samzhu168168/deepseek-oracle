@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API CORS Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #f7f2ff;
+        }
+        h1 {
+            color: #c4a7ff;
+            text-align: center;
+        }
+        .test-section {
+            background: #16213e;
+            border: 1px solid #c4a7ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        button {
+            background: linear-gradient(135deg, #8b7a9f, #c4a7ff);
+            color: #1a1a2e;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(196, 167, 255, 0.4);
+        }
+        .result {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #c4a7ff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success {
+            border-left-color: #4ade80;
+            color: #4ade80;
+        }
+        .error {
+            border-left-color: #ff6b9d;
+            color: #ff6b9d;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(196, 167, 255, 0.3);
+            border-radius: 8px;
+            color: #f7f2ff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .status.checking {
+            background: rgba(196, 167, 255, 0.2);
+            color: #c4a7ff;
+        }
+        .status.online {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+        .status.offline {
+            background: rgba(255, 107, 157, 0.2);
+            color: #ff6b9d;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔮 Elemental Bond API Test</h1>
+    
+    <div class="test-section">
+        <h2>Backend Status</h2>
+        <div id="status" class="status checking">Checking...</div>
+        <button onclick="checkHealth()">🔄 Refresh Status</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 1: Health Check</h2>
+        <button onclick="testHealth()">Run Test</button>
+        <div id="health-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: OPTIONS Preflight (CORS)</h2>
+        <button onclick="testOptions()">Run Test</button>
+        <div id="options-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Capture Email (POST)</h2>
+        <input type="email" id="test-email" placeholder="Enter test email" value="test@example.com">
+        <button onclick="testCaptureEmail()">Run Test</button>
+        <div id="capture-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Verify License (POST)</h2>
+        <input type="text" id="test-license" placeholder="Enter license key" value="test-key-123">
+        <button onclick="testVerifyLicense()">Run Test</button>
+        <div id="license-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://deepseek-oracle-backend-production.up.railway.app';
+
+        async function checkHealth() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = 'status checking';
+            statusDiv.textContent = 'Checking...';
+
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (response.ok) {
+                    statusDiv.className = 'status online';
+                    statusDiv.textContent = '✅ Backend is ONLINE';
+                } else {
+                    statusDiv.className = 'status offline';
+                    statusDiv.textContent = `❌ Backend returned ${response.status}`;
+                }
+            } catch (error) {
+                statusDiv.className = 'status offline';
+                statusDiv.textContent = '❌ Backend is OFFLINE or unreachable';
+            }
+        }
+
+        async function testHealth() {
+            const resultDiv = document.getElementById('health-result');
+            resultDiv.textContent = 'Testing...';
+            resultDiv.className = 'result';
+
+            try {
+                const start = Date.now();
+                const response = await fetch(`${API_BASE}/health`);
+                const duration = Date.now() - start;
+                const data = await response.json();
+
+                resultDiv.className = 'result success';
+                resultDiv.textContent = `✅ SUCCESS (${duration}ms)\n\n` +
+                    `Status: ${response.status}\n` +
+                    `Response: ${JSON.stringify(data, null, 2)}\n\n` +
+                    `Headers:\n${formatHeaders(response.headers)}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ ERROR\n\n${error.message}`;
+            }
+        }
+
+        async function testOptions() {
+            const resultDiv = document.getElementById('options-result');
+            resultDiv.textContent = 'Testing OPTIONS preflight...';
+            resultDiv.className = 'result';
+
+            try {
+                const start = Date.now();
+                const response = await fetch(`${API_BASE}/api/capture-email`, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Origin': 'https://www.elemental.bond',
+                        'Access-Control-Request-Method': 'POST',
+                        'Access-Control-Request-Headers': 'Content-Type'
+                    }
+                });
+                const duration = Date.now() - start;
+
+                const corsHeaders = {
+                    'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),
+                    'Access-Control-Allow-Methods': response.headers.get('Access-Control-Allow-Methods'),
+                    'Access-Control-Allow-Headers': response.headers.get('Access-Control-Allow-Headers'),
+                    'Access-Control-Max-Age': response.headers.get('Access-Control-Max-Age')
+                };
+
+                const hasCors = corsHeaders['Access-Control-Allow-Origin'] === '*';
+
+                resultDiv.className = hasCors ? 'result success' : 'result error';
+                resultDiv.textContent = `${hasCors ? '✅' : '❌'} ${hasCors ? 'SUCCESS' : 'FAILED'} (${duration}ms)\n\n` +
+                    `Status: ${response.status}\n\n` +
+                    `CORS Headers:\n${JSON.stringify(corsHeaders, null, 2)}\n\n` +
+                    `All Headers:\n${formatHeaders(response.headers)}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ ERROR\n\n${error.message}`;
+            }
+        }
+
+        async function testCaptureEmail() {
+            const resultDiv = document.getElementById('capture-result');
+            const email = document.getElementById('test-email').value;
+            resultDiv.textContent = 'Testing...';
+            resultDiv.className = 'result';
+
+            try {
+                const start = Date.now();
+                const response = await fetch(`${API_BASE}/api/capture-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Origin': 'https://www.elemental.bond'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        source: 'email_gate',
+                        score: 79,
+                        element_pair: 'Earth-Metal'
+                    })
+                });
+                const duration = Date.now() - start;
+                const data = await response.json();
+
+                const success = response.ok && data.success;
+                resultDiv.className = success ? 'result success' : 'result error';
+                resultDiv.textContent = `${success ? '✅' : '❌'} ${success ? 'SUCCESS' : 'FAILED'} (${duration}ms)\n\n` +
+                    `Status: ${response.status}\n` +
+                    `Response: ${JSON.stringify(data, null, 2)}\n\n` +
+                    `CORS Header: ${response.headers.get('Access-Control-Allow-Origin')}\n\n` +
+                    `All Headers:\n${formatHeaders(response.headers)}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ ERROR\n\n${error.message}`;
+            }
+        }
+
+        async function testVerifyLicense() {
+            const resultDiv = document.getElementById('license-result');
+            const licenseKey = document.getElementById('test-license').value;
+            resultDiv.textContent = 'Testing...';
+            resultDiv.className = 'result';
+
+            try {
+                const start = Date.now();
+                const response = await fetch(`${API_BASE}/api/verify-license`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Origin': 'https://www.elemental.bond'
+                    },
+                    body: JSON.stringify({
+                        license_key: licenseKey
+                    })
+                });
+                const duration = Date.now() - start;
+                const data = await response.json();
+
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+                resultDiv.textContent = `${response.ok ? '✅' : '❌'} ${response.ok ? 'SUCCESS' : 'FAILED'} (${duration}ms)\n\n` +
+                    `Status: ${response.status}\n` +
+                    `Response: ${JSON.stringify(data, null, 2)}\n\n` +
+                    `CORS Header: ${response.headers.get('Access-Control-Allow-Origin')}\n\n` +
+                    `All Headers:\n${formatHeaders(response.headers)}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ ERROR\n\n${error.message}`;
+            }
+        }
+
+        function formatHeaders(headers) {
+            const headerObj = {};
+            for (const [key, value] of headers.entries()) {
+                headerObj[key] = value;
+            }
+            return JSON.stringify(headerObj, null, 2);
+        }
+
+        // Auto-check status on load
+        checkHealth();
+    </script>
+</body>
+</html>
