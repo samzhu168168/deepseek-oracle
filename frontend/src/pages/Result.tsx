@@ -7,7 +7,8 @@ import { InkButton } from "../components/InkButton";
 import { LicenseKeyModal, FullReportData } from "../components/LicenseKeyModal";
 import { FullReport } from "../components/FullReport";
 import { EmailGateModal } from "../components/EmailGateModal";
-import { FreeReading } from "../components/FreeReading";
+import { TeaserReading } from "../components/TeaserReading";
+import { PreviewReading } from "../components/PreviewReading";
 import { PaidReading } from "../components/PaidReading";
 import { LicenseKeyGuide } from "../components/LicenseKeyGuide";
 import type { BondAnalysisRequest, BondAnalysisResponse } from "../types";
@@ -177,6 +178,7 @@ export default function ResultPage() {
   const [licenseModalOpen, setLicenseModalOpen] = useState(false);
   const [emailGateModalOpen, setEmailGateModalOpen] = useState(false);
   const [emailUnlocked, setEmailUnlocked] = useState(false);
+  const [previewData, setPreviewData] = useState<string | null>(null);
   const [paywallModalOpen, setPaywallModalOpen] = useState(false);
   const [shareImageUrl, setShareImageUrl] = useState(`${SITE_URL}/og-image.png`);
   const shareCardRef = useRef<HTMLDivElement | null>(null);
@@ -299,18 +301,58 @@ export default function ResultPage() {
     setEmailUnlocked(true);
     setEmailGateModalOpen(false);
     
-    // 3 秒后自动显示 upsell 弹窗
+    // 生成预览内容（模拟 API 调用）
+    // TODO: 替换为实际的 API 调用
+    const generatePreview = () => {
+      const previews = {
+        high: `I see ${elementPair.replace('-', ' meeting ')}.
+
+${elementPair.split('-')[0]} wants to burn fast, make decisions now, feel everything intensely. ${elementPair.split('-')[1]} wants to flow, take time, process slowly. This creates a push-pull dynamic that feels exhausting — ${elementPair.split('-')[0]} thinks ${elementPair.split('-')[1]} is avoiding, ${elementPair.split('-')[1]} thinks ${elementPair.split('-')[0]} is overwhelming.
+
+But here's what most people miss: this tension is your growth edge. ${elementPair.split('-')[0]} learns patience. ${elementPair.split('-')[1]} learns courage. The thing you love about them is the thing that drives you crazy. That's not a coincidence.
+
+The Midnight Fight: ${elementPair.split('-')[0]} wants to resolve things immediately. ${elementPair.split('-')[1]} needs time to process. So ${elementPair.split('-')[0]} pushes, ${elementPair.split('-')[1]} retreats, ${elementPair.split('-')[0]} pushes harder, ${elementPair.split('-')[1]} shuts down completely. This pattern repeats every 2-3 weeks.
+
+But this is just the surface. The full pattern reveals the hidden dynamics, your 2026 timeline, and 5 specific action steps to break the cycle.`,
+        medium: `I see ${elementPair.replace('-', ' meeting ')}.
+
+This is a complementary dynamic where each element brings what the other lacks. ${elementPair.split('-')[0]} provides energy and initiative. ${elementPair.split('-')[1]} provides stability and grounding.
+
+The tension shows up in decision-making. ${elementPair.split('-')[0]} wants to move fast. ${elementPair.split('-')[1]} wants to think it through. This creates friction, but it's productive friction — if you learn to work with it.
+
+The Decision Paralysis: When you're trying to plan anything — a vacation, a move, a major purchase — ${elementPair.split('-')[0]} gets impatient with ${elementPair.split('-')[1]}'s "slowness." ${elementPair.split('-')[1]} feels rushed by ${elementPair.split('-')[0]}'s "impulsiveness."
+
+But this is just the surface. The full reading reveals your specific growth protocol and 2026 activation windows.`,
+        low: `I see ${elementPair.replace('-', ' meeting ')}.
+
+This is a challenging dynamic that requires conscious work. ${elementPair.split('-')[0]} and ${elementPair.split('-')[1]} operate on different frequencies. What feels natural to one feels foreign to the other.
+
+The core tension: ${elementPair.split('-')[0]} processes externally. ${elementPair.split('-')[1]} processes internally. This creates misunderstandings that feel personal but are actually elemental.
+
+The Communication Gap: ${elementPair.split('-')[0]} needs to talk things out immediately. ${elementPair.split('-')[1]} needs time alone to process. When ${elementPair.split('-')[0]} pushes for conversation, ${elementPair.split('-')[1]} withdraws. When ${elementPair.split('-')[1]} finally opens up, ${elementPair.split('-')[0]} has already moved on.
+
+But this is just the surface. The full pattern shows you how to bridge this gap with specific protocols.`
+      };
+      
+      if (averageScore >= 75) return previews.high;
+      if (averageScore >= 55) return previews.medium;
+      return previews.low;
+    };
+    
+    setPreviewData(generatePreview());
+    
+    // 延迟显示 paywall（给用户时间阅读预览）
     setTimeout(() => {
       setPaywallModalOpen(true);
-    }, 3000);
+    }, 8000); // 8 秒后显示，给用户更多时间阅读预览
   };
 
-  // 页面加载 5 秒后自动显示 Email Gate（如果还没解锁）
+  // 页面加载 3 秒后自动显示 Email Gate（如果还没解锁）
   useEffect(() => {
     if (!emailUnlocked && normalizedReport) {
       const timer = setTimeout(() => {
         setEmailGateModalOpen(true);
-      }, 5000);
+      }, 3000); // 改为 3 秒，让用户有时间阅读 Teaser
       return () => clearTimeout(timer);
     }
   }, [emailUnlocked, normalizedReport]);
@@ -388,11 +430,22 @@ export default function ResultPage() {
         </div>
       </section>
 
-      <FreeReading 
-        summary={normalizedReport?.teaser?.summary || ""}
-        elementPair={elementPair}
-        score={averageScore}
-      />
+      {/* 条件渲染：根据解锁状态显示不同组件 */}
+      {!emailUnlocked && !isUnlocked && (
+        <TeaserReading 
+          hook={normalizedReport?.teaser?.summary || "I see a pattern here. One that repeats. Let me show you what it means..."}
+          elementPair={elementPair}
+          score={averageScore}
+        />
+      )}
+
+      {emailUnlocked && !isUnlocked && (
+        <PreviewReading 
+          preview={previewData || "The pattern is revealing itself..."}
+          elementPair={elementPair}
+          score={averageScore}
+        />
+      )}
 
       {!isUnlocked && (
         <LicenseKeyGuide onOpenModal={() => setLicenseModalOpen(true)} />
