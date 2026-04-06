@@ -27,15 +27,23 @@
       "dest": "/api/index.py"
     },
     {
+      "src": "/readyz",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/check_cache",
+      "dest": "/api/index.py"
+    },
+    {
       "src": "/(.*)",
       "dest": "/frontend/$1"
     }
   ],
   "env": {
-    "ANTHROPIC_API_KEY": "@anthropic_api_key",
-    "ANTHROPIC_BASE_URL": "@anthropic_base_url",
-    "GUMROAD_PRODUCT_ID": "@gumroad_product_id",
+    "ANTHROPIC_API_KEY": "sk-kEznPpu5i1dHx8EZ0aD4Fc6c3bA347E8993e331e20E347D1",
+    "ANTHROPIC_BASE_URL": "https://api.laozhang.ai",
+    "GUMROAD_PRODUCT_ID": "bhpmxr",
     "DATABASE_PATH": "/tmp/data.db",
-    "REDIS_URL": "redis://localhost:6379/0"
+    "REDIS_URL": ""
   }
 }
