@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiBaseUrl = import.meta.env.VITE_API_URL || "https://deepseek-oracle-backend-production.up.railway.app";
-const USE_MOCK = true; // 紧急：使用 Mock 绕过后端问题
+const USE_MOCK = true; // EMERGENCY: Use mock data to bypass backend issues
 
 const api = axios.create({
   baseURL: apiBaseUrl,

@@ -1,6 +1,6 @@
 /**
- * 打字动画组件
- * 模拟奶奶说话的逐字显示效果
+ * Typing Animation Component
+ * Simulates character-by-character display effect
  */
 import React, { useState, useEffect } from 'react';
 import './TypingAnimation.css';

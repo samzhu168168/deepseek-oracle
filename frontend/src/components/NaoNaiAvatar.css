@@ -1,4 +1,4 @@
-/* Nǎi Nai 头像样式 */
+/* The Oracle Avatar Styles */
 
 .naonai-avatar {
   display: flex;
@@ -51,7 +51,7 @@
   z-index: 1;
 }
 
-/* 尺寸变体 */
+/* Size variants */
 .naonai-avatar-small .naonai-avatar-circle {
   width: 60px;
   height: 60px;
@@ -79,7 +79,7 @@
   font-size: 4rem;
 }
 
-/* 头像信息 */
+/* Avatar info */
 .naonai-avatar-info {
   text-align: center;
 }
@@ -100,7 +100,7 @@
   font-weight: 500;
 }
 
-/* 响应式 */
+/* Responsive */
 @media (max-width: 768px) {
   .naonai-avatar-large .naonai-avatar-circle {
     width: 100px;

@@ -1,4 +1,4 @@
-/* 打字动画样式 */
+/* Typing Animation Styles */
 
 .typing-text {
   font-family: var(--font-serif);
@@ -28,7 +28,7 @@
   }
 }
 
-/* 响应式 */
+/* Responsive */
 @media (max-width: 768px) {
   .typing-text {
     font-size: 1rem;

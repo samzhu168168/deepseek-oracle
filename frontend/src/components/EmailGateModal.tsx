@@ -1,5 +1,5 @@
 // EmailGateModal.tsx
-// 邮件门槛组件 - 在 teaser 后弹出，收集邮件解锁更多内容
+// Email gate component - appears after teaser to collect email and unlock preview
 
 import { useState, useEffect } from 'react'
 
@@ -22,7 +22,7 @@ export function EmailGateModal({
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
-  // 关闭时重置状态
+  // Reset state when closing
   useEffect(() => {
     if (!isOpen) {
       setTimeout(() => {
@@ -51,7 +51,7 @@ export function EmailGateModal({
     setError('')
 
     try {
-      // 调用后端 API 存储邮件
+      // Call backend API to store email
       const response = await fetch('/api/capture-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -71,7 +71,7 @@ export function EmailGateModal({
         return
       }
 
-      // 成功：通知父组件
+      // Success: notify parent component
       onSuccess(trimmedEmail)
     } catch (err) {
       setError('Network error. Please check your connection.')
@@ -115,7 +115,7 @@ export function EmailGateModal({
           border: '1px solid rgba(210, 187, 255, 0.2)',
         }}
       >
-        {/* 关闭按钮 */}
+        {/* Close button */}
         <button
           onClick={onClose}
           aria-label="Close"
@@ -144,7 +144,7 @@ export function EmailGateModal({
           ×
         </button>
 
-        {/* 图标 */}
+        {/* Icon */}
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
           <div
             style={{
@@ -179,7 +179,7 @@ export function EmailGateModal({
           </h2>
         </div>
 
-        {/* 描述 */}
+        {/* Description */}
         <div style={{ marginBottom: '32px', textAlign: 'center' }}>
           <p
             style={{
@@ -205,7 +205,7 @@ export function EmailGateModal({
           </p>
         </div>
 
-        {/* 表单 */}
+        {/* Form */}
         <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
           <input
             type="email"
@@ -302,7 +302,7 @@ export function EmailGateModal({
           </p>
         </form>
 
-        {/* 社交证明 */}
+        {/* Social proof */}
         <div
           style={{
             marginTop: '28px',

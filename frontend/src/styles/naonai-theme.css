@@ -1,54 +1,54 @@
-/* Nǎi Nai 品牌主题样式 */
+/* The Oracle Brand Theme Styles */
 
 :root {
-  /* Nǎi Nai 品牌色 */
-  --naonai-bg: #FFF8F0;           /* 温暖米黄背景 */
-  --naonai-primary: #C0392B;      /* 朱砂红主色 */
-  --naonai-primary-light: #E74C3C; /* 浅朱砂红 */
-  --naonai-primary-dark: #A93226;  /* 深朱砂红 */
+  /* The Oracle Brand Colors */
+  --naonai-bg: #FFF8F0;           /* Warm beige background */
+  --naonai-primary: #C0392B;      /* Cinnabar red primary */
+  --naonai-primary-light: #E74C3C; /* Light cinnabar red */
+  --naonai-primary-dark: #A93226;  /* Dark cinnabar red */
   
-  --naonai-text: #2C1810;         /* 深棕色文字 */
-  --naonai-text-light: #6B4423;   /* 浅棕色文字 */
-  --naonai-text-muted: #9B7653;   /* 柔和文字 */
+  --naonai-text: #2C1810;         /* Deep brown text */
+  --naonai-text-light: #6B4423;   /* Light brown text */
+  --naonai-text-muted: #9B7653;   /* Muted text */
   
-  --naonai-card: #FFFFFF;         /* 卡片背景 */
-  --naonai-card-hover: #FFF5EB;   /* 卡片悬停 */
+  --naonai-card: #FFFFFF;         /* Card background */
+  --naonai-card-hover: #FFF5EB;   /* Card hover */
   
-  --naonai-border: #E8D5C4;       /* 边框颜色 */
-  --naonai-shadow: rgba(192, 57, 43, 0.1); /* 阴影 */
+  --naonai-border: #E8D5C4;       /* Border color */
+  --naonai-shadow: rgba(192, 57, 43, 0.1); /* Shadow */
   --naonai-shadow-hover: rgba(192, 57, 43, 0.2);
   
-  /* 五行颜色 */
+  /* Five Elements Colors */
   --element-wood: #2ECC71;
   --element-fire: #E74C3C;
   --element-earth: #F39C12;
   --element-metal: #95A5A6;
   --element-water: #3498DB;
   
-  /* 字体 */
+  /* Fonts */
   --font-serif: 'Noto Serif SC', 'Georgia', 'Times New Roman', serif;
   --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   
-  /* 间距 */
+  /* Spacing */
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
   --spacing-md: 1.5rem;
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
   
-  /* 圆角 */
+  /* Border Radius */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
   
-  /* 动画 */
+  /* Animations */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
 }
 
-/* 全局样式重置 */
+/* Global Style Reset */
 body {
   background: var(--naonai-bg);
   color: var(--naonai-text);
@@ -58,7 +58,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 衬线字体用于标题和重要文本 */
+/* Serif font for titles and important text */
 h1, h2, h3, h4, h5, h6,
 .naonai-serif {
   font-family: var(--font-serif);
@@ -66,14 +66,14 @@ h1, h2, h3, h4, h5, h6,
   color: var(--naonai-text);
 }
 
-/* Nǎi Nai 容器 */
+/* The Oracle Container */
 .naonai-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--spacing-lg);
 }
 
-/* Nǎi Nai 卡片 */
+/* The Oracle Card */
 .naonai-card {
   background: var(--naonai-card);
   border-radius: var(--radius-lg);
@@ -88,7 +88,7 @@ h1, h2, h3, h4, h5, h6,
   transform: translateY(-2px);
 }
 
-/* Nǎi Nai 按钮 */
+/* The Oracle Button */
 .naonai-button {
   background: var(--naonai-primary);
   color: white;
@@ -124,7 +124,7 @@ h1, h2, h3, h4, h5, h6,
   color: white;
 }
 
-/* Nǎi Nai 输入框 */
+/* The Oracle Input */
 .naonai-input {
   background: var(--naonai-card);
   border: 2px solid var(--naonai-border);
@@ -146,7 +146,7 @@ h1, h2, h3, h4, h5, h6,
   color: var(--naonai-text-muted);
 }
 
-/* 打字光标动画 */
+/* Typing cursor animation */
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
@@ -161,7 +161,7 @@ h1, h2, h3, h4, h5, h6,
   animation: blink 1s infinite;
 }
 
-/* 渐入动画 */
+/* Fade in animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -177,7 +177,7 @@ h1, h2, h3, h4, h5, h6,
   animation: fadeIn 0.6s ease-out;
 }
 
-/* 脉冲动画 */
+/* Pulse animation */
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
@@ -191,14 +191,14 @@ h1, h2, h3, h4, h5, h6,
   animation: pulse 2s infinite;
 }
 
-/* 锁定内容模糊效果 */
+/* Locked content blur effect */
 .naonai-locked {
   filter: blur(8px);
   pointer-events: none;
   user-select: none;
 }
 
-/* 解锁按钮容器 */
+/* Unlock button container */
 .naonai-unlock-overlay {
   position: relative;
 }
@@ -219,7 +219,7 @@ h1, h2, h3, h4, h5, h6,
   pointer-events: none;
 }
 
-/* 响应式 */
+/* Responsive */
 @media (max-width: 768px) {
   .naonai-container {
     padding: var(--spacing-md);

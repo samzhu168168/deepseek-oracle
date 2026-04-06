@@ -1,6 +1,6 @@
 /**
- * Nǎi Nai 头像组件
- * 显示奶奶的头像、名字和介绍
+ * The Oracle Avatar Component
+ * Displays avatar, name and introduction
  */
 import React from 'react';
 import './NaoNaiAvatar.css';
@@ -24,7 +24,7 @@ export const NaoNaiAvatar: React.FC<NaoNaiAvatarProps> = ({
       {showTitle && (
         <div className="naonai-avatar-info">
           <h2 className="naonai-avatar-name">Nǎi Nai</h2>
-          <p className="naonai-avatar-title">八字命理师 · 60年经验</p>
+          <p className="naonai-avatar-title">BaZi Master · 60 Years Experience</p>
         </div>
       )}
     </div>

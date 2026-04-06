@@ -3,7 +3,7 @@ export type TaskStatus = "queued" | "running" | "succeeded" | "failed" | "cancel
 export interface BirthInfo {
   date: string;
   timezone: number;
-  gender: "男" | "女";
+  gender: "Male" | "Female";
   calendar: "solar" | "lunar";
 }
 
@@ -182,9 +182,9 @@ export interface OracleChatRequest {
   conversation_id?: number;
   conversation_history_summary?: string;
   user_profile_summary?: string;
-  /** @deprecated 路由策略改为后端控制 */
+  /** @deprecated Routing strategy now controlled by backend */
   selected_school?: SelectedSchool;
-  /** @deprecated 路由策略改为后端控制 */
+  /** @deprecated Routing strategy now controlled by backend */
   enabled_schools?: EnabledSchool[];
   birth_info?: BirthInfo;
   provider?: string;

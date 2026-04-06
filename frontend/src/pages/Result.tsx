@@ -301,8 +301,8 @@ export default function ResultPage() {
     setEmailUnlocked(true);
     setEmailGateModalOpen(false);
     
-    // 生成预览内容（模拟 API 调用）
-    // TODO: 替换为实际的 API 调用
+    // Generate preview content (simulating API call)
+    // TODO: Replace with actual API call
     const generatePreview = () => {
       const previews = {
         high: `I see ${elementPair.replace('-', ' meeting ')}.
@@ -341,18 +341,18 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
     
     setPreviewData(generatePreview());
     
-    // 延迟显示 paywall（给用户时间阅读预览）
+    // Delay paywall display (give user time to read preview)
     setTimeout(() => {
       setPaywallModalOpen(true);
-    }, 8000); // 8 秒后显示，给用户更多时间阅读预览
+    }, 8000); // Show after 8 seconds to give user more time to read preview
   };
 
-  // 页面加载 3 秒后自动显示 Email Gate（如果还没解锁）
+  // Auto-show Email Gate after 3 seconds (if not unlocked yet)
   useEffect(() => {
     if (!emailUnlocked && normalizedReport) {
       const timer = setTimeout(() => {
         setEmailGateModalOpen(true);
-      }, 3000); // 改为 3 秒，让用户有时间阅读 Teaser
+      }, 3000); // Changed to 3 seconds to give user time to read Teaser
       return () => clearTimeout(timer);
     }
   }, [emailUnlocked, normalizedReport]);
@@ -430,7 +430,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
         </div>
       </section>
 
-      {/* 条件渲染：根据解锁状态显示不同组件 */}
+      {/* Conditional rendering: show different components based on unlock status */}
       {!emailUnlocked && !isUnlocked && (
         <TeaserReading 
           hook={normalizedReport?.teaser?.summary || "I see a pattern here. One that repeats. Let me show you what it means..."}
@@ -474,7 +474,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
             if (tier === 'basic') {
               setPaywallModalOpen(true);
             } else {
-              // 跳转到 PDF 购买页面
+              // Redirect to PDF purchase page
               window.open('https://samzhu168.gumroad.com/l/bhpmxr', '_blank');
             }
           }}

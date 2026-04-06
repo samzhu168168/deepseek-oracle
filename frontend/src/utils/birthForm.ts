@@ -51,7 +51,7 @@ interface TrueSolarCorrectionResult {
 }
 
 /**
- * 中国34个省级行政区（按省会/代表城市）经度数据，用于真太阳时修正。
+ * Longitude data for 34 provincial-level administrative regions in China (by capital/representative city), used for true solar time correction.
  */
 export const TRUE_SOLAR_PROVINCES: TrueSolarProvinceOption[] = [
   { code: "beijing", name: "Beijing", cities: [{ code: "beijing", name: "Beijing", longitude: 116.41 }] },
@@ -91,13 +91,13 @@ export const TRUE_SOLAR_PROVINCES: TrueSolarProvinceOption[] = [
 ];
 
 /**
- * 提供省份下拉选项列表。
+ * Provide province dropdown option list.
  */
 export const getTrueSolarProvinceOptions = () =>
   TRUE_SOLAR_PROVINCES.map((item) => ({ code: item.code, name: item.name }));
 
 /**
- * 根据省份编码获取城市选项列表。
+ * Get city option list based on province code.
  */
 export const getTrueSolarCityOptions = (provinceCode: string) => {
   const province = TRUE_SOLAR_PROVINCES.find((item) => item.code === provinceCode) || TRUE_SOLAR_PROVINCES[0];
@@ -105,7 +105,7 @@ export const getTrueSolarCityOptions = (provinceCode: string) => {
 };
 
 /**
- * 计算指定日期在一年中的序号（1-366）。
+ * Calculate the day number in a year (1-366).
  */
 const dayOfYear = (year: number, month: number, day: number) => {
   const current = Date.UTC(year, month - 1, day);
@@ -114,7 +114,7 @@ const dayOfYear = (year: number, month: number, day: number) => {
 };
 
 /**
- * 计算均时差（Equation of Time, 分钟），采用常见近似公式。
+ * Calculate Equation of Time (in minutes), using common approximation formula.
  */
 const equationOfTimeMinutes = (year: number, month: number, day: number) => {
   const n = dayOfYear(year, month, day);
@@ -123,7 +123,7 @@ const equationOfTimeMinutes = (year: number, month: number, day: number) => {
 };
 
 /**
- * 根据省市经度和均时差，计算真太阳时校正后的日期与时分。
+ * Calculate true solar time corrected date and time based on province/city longitude and equation of time.
  */
 const computeTrueSolarCorrection = (form: ZiweiFortuneFormState): TrueSolarCorrectionResult => {
   const province = TRUE_SOLAR_PROVINCES.find((item) => item.code === form.provinceCode) || TRUE_SOLAR_PROVINCES[0];
@@ -208,7 +208,7 @@ export const validateBirthForm = (form: ZiweiFortuneFormState): string | null =>
 };
 
 /**
- * 生成真太阳时修正说明文本，用于页面提示。
+ * Generate true solar time correction description text for page display.
  */
 export const formatTrueSolarCorrectionPreview = (form: ZiweiFortuneFormState): string => {
   if (form.timeUnknown) {
@@ -260,7 +260,7 @@ export const formatBirthPreview = (form: ZiweiFortuneFormState): string => {
   const y = Number(form.year) || 0;
   const m = Number(form.month) || 0;
   const d = Number(form.day) || 0;
-  const genderLabel = form.gender === "男" ? "Male" : form.gender === "女" ? "Female" : form.gender;
+  const genderLabel = form.gender === "Male" ? "Male" : form.gender === "Female" ? "Female" : form.gender;
   if (form.timeUnknown) {
     return `${form.calendar === "lunar" ? "Lunar" : "Solar"} ${y}-${m}-${d} · Time unknown · ${genderLabel}`;
   }

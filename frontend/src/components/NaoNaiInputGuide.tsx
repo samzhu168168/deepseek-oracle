@@ -1,6 +1,6 @@
 /**
- * Nǎi Nai 输入引导组件
- * 在输入框上方显示奶奶的温暖引导文字
+ * The Oracle Input Guide Component
+ * Displays warm guidance text above input fields
  */
 import React from 'react';
 import './NaoNaiInputGuide.css';

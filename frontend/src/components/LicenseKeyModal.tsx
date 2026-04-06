@@ -1,6 +1,6 @@
 // LicenseKeyModal.tsx
-// 放置路径: frontend/src/components/LicenseKeyModal.tsx
-// 用途: Gumroad 付款后 license key 验证 + 完整报告解锁
+// File path: frontend/src/components/LicenseKeyModal.tsx
+// Purpose: Gumroad payment license key verification + full report unlock
 
 import { useState, useEffect } from 'react'
 

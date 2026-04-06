@@ -4922,7 +4922,7 @@ body {
   border-color: #5a72e2 !important;
 }
 
-/* 减少输入框选中时的阴影效果 */
+/* Reduce input focus shadow effect */
 .auth-modal input:focus {
   outline: none;
   border-color: rgba(178, 58, 47, 0.45);
