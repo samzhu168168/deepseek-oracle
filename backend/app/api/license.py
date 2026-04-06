@@ -23,8 +23,11 @@ _report_cache: dict[str, dict] = {}
 
 # ── Route 1: 验证 Gumroad License Key ───────────────────
 @license_bp.route('/api/verify-license', methods=['POST', 'OPTIONS'])
-@cross_origin()
+@cross_origin(origins='*', allow_headers=['Content-Type'], methods=['POST', 'OPTIONS'])
 def verify_license():
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     data = request.get_json()
     license_key = (data.get('license_key') or '').strip()
 
@@ -61,8 +64,11 @@ def verify_license():
 
 # ── Route 2: 生成完整报告 ─────────────────────────────────
 @license_bp.route('/api/generate-full-report', methods=['POST', 'OPTIONS'])
-@cross_origin()
+@cross_origin(origins='*', allow_headers=['Content-Type'], methods=['POST', 'OPTIONS'])
 def generate_full_report():
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     data = request.get_json()
     license_key = (data.get('license_key') or '').strip()
 

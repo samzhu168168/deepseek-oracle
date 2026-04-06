@@ -52,7 +52,8 @@ export function EmailGateModal({
 
     try {
       // Call backend API to store email
-      const response = await fetch('/api/capture-email', {
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || ''
+      const response = await fetch(`${apiBaseUrl}/api/capture-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

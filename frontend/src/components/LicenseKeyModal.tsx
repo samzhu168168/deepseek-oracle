@@ -79,7 +79,8 @@ export function LicenseKeyModal({
 
     try {
       // Step 1: 验证 Gumroad license key
-      const verifyRes = await fetch('/api/verify-license', {
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || ''
+      const verifyRes = await fetch(`${apiBaseUrl}/api/verify-license`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ license_key: key }),

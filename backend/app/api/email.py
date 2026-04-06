@@ -49,9 +49,12 @@ init_email_table()
 
 
 @email_bp.route('/api/capture-email', methods=['POST', 'OPTIONS'])
-@cross_origin()
+@cross_origin(origins='*', allow_headers=['Content-Type'], methods=['POST', 'OPTIONS'])
 def capture_email():
     """捕获邮件地址"""
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     data = request.get_json()
     
     email = (data.get('email') or '').strip().lower()
@@ -96,9 +99,12 @@ def capture_email():
 
 
 @email_bp.route('/api/mark-conversion', methods=['POST', 'OPTIONS'])
-@cross_origin()
+@cross_origin(origins='*', allow_headers=['Content-Type'], methods=['POST', 'OPTIONS'])
 def mark_conversion():
     """标记邮件已转化（购买）"""
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     data = request.get_json()
     
     email = (data.get('email') or '').strip().lower()
@@ -129,9 +135,12 @@ def mark_conversion():
 
 
 @email_bp.route('/api/export-emails', methods=['GET', 'OPTIONS'])
-@cross_origin()
+@cross_origin(origins='*', allow_headers=['Content-Type'], methods=['GET', 'OPTIONS'])
 def export_emails():
     """导出邮件列表（管理员功能）"""
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     # TODO: 添加管理员认证
     
     try:
@@ -180,9 +189,12 @@ def export_emails():
 
 
 @email_bp.route('/api/email-stats', methods=['GET', 'OPTIONS'])
-@cross_origin()
+@cross_origin(origins='*', allow_headers=['Content-Type'], methods=['GET', 'OPTIONS'])
 def email_stats():
     """邮件统计（管理员功能）"""
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     # TODO: 添加管理员认证
     
     try:
