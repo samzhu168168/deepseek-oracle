@@ -1,0 +1,175 @@
+/* Teaser Reading Styles - The Hook */
+
+.teaser-reading {
+  background: rgba(30, 27, 75, 0.8);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 2rem 0;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.teaser-reading:hover {
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);
+}
+
+.teaser-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.oracle-symbol {
+  font-size: 3rem;
+  color: var(--oracle-primary, #6366f1);
+  text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+  margin-bottom: 1rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.teaser-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--oracle-text, #e2e8f0);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.teaser-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.element-reveal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.element-pair {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--oracle-accent, #8b5cf6);
+  letter-spacing: 0.05em;
+}
+
+.compatibility-score {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--oracle-primary, #6366f1);
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+/* The Hook - mysterious opening */
+.oracle-hook {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  color: var(--oracle-text, #e2e8f0);
+  font-style: italic;
+  padding: 1.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.1) 0%,
+    rgba(139, 92, 246, 0.1) 100%
+  );
+  border-left: 3px solid var(--oracle-primary, #6366f1);
+  border-radius: 8px;
+  position: relative;
+}
+
+.oracle-hook::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  font-size: 4rem;
+  color: var(--oracle-primary, #6366f1);
+  opacity: 0.3;
+  font-family: Georgia, serif;
+}
+
+/* Cliffhanger - create desire for more */
+.teaser-cliffhanger {
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(99, 102, 241, 0.2);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(99, 102, 241, 0.05) 100%
+  );
+  border-radius: 0 0 12px 12px;
+}
+
+.cliffhanger-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--oracle-accent, #8b5cf6);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.teaser-hint {
+  font-size: 1rem;
+  color: var(--oracle-muted, #64748b);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .teaser-reading {
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .oracle-symbol {
+    font-size: 2.5rem;
+  }
+
+  .teaser-title {
+    font-size: 1.5rem;
+    letter-spacing: 0.15em;
+  }
+
+  .element-pair {
+    font-size: 1.1rem;
+  }
+
+  .compatibility-score {
+    font-size: 1.3rem;
+  }
+
+  .oracle-hook {
+    font-size: 1.1rem;
+    padding: 1rem;
+  }
+
+  .cliffhanger-text {
+    font-size: 1.1rem;
+  }
+
+  .teaser-hint {
+    font-size: 0.9rem;
+  }
+}
