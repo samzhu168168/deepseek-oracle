@@ -1,7 +1,19 @@
 {
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "../backend/**/*.py",
+      "memory": 512,
+      "maxDuration": 60
+    }
+  },
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/api/(.*)", "destination": "/api/index" },
+    { "source": "/health", "destination": "/api/index" },
+    { "source": "/healthz", "destination": "/api/index" },
+    { "source": "/readyz", "destination": "/api/index" },
+    { "source": "/check_cache", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
