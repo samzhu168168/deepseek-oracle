@@ -1,3 +1,4 @@
+from __future__ import annotations
 from flask import Blueprint, request
 
 from app.schemas.divination import validate_meihua_divination_payload, validate_ziwei_divination_payload

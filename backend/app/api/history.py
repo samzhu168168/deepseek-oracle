@@ -1,3 +1,4 @@
+from __future__ import annotations
 from flask import Blueprint, request
 
 from app.services import get_analysis_service, get_divination_service

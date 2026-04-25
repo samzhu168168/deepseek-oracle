@@ -40,9 +40,6 @@
     }
   ],
   "env": {
-    "ANTHROPIC_API_KEY": "sk-kEznPpu5i1dHx8EZ0aD4Fc6c3bA347E8993e331e20E347D1",
-    "ANTHROPIC_BASE_URL": "https://api.laozhang.ai",
-    "GUMROAD_PRODUCT_ID": "bhpmxr",
     "DATABASE_PATH": "/tmp/data.db",
     "REDIS_URL": ""
   }

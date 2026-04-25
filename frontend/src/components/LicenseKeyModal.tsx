@@ -78,13 +78,30 @@ export function LicenseKeyModal({
     setErrorMsg('')
 
     try {
-      // Step 1: 验证 Gumroad license key
-      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || ''
+      // Step 1: 验证 Gumroad license key with timeout
+      const apiBaseUrl = import.meta.env.VITE_API_URL || ''
+      const controller1 = new AbortController()
+      const timeoutId1 = setTimeout(() => controller1.abort(), 15000) // 15秒超时
+
       const verifyRes = await fetch(`${apiBaseUrl}/api/verify-license`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ license_key: key }),
+        signal: controller1.signal
       })
+
+      clearTimeout(timeoutId1)
+
+      if (!verifyRes.ok) {
+        let errorDetail = `HTTP ${verifyRes.status}`
+        try {
+          const errorData = await verifyRes.json()
+          errorDetail = errorData.error || errorDetail
+        } catch {
+          // 忽略JSON解析错误
+        }
+        throw new Error(`License verification failed: ${errorDetail}`)
+      }
 
       const verifyData = await verifyRes.json()
 
@@ -94,8 +111,11 @@ export function LicenseKeyModal({
         return
       }
 
-      // Step 2: 生成完整报告
+      // Step 2: 生成完整报告 with timeout
       setStep('generating')
+      
+      const controller2 = new AbortController()
+      const timeoutId2 = setTimeout(() => controller2.abort(), 30000) // 报告生成可能需要更长时间，30秒
 
       const reportRes = await fetch('/api/generate-full-report', {
         method: 'POST',
@@ -107,7 +127,21 @@ export function LicenseKeyModal({
           score: resultPayload.score,
           element_pair: resultPayload.elementPair,
         }),
+        signal: controller2.signal
       })
+
+      clearTimeout(timeoutId2)
+
+      if (!reportRes.ok) {
+        let errorDetail = `HTTP ${reportRes.status}`
+        try {
+          const errorData = await reportRes.json()
+          errorDetail = errorData.error || errorDetail
+        } catch {
+          // 忽略JSON解析错误
+        }
+        throw new Error(`Report generation failed: ${errorDetail}`)
+      }
 
       const reportData = await reportRes.json()
 
@@ -119,9 +153,15 @@ export function LicenseKeyModal({
 
       // 成功：把完整报告数据传回父组件
       onSuccess({ ...reportData.report, licenseKey: key })
-    } catch (err) {
+    } catch (err: any) {
       setStep('error')
-      setErrorMsg('Network error. Please check your connection and try again.')
+      let errorMessage = 'Network error. Please check your connection and try again.'
+      if (err.name === 'AbortError') {
+        errorMessage = 'Request timeout. Please try again.'
+      } else if (err.message) {
+        errorMessage = err.message
+      }
+      setErrorMsg(errorMessage)
     }
   }
 

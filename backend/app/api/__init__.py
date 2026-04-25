@@ -1,3 +1,4 @@
+from __future__ import annotations
 from flask import Flask
 
 from .analyze import analyze_bp
@@ -9,6 +10,7 @@ from .history import history_bp
 from .insights import insights_bp
 from .license import license_bp
 from .oracle import oracle_bp
+from .proxy import proxy_bp
 from .task import task_bp
 
 
@@ -23,8 +25,9 @@ def register_blueprints(app: Flask) -> None:
         (export_bp, "/api"),
         (insights_bp, "/api"),
         (oracle_bp, "/api"),
+        (proxy_bp, "/api"),  # 代理接口，用于转发被封锁的外部API
         (license_bp, None),  # Already has /api prefix in routes
-        (email_bp, None),    # Already has /api prefix in routes
+        (email_bp, None)     # Already has /api prefix in routes
     ]
     
     for blueprint, prefix in blueprints:

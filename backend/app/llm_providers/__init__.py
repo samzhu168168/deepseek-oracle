@@ -1,3 +1,4 @@
+from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
@@ -5,13 +6,44 @@ from flask import current_app
 
 from app.utils.errors import business_error
 
-from .aliyun import AliyunProvider
 from .base import BaseLLMProvider
-from .deepseek import DeepSeekProvider
-from .glm import GLMProvider
 from .mock import MockProvider
-from .qwen import QwenProvider
-from .volcano import VolcanoProvider
+
+# Conditional imports for providers that may have missing dependencies
+try:
+    from .aliyun import AliyunProvider
+    ALIYUN_AVAILABLE = True
+except ImportError:
+    ALIYUN_AVAILABLE = False
+    AliyunProvider = None
+
+try:
+    from .deepseek import DeepSeekProvider
+    DEEPSEEK_AVAILABLE = True
+except ImportError:
+    DEEPSEEK_AVAILABLE = False
+    DeepSeekProvider = None
+
+try:
+    from .glm import GLMProvider
+    GLM_AVAILABLE = True
+except ImportError:
+    GLM_AVAILABLE = False
+    GLMProvider = None
+
+try:
+    from .qwen import QwenProvider
+    QWEN_AVAILABLE = True
+except ImportError:
+    QWEN_AVAILABLE = False
+    QwenProvider = None
+
+try:
+    from .volcano import VolcanoProvider
+    VOLCANO_AVAILABLE = True
+except ImportError:
+    VOLCANO_AVAILABLE = False
+    VolcanoProvider = None
 
 
 def create_provider(
@@ -29,6 +61,9 @@ def create_provider(
     model = model or str(resolved_config.get("LLM_MODEL", ""))
 
     if provider_name == "volcano":
+        if not VOLCANO_AVAILABLE or VolcanoProvider is None:
+            print("WARNING: Volcano provider not available, falling back to mock")
+            return MockProvider(model=model)
         api_key = str(resolved_config.get("VOLCANO_API_KEY", ""))
         if not api_key:
             raise business_error("A3002", "volcano api key is not configured", 502, True)
@@ -36,6 +71,9 @@ def create_provider(
         return VolcanoProvider(api_key=api_key, model=provider_model)
 
     if provider_name == "aliyun":
+        if not ALIYUN_AVAILABLE or AliyunProvider is None:
+            print("WARNING: Aliyun provider not available, falling back to mock")
+            return MockProvider(model=model)
         api_key = str(resolved_config.get("ALIYUN_API_KEY", ""))
         if not api_key:
             raise business_error("A3002", "aliyun api key is not configured", 502, True)
@@ -46,6 +84,9 @@ def create_provider(
         )
 
     if provider_name == "deepseek":
+        if not DEEPSEEK_AVAILABLE or DeepSeekProvider is None:
+            print("WARNING: DeepSeek provider not available, falling back to mock")
+            return MockProvider(model=model)
         api_key = str(resolved_config.get("DEEPSEEK_API_KEY", ""))
         if not api_key:
             raise business_error("A3002", "deepseek api key is not configured", 502, True)
@@ -56,12 +97,18 @@ def create_provider(
         )
 
     if provider_name == "glm":
+        if not GLM_AVAILABLE or GLMProvider is None:
+            print("WARNING: GLM provider not available, falling back to mock")
+            return MockProvider(model=model)
         api_key = str(resolved_config.get("ZHIPU_API_KEY", ""))
         if not api_key:
             raise business_error("A3002", "zhipu api key is not configured", 502, True)
         return GLMProvider(api_key=api_key, model=model)
 
     if provider_name == "qwen":
+        if not QWEN_AVAILABLE or QwenProvider is None:
+            print("WARNING: Qwen provider not available, falling back to mock")
+            return MockProvider(model=model)
         api_key = str(resolved_config.get("QWEN_API_KEY", ""))
         if not api_key:
             raise business_error("A3002", "qwen api key is not configured", 502, True)

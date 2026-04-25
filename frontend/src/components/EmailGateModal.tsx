@@ -51,8 +51,11 @@ export function EmailGateModal({
     setError('')
 
     try {
-      // Call backend API to store email
-      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || ''
+      // Call backend API to store email with timeout
+      const apiBaseUrl = import.meta.env.VITE_API_URL || ''
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 15000) // 15秒超时
+
       const response = await fetch(`${apiBaseUrl}/api/capture-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -62,7 +65,22 @@ export function EmailGateModal({
           score,
           element_pair: elementPair,
         }),
+        signal: controller.signal
       })
+
+      clearTimeout(timeoutId)
+
+      // 检查HTTP状态码
+      if (!response.ok) {
+        let errorDetail = `HTTP ${response.status}`
+        try {
+          const errorData = await response.json()
+          errorDetail = errorData.error || errorDetail
+        } catch {
+          // 忽略JSON解析错误
+        }
+        throw new Error(`Server error: ${errorDetail}`)
+      }
 
       const data = await response.json()
 
@@ -74,8 +92,14 @@ export function EmailGateModal({
 
       // Success: notify parent component
       onSuccess(trimmedEmail)
-    } catch (err) {
-      setError('Network error. Please check your connection.')
+    } catch (err: any) {
+      let errorMessage = 'Network error. Please check your connection.'
+      if (err.name === 'AbortError') {
+        errorMessage = 'Request timeout. Please try again.'
+      } else if (err.message) {
+        errorMessage = err.message
+      }
+      setError(errorMessage)
       setSubmitting(false)
     }
   }

@@ -16,8 +16,8 @@ export interface StreamEvent {
  * Stream divination analysis with real-time progress updates
  */
 export async function* analyzeBondStreaming(data: any): AsyncGenerator<StreamEvent> {
-  const apiBaseUrl = import.meta.env.VITE_API_URL || "https://deepseek-oracle-backend-production.up.railway.app";
-  
+  const apiBaseUrl = import.meta.env.VITE_API_URL || "";
+
   const response = await fetch(`${apiBaseUrl}/api/divination/analyze-stream`, {
     method: 'POST',
     headers: {
@@ -69,8 +69,8 @@ export async function* analyzeBondStreaming(data: any): AsyncGenerator<StreamEve
  * Stream full report generation with text chunks
  */
 export async function* generateReportStreaming(data: any): AsyncGenerator<StreamEvent> {
-  const apiBaseUrl = import.meta.env.VITE_API_URL || "https://deepseek-oracle-backend-production.up.railway.app";
-  
+  const apiBaseUrl = import.meta.env.VITE_API_URL || "";
+
   const response = await fetch(`${apiBaseUrl}/api/divination/report-stream`, {
     method: 'POST',
     headers: {

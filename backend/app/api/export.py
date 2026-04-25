@@ -1,3 +1,4 @@
+from __future__ import annotations
 from flask import Blueprint, request, send_file
 
 from app.services import get_analysis_service

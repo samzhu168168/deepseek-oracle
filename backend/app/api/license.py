@@ -2,13 +2,20 @@
 # 放置路径: backend/license_routes.py
 # 然后在 app.py 中 import: from license_routes import license_bp; app.register_blueprint(license_bp)
 
+from __future__ import annotations
 import os
 import json
 import hashlib
 import requests
 from datetime import datetime
 from flask import Blueprint, request, jsonify
-from flask_cors import cross_origin
+# from flask_cors import cross_origin  # Commented out due to installation issues
+
+# Create a dummy cross_origin decorator
+def cross_origin(*args, **kwargs):
+    def decorator(f):
+        return f
+    return decorator
 
 license_bp = Blueprint('license', __name__)
 

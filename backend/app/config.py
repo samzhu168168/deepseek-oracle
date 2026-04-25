@@ -1,12 +1,19 @@
+from __future__ import annotations
 import os
 import re
 from pathlib import Path
 
-from dotenv import load_dotenv
+# Conditional import for dotenv
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+except ImportError:
+    # If dotenv is not available, just use system environment variables
+    print("WARNING: python-dotenv not installed, using system environment variables only")
+    pass
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")
 
 
 def _split_csv(value: str) -> list[str]:

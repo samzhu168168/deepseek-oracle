@@ -1,3 +1,4 @@
+from __future__ import annotations
 from app import create_app
 from app.services.analysis_service import get_analysis_service
 

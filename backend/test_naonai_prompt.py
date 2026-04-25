@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 测试 Nǎi Nai Prompt 的效果
 """

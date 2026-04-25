@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 Teaser Service - Generate hooks and previews for free tier
 """

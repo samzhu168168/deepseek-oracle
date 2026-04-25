@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 Tool Registry System
 Inspired by Claude Code's declarative tool registration pattern

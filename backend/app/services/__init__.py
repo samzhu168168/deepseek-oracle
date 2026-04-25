@@ -1,3 +1,4 @@
+from __future__ import annotations
 from .analysis_service import AnalysisService, get_analysis_service
 from .divination_service import DivinationService, get_divination_service
 from .insight_service import InsightService, get_insight_service

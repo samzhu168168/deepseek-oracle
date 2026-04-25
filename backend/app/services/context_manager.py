@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 Context Manager for LLM Token Management
 Inspired by Claude Code's three-layer compression strategy

@@ -1,10 +1,17 @@
+from __future__ import annotations
 """
 Streaming API for real-time divination analysis
 Inspired by Claude Code's AsyncGenerator pattern
 """
 import json
 from flask import Blueprint, request, Response, stream_with_context
-from flask_cors import cross_origin
+# from flask_cors import cross_origin  # Commented out due to installation issues
+
+# Create a dummy cross_origin decorator
+def cross_origin(*args, **kwargs):
+    def decorator(f):
+        return f
+    return decorator
 
 from ..schemas import validate_analyze_payload
 from ..services import get_analysis_service

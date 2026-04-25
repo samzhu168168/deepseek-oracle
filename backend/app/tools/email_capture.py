@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 Email Capture Tool
 Declarative tool for capturing user emails

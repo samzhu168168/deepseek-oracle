@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 Nǎi Nai (奶奶) 系统 Prompt
 让 AI 以温暖、有智慧的中国老奶奶口吻解读八字命盘

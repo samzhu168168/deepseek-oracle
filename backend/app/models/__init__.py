@@ -1,3 +1,4 @@
+from __future__ import annotations
 from .divination_repo import DivinationRepo
 from .insight_repo import InsightRepo
 from .oracle_chat_repo import OracleChatRepo

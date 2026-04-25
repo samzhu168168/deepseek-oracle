@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 The Oracle System Prompt
 Ancient wisdom meets modern insights for the US market

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from .errors import AppError
 from .response import error_response, success_response
 

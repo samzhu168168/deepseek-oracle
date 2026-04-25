@@ -1,8 +1,21 @@
+from __future__ import annotations
 import json
 import time
 import uuid
 
-from openai import OpenAI
+# Conditional import for OpenAI
+try:
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OPENAI_AVAILABLE = False
+    # Create a dummy OpenAI class for fallback
+    class OpenAI:
+        class chat:
+            class completions:
+                @staticmethod
+                def create(*args, **kwargs):
+                    raise ImportError("OpenAI module not installed")
 
 from .base import BaseLLMProvider, LLMResult, LLMUsage, ToolCall, ToolChatResult
 
@@ -10,6 +23,8 @@ from .base import BaseLLMProvider, LLMResult, LLMUsage, ToolCall, ToolChatResult
 class DeepSeekProvider(BaseLLMProvider):
     def __init__(self, api_key: str, base_url: str, model: str = "deepseek-chat"):
         super().__init__(model=model)
+        if not OPENAI_AVAILABLE:
+            raise ImportError("OpenAI module not installed. DeepSeek provider requires 'openai' package.")
         self.client = OpenAI(api_key=api_key, base_url=base_url)
 
     def generate(self, user_message: str, timeout_s: int = 60) -> LLMResult:

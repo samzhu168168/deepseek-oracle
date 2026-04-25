@@ -1,11 +1,20 @@
+from __future__ import annotations
 import uuid
 import time
 
 from flask import Flask, g, jsonify, request
-from flask_cors import CORS
+# from flask_cors import CORS  # Commented out due to installation issues
 from werkzeug.exceptions import HTTPException
-from redis import Redis
-from rq import Queue
+
+# Conditional imports for optional dependencies
+try:
+    from redis import Redis
+    from rq import Queue
+    REDIS_AVAILABLE = True
+except ImportError:
+    Redis = None
+    Queue = None
+    REDIS_AVAILABLE = False
 
 from .api import register_blueprints
 from .config import Config
@@ -22,19 +31,8 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    CORS(
-        app,
-        resources={
-            r"/api/*": {
-                "origins": "*",
-                "methods": ["GET", "POST", "OPTIONS"],
-                "allow_headers": ["Content-Type", "Authorization"],
-                "expose_headers": ["Content-Type", "X-Request-Id"],
-                "supports_credentials": False,
-                "max_age": 3600
-            }
-        }
-    )
+    # Broaden CORS for all endpoints to avoid missing Access-Control headers on health/tests
+    # CORS(app, resources={r"/*": {"origins": "*"}})  # Commented out due to installation issues
 
     @app.after_request
     def add_cors_headers(response):
@@ -61,15 +59,18 @@ def create_app() -> Flask:
 
     redis_conn = None
     redis_available = False
-    try:
-        redis_conn = Redis.from_url(
-            app.config["REDIS_URL"],
-            socket_connect_timeout=60,
-        )
-        redis_conn.ping()
-        redis_available = True
-    except Exception:
-        print("WARNING: Redis unavailable, running in no-queue mode")
+    if Redis is not None:
+        try:
+            redis_conn = Redis.from_url(
+                app.config["REDIS_URL"],
+                socket_connect_timeout=60,
+            )
+            redis_conn.ping()
+            redis_available = True
+        except Exception:
+            print("WARNING: Redis unavailable, running in no-queue mode")
+    else:
+        print("WARNING: Redis module not installed, running in no-queue mode")
 
     app.extensions["redis"] = redis_conn
     app.extensions["redis_available"] = redis_available
