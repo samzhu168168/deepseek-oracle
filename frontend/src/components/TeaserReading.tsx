@@ -3,6 +3,7 @@
  * Shows only the mysterious opening to create curiosity
  */
 import React from 'react';
+import { MarkdownRenderer } from './MarkdownRenderer';
 import './TeaserReading.css';
 
 interface TeaserReadingProps {
@@ -33,7 +34,7 @@ export const TeaserReading: React.FC<TeaserReadingProps> = ({
 
         {/* The Hook - mysterious opening that creates curiosity */}
         <div className="oracle-hook">
-          {hook || "I see a pattern here. One that repeats. Let me show you what it means..."}
+          <MarkdownRenderer content={hook || "I see a pattern here. One that repeats. Let me show you what it means..."} />
         </div>
 
         {/* Cliffhanger - make them want more */}

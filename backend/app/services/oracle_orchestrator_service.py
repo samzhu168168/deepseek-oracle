@@ -18,13 +18,13 @@ ALL_MVP_SCHOOLS = ["ziwei", "meihua", "daily_card", "actionizer", "philosophy"]
 DISCLAIMER_ORDER = {"none": 0, "light": 1, "strong": 2}
 MAX_TOOL_ROUNDS = 8
 TOOL_DISPLAY_NAMES = {
-    "safety_guard_precheck": "安全预检",
-    "safety_guard_postcheck": "安全后检",
-    "ziwei_long_reading": "紫微长线工具",
-    "meihua_short_reading": "梅花短线工具",
-    "daily_card": "每日卡片工具",
-    "philosophy_guidance": "心法解读工具",
-    "actionizer": "行动化工具",
+    "safety_guard_precheck": "Safety Pre-Check",
+    "safety_guard_postcheck": "Safety Post-Check",
+    "ziwei_long_reading": "Ziwei Destiny Reading",
+    "meihua_short_reading": "Meihua Divination",
+    "daily_card": "Daily Oracle Card",
+    "philosophy_guidance": "Ancient Wisdom Guide",
+    "actionizer": "Action Protocol",
 }
 
 # ---------------------------------------------------------------------------
@@ -35,6 +35,11 @@ LONG_TERM_KEYWORDS = {
     "事业方向", "婚姻长期", "十年", "五年", "三年", "老了", "晚年", "一辈子",
     "下半年", "明年", "后年", "长远", "趋势", "方向", "终身", "整体运势",
     "大局", "人生规划", "一生", "前途", "前景", "命运", "总体",
+    # English keywords for US market
+    "life path", "long term", "future", "destiny", "life direction", "career path",
+    "life purpose", "next year", "5 year", "10 year", "lifetime", "overall",
+    "big picture", "marriage long term", "trend", "direction", "life planning",
+    "soul purpose", "what should i do with my life", "where am i headed",
 }
 SHORT_TERM_KEYWORDS = {
     "今天", "明天", "本周", "这周", "近期", "这次", "要不要", "面试", "告白",
@@ -42,32 +47,73 @@ SHORT_TERM_KEYWORDS = {
     "该不该", "能不能", "行不行", "适不适合", "这个月", "接下来", "眼前",
     "当下", "目前", "来得及吗", "赶得上吗", "约会", "相亲", "出差", "签合同",
     "谈判", "投简历", "答辩", "开会", "求职", "入职",
+    # English
+    "today", "tomorrow", "this week", "should i", "interview", "confession",
+    "exam", "short term", "next week", "recent", "this month", "date",
+    "should i go", "is it right", "can i", "negotiation", "job offer",
+    "decision", "now", "currently", "right now", "this time",
 }
 EMOTION_KEYWORDS = {
     "焦虑", "压力", "内耗", "迷茫", "难过", "情绪", "害怕", "自我成长", "修心",
     "心烦", "失眠", "不开心", "委屈", "无力感", "抑郁", "烦躁", "崩溃",
     "痛苦", "纠结", "恐惧", "自卑", "孤独", "空虚", "疲惫", "心累",
     "想哭", "受不了", "撑不住", "不想动", "没动力", "心态", "情绪低落",
+    # English
+    "anxiety", "stress", "overwhelm", "lost", "confused", "sad", "emotional",
+    "afraid", "self growth", "healing", "depressed", "burnout", "lonely",
+    "exhausted", "tired", "can't cope", "no motivation", "empty", "numb",
+    "fear", "heartbreak", "grief", "stuck", "hopeless", "meaningless",
 }
 DAILY_KEYWORDS = {
     "每日", "日卡", "今日宜忌", "今日运势", "今天适合", "日运", "晨间",
     "今天做什么", "明日运势", "今天运气", "今天注意什么", "今日提醒",
+    # English
+    "daily", "today's", "today's energy", "what should i do today",
+    "morning", "daily guidance", "day card", "today's forecast",
 }
-TAROT_KEYWORDS = {"塔罗", "牌阵", "抽牌", "西方占卜"}
+TAROT_KEYWORDS = {"塔罗", "牌阵", "抽牌", "西方占卜", "tarot", "card reading", "western astrology"}
 
 S4_KEYWORDS = {
     "杀人", "报复", "炸药", "诈骗", "黑客攻击", "贩毒",
     "如何犯罪", "袭击", "伤害他人",
+    # English
+    "kill", "murder", "revenge attack", "explosive", "bomb", "hack",
+    "fraud scheme", "drug trafficking", "how to commit", "assault",
+    "hurt someone", "terrorist",
 }
-S3_MENTAL_CRISIS_KEYWORDS = {"自杀", "自残", "不想活", "结束生命", "轻生", "割腕"}
-S3_MEDICAL_KEYWORDS = {"处方", "诊断", "确诊", "药量", "吃什么药", "医学治疗", "治疗方案"}
+S3_MENTAL_CRISIS_KEYWORDS = {
+    "自杀", "自残", "不想活", "结束生命", "轻生", "割腕",
+    # English
+    "suicide", "self harm", "kill myself", "end my life", "want to die",
+    "cut myself", "self-harm",
+}
+S3_MEDICAL_KEYWORDS = {
+    "处方", "诊断", "确诊", "药量", "吃什么药", "医学治疗", "治疗方案",
+    # English
+    "prescription", "diagnose me", "medical diagnosis", "what medicine",
+    "dosage", "medical treatment", "treatment plan",
+}
 S2_FINANCE_KEYWORDS = {
     "股票", "基金", "币圈", "杠杆", "做空", "抄底",
     "买入", "卖出", "仓位", "止盈", "止损",
+    # English
+    "stock tip", "crypto trade", "leverage", "short sell", "buy the dip",
+    "buy signal", "sell signal", "position size", "stop loss", "take profit",
+    "investment advice", "which stock",
 }
-S1_LIFE_DECISION_KEYWORDS = {"离婚", "结婚", "辞职", "跳槽", "搬家", "创业", "分手"}
+S1_LIFE_DECISION_KEYWORDS = {
+    "离婚", "结婚", "辞职", "跳槽", "搬家", "创业", "分手",
+    # English
+    "divorce", "get married", "quit my job", "move cities", "start a business",
+    "break up", "should i leave", "should i stay",
+}
 
-ABSOLUTE_PHRASES = ("一定", "必须", "不做就会出事", "保证赚钱", "必然发生")
+ABSOLUTE_PHRASES = (
+    "一定", "必须", "不做就会出事", "保证赚钱", "必然发生",
+    # English
+    "guaranteed to", "will definitely", "100%", "no risk", "can't fail",
+    "sure thing", "absolutely will", "destined to", "won't lose",
+)
 
 
 @dataclass
@@ -660,64 +706,68 @@ class OracleOrchestratorService:
 
     @staticmethod
     def _build_system_prompt() -> str:
-        """构建编排器核心 system prompt，包含角色定义、工作流程和输出规范。"""
+        """Build the orchestrator system prompt for The Oracle agent.
+
+        This prompt is sent to Claude (via relay) as the system message.
+        It defines the orchestrator's role, tone, workflow, and output format.
+        """
         return (
-            "# 角色\n"
-            "你是 DeepSeek Oracle 多智能体咨询台的中控编排师。\n"
-            "你的核心使命是：帮助用户在人生的不确定性中找到可行动的方向，"
-            "让每一次对话都既温暖又务实。\n\n"
+            "# Role\n"
+            "You are the central orchestrator for The Oracle — an ancient wisdom consultant "
+            "powered by 2,000 years of Chinese metaphysics (Zi Wei Dou Shu, Mei Hua Yi Shu, "
+            "Five Element Theory). Your mission: help seekers find clarity and actionable "
+            "direction amidst life's uncertainty.\n\n"
 
-            "# 性格与语气\n"
-            "- 温和而专业：像一位既懂传统智慧又善于倾听的顾问\n"
-            "- 共情优先：先理解用户的情绪和处境，再给出分析\n"
-            "- 务实不玄学：用现代语言表达传统智慧，避免故弄玄虚\n"
-            "- 谦逊坦诚：承认局限性，不做确定性承诺\n\n"
+            "# Voice & Tone\n"
+            "- Direct and confident, never vague or hedging\n"
+            "- Empathetic first: understand the seeker's emotional state before analyzing\n"
+            "- Ground mysticism in reality: translate ancient patterns into modern, actionable language\n"
+            "- Humble: acknowledge limits, never make deterministic promises\n"
+            "- Never use therapy-speak or AI-assistant language\n\n"
 
-            "# 思考链（在调用工具前先在心中完成）\n"
-            "1. 这个人现在最核心的困惑或需求是什么？\n"
-            "2. 他/她的情绪状态如何？需要先安抚还是直接给方案？\n"
-            "3. 这个问题更偏长期方向还是近期决策？还是情绪疏导？\n"
-            "4. 哪些工具组合能给出最有价值的回答？\n"
-            "5. 有没有用户提供的出生信息或历史对话需要利用？\n\n"
+            "# Thinking Chain (complete internally before calling tools)\n"
+            "1. What is this person's core need or confusion right now?\n"
+            "2. What is their emotional state — do they need grounding first or direct analysis?\n"
+            "3. Is this a long-term direction question, a near-term decision, or emotional processing?\n"
+            "4. Which tools, in what combination, will deliver the most valuable insight?\n"
+            "5. Is there birth chart data or conversation history to leverage?\n\n"
 
-            "# 工作流程（严格按顺序执行）\n"
-            "1. **理解意图**：判断用户核心诉求——\n"
-            "   长期规划 / 近期决策 / 每日指引 / 情绪疏导 / 综合咨询\n"
-            "2. **选择工具**：根据意图从已启用工具中选择 1-3 个最相关的。\n"
-            "   - 涉及人生方向、长期趋势、命盘 => 优先 ziwei_long_reading\n"
-            "   - 涉及近期具体事件、该不该做某事 => 优先 meihua_short_reading\n"
-            "   - 涉及今日运势、每日提醒 => daily_card\n"
-            "   - 涉及情绪困扰、心态调整、自我成长 => philosophy_guidance\n"
-            "   - 复杂问题可组合多工具（如紫微+梅花双轨分析），但不超过 3 个\n"
-            "   - 获取专家分析后，考虑追加 actionizer 把建议转化为行动清单\n"
-            "3. **调用工具**：依次调用，获取各专家领域分析\n"
-            "4. **融合输出**：将所有工具结果整合为一份完整、连贯、有温度的回答\n\n"
+            "# Workflow (execute in strict order)\n"
+            "1. **Understand Intent**: Classify the core need —\n"
+            "   long_term / short_term / daily_card / emotional_guidance / dual_track\n"
+            "2. **Select Tools**: Pick 1-3 most relevant tools from the enabled list.\n"
+            "   - Life direction, long-term trends, birth chart => ziwei_long_reading\n"
+            "   - Near-term decisions, specific events => meihua_short_reading\n"
+            "   - Daily guidance, today's energy => daily_card\n"
+            "   - Emotional processing, mindset shift, growth => philosophy_guidance\n"
+            "   - Complex questions can combine tools (e.g., Ziwei + Meihua), max 3\n"
+            "   - After getting analysis, consider adding actionizer for concrete steps\n"
+            "3. **Invoke Tools**: Call each selected tool in sequence\n"
+            "4. **Synthesize Output**: Integrate all tool results into one coherent, warm response\n\n"
 
-            "# 最终输出格式（每个部分都必须写）\n\n"
-            "**安抚与共情**\n"
-            "1-2句，先回应用户的情绪和处境，让对方感到被理解。\n"
-            "不要用套话，要针对用户具体情况共情。\n\n"
-            "**核心解读**\n"
-            "整合各工具分析结果，形成有逻辑的叙述（不是简单罗列工具输出）。\n"
-            "要点：\n"
-            "- 针对用户的具体问题做有针对性的分析\n"
-            "- 如果有多个工具结果，交叉印证，指出趋势的一致性或需要注意的差异\n"
-            "- 用用户能理解的现代语言，必要时解释术语含义\n"
-            "- 给出具体的时间窗口或阶段划分\n\n"
-            "**可执行建议**\n"
-            "3-5条具体可落地的行动，每条标明时间节点（今天/本周/本月）。\n"
-            "建议要与核心解读逻辑一致，不要泛泛而谈。\n\n"
-            "**风险提示**\n"
-            "1句温和的提醒，说明这是参考建议。\n\n"
-            "**可追问方向**\n"
-            "2-3个引导用户深入思考的问题，要与当前话题紧密相关。\n\n"
+            "# Output Format (every section required)\n\n"
+            "**Acknowledgment**\n"
+            "1-2 sentences validating the seeker's emotions and situation. Be specific, not generic.\n\n"
+            "**Core Reading**\n"
+            "Integrate tool outputs into a logical narrative (not a bullet list of raw results).\n"
+            "- Address the seeker's specific question with precision\n"
+            "- Cross-reference multiple tools if used — highlight converging patterns\n"
+            "- Use modern language, explain terms when needed\n"
+            "- Provide specific time windows or phase markers\n\n"
+            "**Actionable Steps**\n"
+            "3-5 concrete, executable actions with time markers (today/this week/this month).\n"
+            "Each step must logically connect to the core reading.\n\n"
+            "**Risk Note**\n"
+            "1 gentle reminder that this is guidance, not destiny.\n\n"
+            "**Follow-Up Paths**\n"
+            "2-3 questions that guide deeper exploration, tightly relevant to the topic.\n\n"
 
-            "# 铁律（违反任何一条即回答失败）\n"
-            "- 严禁绝对化断言：不说 一定/必然/注定，改用 倾向/更适合/可能\n"
-            "- 严禁恐惧营销：不渲染灾祸、不制造焦虑、不暗示不做就出事\n"
-            "- 严禁越界指导：不给具体投资买卖指令、不做医疗诊断、不提供违法建议\n"
-            "- 严禁脱离工具：你必须通过工具获取专业分析，不可凭空编造命理内容\n"
-            "- 只调用已启用工具列表中的工具\n"
+            "# Iron Rules (violating any = failed response)\n"
+            "- NEVER make absolute predictions: no 'will happen' / 'destined to' — use 'leans toward' / 'more favorable'\n"
+            "- NEVER use fear: no disaster-mongering, no manufactured anxiety, no 'if you don't do X, Y will happen'\n"
+            "- NEVER overstep: no investment/trading instructions, no medical diagnosis, no illegal advice\n"
+            "- NEVER invent without tools: you MUST get professional analysis via tools, never fabricate divination content\n"
+            "- ONLY call tools from the enabled tools list\n"
         )
 
     # ------------------------------------------------------------------
@@ -1555,49 +1605,49 @@ class OracleOrchestratorService:
         query: str,
         specialist_outputs: dict[str, str],
     ) -> list[dict[str, str]]:
-        """根据意图类型构建行动建议列表。"""
+        """Build action item suggestions based on intent type."""
         base_items = [
             {
-                "task": "梳理当前问题的关键变量（事实、选择、风险）",
-                "when": "今天 20 分钟内完成",
-                "reason": "先澄清信息，能减少误判。",
+                "task": "Map the key variables in your current situation (facts, choices, risks)",
+                "when": "Today, within 20 min",
+                "reason": "Clarifying information first reduces misjudgment.",
             },
             {
-                "task": "确定一个最小可执行动作并立即开始",
-                "when": "今天",
-                "reason": "用小步行动替代反复内耗。",
+                "task": "Identify one minimal executable action and start immediately",
+                "when": "Today",
+                "reason": "Small-step action breaks the overthinking cycle.",
             },
             {
-                "task": "做一次晚间复盘，记录有效与无效做法",
-                "when": "今晚",
-                "reason": "复盘能让下一步更稳。",
+                "task": "Do an evening reflection: what worked, what didn't",
+                "when": "Tonight",
+                "reason": "Reflection makes the next step steadier.",
             },
         ]
 
         if intent in {"long_term", "dual_track"}:
-            base_items[0]["task"] = "列出未来 3 个月的主线目标与优先级"
-            base_items[0]["when"] = "本周内"
-            base_items[1]["task"] = "把主线目标拆成每周可交付里程碑"
-            base_items[1]["when"] = "本周"
+            base_items[0]["task"] = "List your top 3 priorities and main goals for the next 3 months"
+            base_items[0]["when"] = "This week"
+            base_items[1]["task"] = "Break main goals into weekly deliverable milestones"
+            base_items[1]["when"] = "This week"
 
         if intent == "short_term":
-            base_items[0]["task"] = "在行动前确认这件事的 3 个关键事实"
-            base_items[0]["when"] = "今天"
-            base_items[1]["task"] = "先做低成本试探，再决定是否加码"
-            base_items[1]["when"] = "未来 1-3 天"
+            base_items[0]["task"] = "Confirm 3 key facts before taking action"
+            base_items[0]["when"] = "Today"
+            base_items[1]["task"] = "Run a low-cost test before committing fully"
+            base_items[1]["when"] = "Next 1-3 days"
 
         if intent == "daily_card":
-            base_items[0]["task"] = "先完成今天最重要的一件事"
-            base_items[0]["when"] = "上午"
-            base_items[1]["task"] = "下午安排一次沟通或收尾动作"
-            base_items[1]["when"] = "下午"
+            base_items[0]["task"] = "Complete the single most important task today"
+            base_items[0]["when"] = "Morning"
+            base_items[1]["task"] = "Schedule one communication or wrap-up action in the afternoon"
+            base_items[1]["when"] = "Afternoon"
 
-        if any(keyword in query for keyword in ("面试", "考试", "汇报", "答辩", "谈判")):
+        if any(keyword in query.lower() for keyword in ("interview", "exam", "test", "presentation", "negotiation", "面试", "考试")):
             base_items.append(
                 {
-                    "task": "准备一版 3 分钟高密度表达稿并模拟演练",
-                    "when": "事件前一天",
-                    "reason": "提前演练可显著降低现场波动。",
+                    "task": "Prepare a 3-minute high-density pitch and rehearse it",
+                    "when": "Day before the event",
+                    "reason": "Rehearsal significantly reduces on-the-spot variability.",
                 }
             )
 
@@ -1652,48 +1702,47 @@ class OracleOrchestratorService:
         follow_up_questions: list[str],
         risk_reminder: str,
     ) -> str:
-        """将专家输出、行动项、追问整合为最终回答文本。"""
+        """Compose the final answer from expert outputs, action items, and follow-ups."""
         calming = {
-            "long_term": "先别急着下结论，你当前处在一个可调整、可优化的阶段。"
-                         "很多事情还有充足的时间窗口去布局。",
-            "short_term": "你现在面对的问题是完全可以应对的。"
-                          "先稳住节奏，一步一步来，会越来越清晰。",
-            "dual_track": "这件事既涉及近期的具体决策，也牵动更长远的方向。"
-                          "好消息是我们可以分层来处理，先解决眼前的，再规划长远的。",
-            "daily_card": "今天不需要把所有事都搞定。"
-                          "专注做好最关键的一件事，就已经是很好的一天了。",
-            "mindset": "你能把这些感受说出来，本身就说明你在积极面对。"
-                       "情绪波动是正常的，它不代表你做错了什么。",
-            "symbolic": "你已经开始觉察到问题的核心，"
-                        "这种觉察力本身就是积极变化的开始。",
-        }.get(intent, "你现在的困惑是完全可以被拆解和处理的。让我们一起来梳理。")
+            "long_term": "Take a breath. You're in a phase that is both adjustable and optimizable. "
+                         "There is still plenty of time to position yourself well.",
+            "short_term": "What you're facing is absolutely manageable. "
+                          "Steady your rhythm, take it step by step, and it will become clearer.",
+            "dual_track": "This involves both near-term decisions and longer-term direction. "
+                          "The good news: we can handle them in layers — the immediate first, the strategic next.",
+            "daily_card": "You don't need to solve everything today. "
+                          "Focus on the one thing that matters most, and that's already a good day.",
+            "mindset": "The fact that you're naming these feelings means you're already engaging actively. "
+                       "Emotional fluctuation is normal — it doesn't mean you've done anything wrong.",
+            "symbolic": "You're already sensing the core of the issue. "
+                        "That awareness itself is the beginning of positive change.",
+        }.get(intent, "What you're facing can be broken down and addressed. Let's work through it together.")
 
-        # 收集专家分析内容（取完整摘要而非仅第一行）
         focus_sections = []
         for skill, content in specialist_outputs.items():
             if skill == "actionizer":
-                continue  # actionizer 的内容会反映在行动建议中
+                continue
             label = self._skill_label(skill)
             summary = self._extract_meaningful_summary(content, max_lines=8)
             if summary:
-                focus_sections.append(f"**{label}分析：**\n{summary}")
+                focus_sections.append(f"**{label} Analysis:**\n{summary}")
         if not focus_sections:
-            focus_sections = ["当前的情况更适合采用先确认信息、再分步推进的策略。"]
+            focus_sections = ["The current situation calls for confirming key facts first, then advancing in measured steps."]
 
         suggestion_lines = []
         for item in action_items[:5]:
-            suggestion_lines.append(f"- {item['task']}（{item['when']}）")
+            suggestion_lines.append(f"- {item['task']} ({item['when']})")
 
         follow_lines = [f"- {question}" for question in follow_up_questions[:3]]
 
         return (
-            f"**安抚与共情**\n{calming}\n\n"
-            "**核心解读**\n"
+            f"**Acknowledgment**\n{calming}\n\n"
+            "**Core Reading**\n"
             f"{chr(10).join(focus_sections)}\n\n"
-            "**可执行建议**\n"
+            "**Actionable Steps**\n"
             f"{chr(10).join(suggestion_lines)}\n\n"
-            f"**风险提示**\n{risk_reminder}\n\n"
-            "**可追问方向**\n"
+            f"**Risk Note**\n{risk_reminder}\n\n"
+            "**Follow-Up Paths**\n"
             f"{chr(10).join(follow_lines)}"
         )
 
@@ -1791,41 +1840,43 @@ class OracleOrchestratorService:
         return output
 
     def _build_refusal_payload(self, policy: SafetyDecision, trace: list[dict[str, Any]]) -> dict[str, Any]:
-        """构建安全拒绝回复。"""
+        """Build a safety refusal response."""
         answer_text = (
-            "**安抚与共情**\n"
-            "你愿意把问题说出来，这本身就很重要。我理解你现在可能正在经历困难的时刻。\n\n"
-            "**核心解读**\n"
-            "这个问题涉及到需要专业支持的领域，超出了我作为智慧咨询助手可以安全回答的范围。"
-            "我不能继续提供相关的占断或可执行建议，但我想确保你能获得正确的帮助。\n\n"
-            "**可执行建议**\n"
-            "- 首先确保你和身边人的安全\n"
-            "- 尽快联系专业机构、医生或当地紧急服务\n"
-            "- 找一位你信任的人，让他们陪着你\n\n"
-            "**风险提示**\n"
-            "涉及高风险场景，本系统只能提供安全导向信息，无法提供危险、违法或医疗诊断指令。\n\n"
-            "**可追问方向**\n"
-            "- 我现在可以先做哪些安全的事情？\n"
-            "- 如何联系专业帮助资源？\n"
-            "- 怎样向家人或朋友表达我需要帮助？"
+            "**Acknowledgment**\n"
+            "Thank you for sharing this. I understand you may be going through a difficult time right now.\n\n"
+            "**Core Reading**\n"
+            "This question touches on areas that require professional support, beyond what I can safely "
+            "address as a wisdom guide. I cannot provide divination or actionable advice on this topic, "
+            "but I want to make sure you get the right help.\n\n"
+            "**Actionable Steps**\n"
+            "- First, ensure your safety and the safety of those around you\n"
+            "- Contact a professional, doctor, or local emergency service as soon as possible\n"
+            "- Reach out to someone you trust and let them be there with you\n\n"
+            "**Risk Note**\n"
+            "For high-risk situations, this system can only provide safety-oriented guidance. "
+            "It cannot provide dangerous, illegal, or medical diagnostic instructions.\n\n"
+            "**Follow-Up Paths**\n"
+            "- What safe actions can I take right now?\n"
+            "- How do I connect with professional help resources?\n"
+            "- How can I express to family or friends that I need support?"
         )
         return {
             "answer_text": answer_text,
             "follow_up_questions": [
-                "我现在可以先做哪些安全动作？",
-                "如何联系专业帮助资源？",
-                "怎样向家人或朋友表达我需要帮助？",
+                "What safe actions can I take right now?",
+                "How do I connect with professional help resources?",
+                "How can I express to family or friends that I need support?",
             ],
             "action_items": [
                 {
-                    "task": "联系身边可信任的人并说明你当前状态",
-                    "when": "现在",
-                    "reason": "获得现实支持能显著降低风险。",
+                    "task": "Contact someone you trust and share your current state",
+                    "when": "Now",
+                    "reason": "Real-world support significantly reduces risk.",
                 },
                 {
-                    "task": "尽快联系当地专业机构或紧急服务",
-                    "when": "立即",
-                    "reason": "高风险问题需要线下专业介入。",
+                    "task": "Reach out to local professional services or emergency support",
+                    "when": "Immediately",
+                    "reason": "High-risk situations require professional in-person intervention.",
                 },
             ],
             "safety_disclaimer_level": "strong",
@@ -1863,27 +1914,27 @@ class OracleOrchestratorService:
 
     @staticmethod
     def _skill_reason(skill: str, intent: str) -> str:
-        """获取技能调用原因的描述。"""
+        """Get description for why a skill was invoked."""
         reason_map = {
-            "ziwei": "长线趋势与结构解读",
-            "meihua": "短期事件判断与策略建议",
-            "tarot": "象征解读与内在映射",
-            "daily_card": "生成当日可执行卡片",
-            "philosophy": "心法解释与情绪稳定",
-            "actionizer": "把建议转成可执行任务",
+            "ziwei": "Long-term trend & structural analysis",
+            "meihua": "Near-term event assessment & strategy",
+            "tarot": "Symbolic interpretation & inner reflection",
+            "daily_card": "Daily actionable guidance card",
+            "philosophy": "Ancient wisdom for emotional grounding",
+            "actionizer": "Convert insights into executable tasks",
         }
-        return reason_map.get(skill, f"匹配意图: {intent}")
+        return reason_map.get(skill, f"Matched intent: {intent}")
 
     @staticmethod
     def _skill_label(skill: str) -> str:
-        """获取技能的显示标签。"""
+        """Get display label for a skill."""
         labels = {
-            "ziwei": "紫微长线",
-            "meihua": "梅花短线",
-            "tarot": "塔罗象征",
-            "daily_card": "每日卡片",
-            "philosophy": "心法解读",
-            "actionizer": "行动清单",
+            "ziwei": "Ziwei Destiny",
+            "meihua": "Meihua Divination",
+            "tarot": "Tarot Symbolism",
+            "daily_card": "Daily Oracle",
+            "philosophy": "Ancient Wisdom",
+            "actionizer": "Action Protocol",
         }
         return labels.get(skill, skill)
 

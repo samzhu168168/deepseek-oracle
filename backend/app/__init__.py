@@ -3,7 +3,7 @@ import uuid
 import time
 
 from flask import Flask, g, jsonify, request
-# from flask_cors import CORS  # Commented out due to installation issues
+from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
 # Conditional imports for optional dependencies
@@ -31,26 +31,7 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Broaden CORS for all endpoints to avoid missing Access-Control headers on health/tests
-    # CORS(app, resources={r"/*": {"origins": "*"}})  # Commented out due to installation issues
-
-    @app.after_request
-    def add_cors_headers(response):
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-        response.headers['Access-Control-Max-Age'] = '3600'
-        return response
-
-    @app.before_request
-    def handle_preflight():
-        if request.method == "OPTIONS":
-            response = app.make_default_options_response()
-            response.headers["Access-Control-Allow-Origin"] = "*"
-            response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-            response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-            response.headers["Access-Control-Max-Age"] = "3600"
-            return response
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     setup_logging(app)
 

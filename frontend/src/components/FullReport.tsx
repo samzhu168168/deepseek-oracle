@@ -2,6 +2,7 @@
 // 放置路径: frontend/src/components/FullReport.tsx
 // 用途: 展示解锁后的完整报告，替换模糊区域
 
+import { MarkdownRenderer } from './MarkdownRenderer'
 import { FullReportData } from './LicenseKeyModal'
 
 interface FullReportProps {
@@ -47,10 +48,7 @@ export function FullReport({ data, elementPair, score }: FullReportProps) {
         icon="◈"
         accent="#8b6240"
       >
-        <div
-          style={{ color: '#3d3530', lineHeight: 1.85, fontSize: '15px', whiteSpace: 'pre-wrap' }}
-          dangerouslySetInnerHTML={{ __html: formatText(data.fullAnalysis) }}
-        />
+        <MarkdownRenderer content={data.fullAnalysis} />
       </ReportSection>
 
       {/* ── Section 2: Palace Readings ── */}
@@ -100,15 +98,13 @@ export function FullReport({ data, elementPair, score }: FullReportProps) {
         <div
           style={{
             color: '#3d3530',
-            lineHeight: 1.85,
-            fontSize: '15px',
             background: '#f8f5f0',
             borderRadius: '10px',
             padding: '20px',
-            whiteSpace: 'pre-wrap',
           }}
-          dangerouslySetInnerHTML={{ __html: formatText(data.elementAdvice) }}
-        />
+        >
+          <MarkdownRenderer content={data.elementAdvice} />
+        </div>
       </ReportSection>
 
       {/* ── 底部保存提示 ── */}
@@ -256,7 +252,3 @@ function TimingCard({
   )
 }
 
-// 把 **bold** 转为 <strong>
-function formatText(text: string): string {
-  return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-}

@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet-async";
 import { InkButton } from "../components/InkButton";
 import { LicenseKeyModal, FullReportData } from "../components/LicenseKeyModal";
 import { FullReport } from "../components/FullReport";
+import { MarkdownRenderer } from "../components/MarkdownRenderer";
 import { EmailGateModal } from "../components/EmailGateModal";
 import { TeaserReading } from "../components/TeaserReading";
 import { PreviewReading } from "../components/PreviewReading";
@@ -84,10 +85,10 @@ const buildPolygonPoints = (values: number[], radius: number, center: number) =>
 
 const getRelationshipLabel = (score: number) => {
   if (score >= 85) {
-    return "‚ö° Electric Tension Pair";
+    return "‚ö?Electric Tension Pair";
   }
   if (score >= 70) {
-    return "‚ú® Balanced Harmony Pair";
+    return "‚ú?Balanced Harmony Pair";
   }
   if (score >= 55) {
     return "üåô Growth-Oriented Pair";
@@ -157,7 +158,7 @@ const EmailCapture = () => {
             placeholder="Enter your email address"
             required
           />
-          <InkButton type="submit">Send My Forecast ‚Üí</InkButton>
+          <InkButton type="submit">Send My Forecast </InkButton>
           {error ? <p className="error-text">{error}</p> : null}
           <p className="email-capture__note">
             No spam. One email. Your cosmic timing, decoded.
@@ -180,8 +181,33 @@ export default function ResultPage() {
   const [emailUnlocked, setEmailUnlocked] = useState(false);
   const [previewData, setPreviewData] = useState<string | null>(null);
   const [paywallModalOpen, setPaywallModalOpen] = useState(false);
-  const [shareImageUrl, setShareImageUrl] = useState(`${SITE_URL}/og-image.png`);
+  const [, setShareImageUrl] = useState(`${SITE_URL}/og-image.png`);
+  const [postPaymentFlow, setPostPaymentFlow] = useState(false);
   const shareCardRef = useRef<HTMLDivElement | null>(null);
+
+  // ‚îÄ‚îÄ Detect Gumroad post-payment redirect ‚îÄ‚îÄ
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("unlocked") === "true" && params.get("ref") === "gumroad") {
+      sessionStorage.setItem("bond:post_payment", "true");
+      window.history.replaceState({}, "", "/result");
+      setPostPaymentFlow(true);
+    }
+    // Also check sessionStorage on mount (survives page refresh)
+    if (sessionStorage.getItem("bond:post_payment") === "true") {
+      setPostPaymentFlow(true);
+    }
+  }, []);
+
+  // ‚îÄ‚îÄ Auto-open License Key modal for post-payment users ‚îÄ‚îÄ
+  useEffect(() => {
+    if (postPaymentFlow && normalizedReport) {
+      const timer = setTimeout(() => {
+        setLicenseModalOpen(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [postPaymentFlow]);
 
   useEffect(() => {
     if (!initial) {
@@ -245,12 +271,38 @@ export default function ResultPage() {
     radarEntries.reduce((sum, item) => sum + item.value, 0) / radarEntries.length,
   );
   const relationshipLabel = getRelationshipLabel(averageScore);
+
+  // ‚îÄ‚îÄ Dynamic OG image URL for social sharing ‚îÄ‚îÄ
+  const ogImageUrl = useMemo(() => {
+    const params = new URLSearchParams({
+      e1: normalizedReport?.teaser?.five_element_compatibility?.split(" ")[0] || "Water",
+      e2: normalizedReport?.teaser?.five_element_compatibility?.split(" ").pop() || "Wood",
+      score: String(averageScore),
+      label: relationshipLabel,
+    });
+    return `${SITE_URL}/api/og-image?${params.toString()}`;
+  }, [normalizedReport, averageScore, relationshipLabel]);
+
   const isUnlocked = Boolean(fullReportData || (normalizedReport?.license_valid && normalizedReport?.full_report));
   const elementCombo = normalizedReport?.teaser?.five_element_compatibility || "Water meets Wood";
   const elementPair = elementCombo.replace(/\s*meets\s*/i, "-").replace(/\s+/g, " ").trim();
-  const resultTitle = `${elementPair} Elemental Bond ‚Äî Your BaZi Compatibility Reading`;
-  const resultDescription = `Your ${elementPair} connection carries a rare dynamic. Discover the hidden pattern...`;
-  const shareText = `My elemental bond score: ${averageScore}/100\nElement: ${elementCombo}\nTest yours ‚Üí ${SITE_URL.replace(/^https?:\/\//, "")}`;
+  const elements = elementPair.split("-").map((s) => s.trim());
+  const resultTitle = `${elementPair} Compatibility ‚Ä?Soul Resonance Score ${averageScore}/100 | Elemental Bond`;
+  const resultDescription = `Your ${elementPair} connection reveals a ${relationshipLabel.toLowerCase()}. ${averageScore}/100 Soul Resonance. Discover your hidden pattern, 2026 timing windows, and karmic growth edge.`;
+
+  // ‚îÄ‚îÄ Unique shareable URL with encoded result data ‚îÄ‚îÄ
+  const shareUrl = useMemo(() => {
+    const data = {
+      e1: elements[0] || "Water",
+      e2: elements[1] || "Wood",
+      s: averageScore,
+      l: relationshipLabel,
+    };
+    const encoded = btoa(JSON.stringify(data));
+    return `${SITE_URL}/?r=${encoded}`;
+  }, [elements, averageScore, relationshipLabel]);
+
+  const shareText = `My Soul Resonance Score: ${averageScore}/100\nElemental Bond: ${elementCombo}\nDiscover yours ‚Ü?${shareUrl}`;
 
   const generateShareImage = async () => {
     if (!shareCardRef.current) {
@@ -276,18 +328,23 @@ export default function ResultPage() {
   };
 
   const handleShare = async () => {
-    const dataUrl = await generateShareImage();
-    if (!dataUrl) {
-      return;
+    // Copy share URL to clipboard (primary) with image download as fallback
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      // Brief visual feedback could go here
+    } catch {
+      // Fallback: download image
+      const dataUrl = await generateShareImage();
+      if (dataUrl) {
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = "soul-resonance.png";
+        link.click();
+      }
     }
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = "soul-resonance.png";
-    link.click();
   };
 
   const handleShareToX = async () => {
-    await generateShareImage();
     const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
     window.open(intentUrl, "_blank", "noopener,noreferrer");
   };
@@ -307,7 +364,7 @@ export default function ResultPage() {
       const previews = {
         high: `I see ${elementPair.replace('-', ' meeting ')}.
 
-${elementPair.split('-')[0]} wants to burn fast, make decisions now, feel everything intensely. ${elementPair.split('-')[1]} wants to flow, take time, process slowly. This creates a push-pull dynamic that feels exhausting ‚Äî ${elementPair.split('-')[0]} thinks ${elementPair.split('-')[1]} is avoiding, ${elementPair.split('-')[1]} thinks ${elementPair.split('-')[0]} is overwhelming.
+${elementPair.split('-')[0]} wants to burn fast, make decisions now, feel everything intensely. ${elementPair.split('-')[1]} wants to flow, take time, process slowly. This creates a push-pull dynamic that feels exhausting ‚Ä?${elementPair.split('-')[0]} thinks ${elementPair.split('-')[1]} is avoiding, ${elementPair.split('-')[1]} thinks ${elementPair.split('-')[0]} is overwhelming.
 
 But here's what most people miss: this tension is your growth edge. ${elementPair.split('-')[0]} learns patience. ${elementPair.split('-')[1]} learns courage. The thing you love about them is the thing that drives you crazy. That's not a coincidence.
 
@@ -318,9 +375,9 @@ But this is just the surface. The full pattern reveals the hidden dynamics, your
 
 This is a complementary dynamic where each element brings what the other lacks. ${elementPair.split('-')[0]} provides energy and initiative. ${elementPair.split('-')[1]} provides stability and grounding.
 
-The tension shows up in decision-making. ${elementPair.split('-')[0]} wants to move fast. ${elementPair.split('-')[1]} wants to think it through. This creates friction, but it's productive friction ‚Äî if you learn to work with it.
+The tension shows up in decision-making. ${elementPair.split('-')[0]} wants to move fast. ${elementPair.split('-')[1]} wants to think it through. This creates friction, but it's productive friction ‚Ä?if you learn to work with it.
 
-The Decision Paralysis: When you're trying to plan anything ‚Äî a vacation, a move, a major purchase ‚Äî ${elementPair.split('-')[0]} gets impatient with ${elementPair.split('-')[1]}'s "slowness." ${elementPair.split('-')[1]} feels rushed by ${elementPair.split('-')[0]}'s "impulsiveness."
+The Decision Paralysis: When you're trying to plan anything ‚Ä?a vacation, a move, a major purchase ‚Ä?${elementPair.split('-')[0]} gets impatient with ${elementPair.split('-')[1]}'s "slowness." ${elementPair.split('-')[1]} feels rushed by ${elementPair.split('-')[0]}'s "impulsiveness."
 
 But this is just the surface. The full reading reveals your specific growth protocol and 2026 activation windows.`,
         low: `I see ${elementPair.replace('-', ' meeting ')}.
@@ -382,18 +439,20 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
         <meta name="description" content={resultDescription} />
         <meta
           name="keywords"
-          content="bazi compatibility, chinese astrology compatibility, soul resonance test, karmic relationship, twin flame calculator"
+          content={`${elementPair} compatibility, bazi reading, soul resonance test, karmic relationship reading, twin flame calculator, chinese astrology love match, five element compatibility, ${elementPair.replace('-', ' and ')} soul bond`}
         />
         <link rel="canonical" href={SITE_URL} />
         <meta property="og:title" content={resultTitle} />
         <meta property="og:description" content={resultDescription} />
         <meta property="og:url" content={SITE_URL} />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content={shareImageUrl} />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={resultTitle} />
         <meta name="twitter:description" content={resultDescription} />
-        <meta name="twitter:image" content={shareImageUrl} />
+        <meta name="twitter:image" content={ogImageUrl} />
       </Helmet>
       <section className="result-scorecard">
         <div className="result-scorecard__summary">
@@ -422,7 +481,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
         </div>
         <div className="result-scorecard__share">
           <InkButton type="button" onClick={handleShare}>
-            Share Your Soul Reading
+            Copy Share Link
           </InkButton>
           <InkButton type="button" kind="secondary" onClick={handleShareToX}>
             Share to X / Twitter
@@ -448,7 +507,10 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
       )}
 
       {!isUnlocked && (
-        <LicenseKeyGuide onOpenModal={() => setLicenseModalOpen(true)} />
+        <LicenseKeyGuide
+          onOpenModal={() => setLicenseModalOpen(true)}
+          postPayment={postPaymentFlow}
+        />
       )}
 
       {isUnlocked ? (
@@ -461,21 +523,26 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
             />
           ) : (
             <>
-              <div className="pre-wrap">{normalizedReport.full_report}</div>
+              <div className="result-full__report">
+                <MarkdownRenderer content={normalizedReport.full_report || ""} />
+              </div>
               <p className="result-full__note">
-                ‚ú® Your Elemental Signature and 2026 Activation Windows are included in your full reading.
+                ‚ú?Your Elemental Signature and 2026 Activation Windows are included in your full reading.
               </p>
             </>
           )}
         </section>
       ) : (
-        <PaidReading 
+        <PaidReading
           onUnlock={(tier) => {
             if (tier === 'basic') {
-              setPaywallModalOpen(true);
+              // Direct Gumroad purchase ‚Ä?redirect back to result page after payment
+              const returnUrl = encodeURIComponent(`${SITE_URL}/result?unlocked=true&ref=gumroad`);
+              window.open(`https://samzhu168.gumroad.com/l/bhpmxr?wanted=true&return_url=${returnUrl}`, '_blank');
             } else {
-              // Redirect to PDF purchase page
-              window.open('https://samzhu168.gumroad.com/l/bhpmxr', '_blank');
+              // PDF Report purchase
+              const returnUrl = encodeURIComponent(`${SITE_URL}/result?unlocked=true&ref=gumroad`);
+              window.open(`https://samzhu168.gumroad.com/l/bhpmxr?wanted=true&return_url=${returnUrl}`, '_blank');
             }
           }}
         />
@@ -491,9 +558,9 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
             <p className="paywall-modal__subtitle">One-time payment. Instant delivery to your email.</p>
             <p className="paywall-modal__score">Soul Resonance Score: {averageScore} / 100</p>
             <ul className="paywall-modal__list">
-              <li>‚úì 800-word personalized BaZi analysis</li>
-              <li>‚úì 2026 timing windows for your relationship</li>
-              <li>‚úì Specific action steps for your element pair</li>
+              <li>‚ú?800-word personalized BaZi analysis</li>
+              <li>‚ú?2026 timing windows for your relationship</li>
+              <li>‚ú?Specific action steps for your element pair</li>
             </ul>
             <a
               className="paywall-modal__cta"
@@ -501,7 +568,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
               target="_blank"
               rel="noreferrer"
             >
-              Yes, Reveal My Blueprint ‚Äî $24.90
+              Yes, Reveal My Blueprint ‚Ä?$24.90
             </a>
             <p className="paywall-modal__note">Secure payment via Gumroad</p>
           </div>
@@ -588,8 +655,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
             </div>
           ) : averageScore < 60 ? (
             <div style={{ fontSize: "72px", fontWeight: 700, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
-              Karmic Lesson Detected üå™Ô∏è
-            </div>
+              Karmic Lesson Detected üå™Ô∏?            </div>
           ) : (
             <div style={{ fontSize: "64px", fontWeight: 600, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
               Cosmic Connection
@@ -598,8 +664,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", zIndex: 1 }}>
           <div style={{ fontSize: "28px", letterSpacing: "3px", textTransform: "uppercase", opacity: 0.8 }}>
-            Magnetic Connection ‚ú®
-          </div>
+            Magnetic Connection ‚ú?          </div>
           <div style={{ fontSize: "160px", fontWeight: 700, textShadow: "0 24px 80px rgba(70, 32, 120, 0.6)" }}>
             {averageScore}
           </div>
@@ -626,20 +691,20 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
 
       <section className="result-testimonials">
         <div className="result-testimonials__card">
-          <p>"It felt like a mirror to our real dynamic ‚Äî eerily precise and deeply grounding."</p>
-          <p>‚Äî M.L., Seattle</p>
+          <p>"It felt like a mirror to our real dynamic ‚Ä?eerily precise and deeply grounding."</p>
+          <p>‚Ä?M.L., Seattle</p>
         </div>
         <div className="result-testimonials__card">
           <p>"The 2026 window timing was the exact clarity I needed to plan our next steps."</p>
-          <p>‚Äî J.K., Toronto</p>
+          <p>‚Ä?J.K., Toronto</p>
         </div>
         <div className="result-testimonials__card">
           <p>"I finally understood the hidden pattern behind our push-pull cycle."</p>
-          <p>‚Äî A.R., Singapore</p>
+          <p>‚Ä?A.R., Singapore</p>
         </div>
       </section>
       <p className="result-share-footer">
-        Want to know what your score means? Share and tag us ‚Äî we read every one.
+        Want to know what your score means? Share and tag us ‚Ä?we read every one.
       </p>
 
       <EmailGateModal

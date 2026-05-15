@@ -6,7 +6,14 @@
       "Bash(git checkout:*)",
       "Bash(git branch:*)",
       "Bash(git config:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "WebSearch",
+      "Bash(/f/MyTraeProjects/ElementalBond/backend/.venv/Scripts/python.exe -X utf8 compose_video.py)",
+      "Bash(/f/MyTraeProjects/ElementalBond/backend/.venv/Scripts/python.exe *)",
+      "Bash(sed -i 's/set -e/set +e/' /f/MyTraeProjects/agent-content-kit/data/videos/fire_water_20260502_142544/render_commands.sh)",
+      "Bash(bash /f/MyTraeProjects/agent-content-kit/data/videos/fire_water_20260502_142544/render_commands.sh)",
+      "Bash(/f/MyTraeProjects/agent-content-kit/ffmpeg/ffmpeg.exe -i /f/MyTraeProjects/agent-content-kit/data/videos/fire_water_20260502_142544/oracle_video_20260502_145226.mp4)",
+      "Bash(/f/MyTraeProjects/agent-content-kit/ffmpeg/ffmpeg.exe -i /f/MyTraeProjects/agent-content-kit/data/videos/fire_water_20260502_142544/oracle_video_20260502_150544.mp4)"
     ]
   }
 }

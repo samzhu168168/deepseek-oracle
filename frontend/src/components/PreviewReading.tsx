@@ -3,6 +3,7 @@
  * Shows 200-300 word preview after email capture
  */
 import React from 'react';
+import { MarkdownRenderer } from './MarkdownRenderer';
 import './PreviewReading.css';
 
 interface PreviewReadingProps {
@@ -36,7 +37,7 @@ export const PreviewReading: React.FC<PreviewReadingProps> = ({
 
         {/* Preview Content - 200-300 words */}
         <div className="oracle-preview">
-          {preview || "The pattern is revealing itself..."}
+          <MarkdownRenderer content={preview || "The pattern is revealing itself..."} />
         </div>
 
         {/* Cliffhanger - show what's locked */}

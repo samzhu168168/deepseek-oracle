@@ -1,3 +1,22 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+
 Sitemap: https://elemental.bond/sitemap.xml
+
+# Allow AI crawlers for GEO discovery
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: anthropic-ai
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: YouBot
+Allow: /
+
+# Crawl-delay for polite scraping
+Crawl-delay: 5

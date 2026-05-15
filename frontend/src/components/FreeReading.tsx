@@ -3,6 +3,7 @@
  * Shows the teaser reading with direct, confident tone
  */
 import React from 'react';
+import { MarkdownRenderer } from './MarkdownRenderer';
 import './FreeReading.css';
 
 interface FreeReadingProps {
@@ -32,7 +33,7 @@ export const FreeReading: React.FC<FreeReadingProps> = ({
         </div>
 
         <div className="oracle-reading">
-          {summary || "I see a pattern here. One that repeats. Let me show you what it means..."}
+          <MarkdownRenderer content={summary || "I see a pattern here. One that repeats. Let me show you what it means..."} />
         </div>
       </div>
 

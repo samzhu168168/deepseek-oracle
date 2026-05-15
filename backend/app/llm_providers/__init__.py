@@ -7,6 +7,7 @@ from flask import current_app
 from app.utils.errors import business_error
 
 from .base import BaseLLMProvider
+from .fallback import FallbackProvider
 from .mock import MockProvider
 
 # Conditional imports for providers that may have missing dependencies
@@ -44,6 +45,20 @@ try:
 except ImportError:
     VOLCANO_AVAILABLE = False
     VolcanoProvider = None
+
+try:
+    from .anthropic import AnthropicProvider
+    ANTHROPIC_AVAILABLE = True
+except ImportError:
+    ANTHROPIC_AVAILABLE = False
+    AnthropicProvider = None
+
+try:
+    from .nvidia import NvidiaProvider
+    NVIDIA_AVAILABLE = True
+except ImportError:
+    NVIDIA_AVAILABLE = False
+    NvidiaProvider = None
 
 
 def create_provider(
@@ -117,6 +132,43 @@ def create_provider(
             base_url=str(resolved_config.get("QWEN_BASE_URL", "")),
             model=model,
         )
+
+    if provider_name == "anthropic":
+        if not ANTHROPIC_AVAILABLE or AnthropicProvider is None:
+            print("WARNING: Anthropic provider not available, falling back to mock")
+            return MockProvider(model=model)
+        api_key = str(resolved_config.get("ANTHROPIC_API_KEY", ""))
+        if not api_key:
+            raise business_error("A3002", "anthropic api key is not configured", 502, True)
+        return AnthropicProvider(
+            api_key=api_key,
+            base_url=str(resolved_config.get("ANTHROPIC_BASE_URL", "https://api.b.ai/v1")),
+            model=str(resolved_config.get("ANTHROPIC_MODEL") or model),
+        )
+
+    if provider_name == "nvidia":
+        if not NVIDIA_AVAILABLE or NvidiaProvider is None:
+            print("WARNING: NVIDIA provider not available, falling back to mock")
+            return MockProvider(model=model)
+        api_key = str(resolved_config.get("NVIDIA_API_KEY", ""))
+        if not api_key:
+            raise business_error("A3002", "nvidia api key is not configured", 502, True)
+        return NvidiaProvider(
+            api_key=api_key,
+            base_url=str(resolved_config.get("NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1")),
+            model=str(resolved_config.get("NVIDIA_MODEL") or model),
+        )
+
+    if provider_name == "fallback":
+        # ── Dual-model: primary → fallback on failure ──────────────
+        primary_name = str(resolved_config.get("LLM_PRIMARY_PROVIDER", "anthropic"))
+        primary_model = str(resolved_config.get("LLM_PRIMARY_MODEL", model))
+        fallback_name = str(resolved_config.get("LLM_FALLBACK_PROVIDER", "deepseek"))
+        fallback_model = str(resolved_config.get("LLM_FALLBACK_MODEL", "deepseek-v4-pro"))
+
+        primary = create_provider(primary_name, primary_model, resolved_config)
+        fb = create_provider(fallback_name, fallback_model, resolved_config)
+        return FallbackProvider(primary=primary, fallback=fb)
 
     if provider_name == "mock":
         return MockProvider(model=model)

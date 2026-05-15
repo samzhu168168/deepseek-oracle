@@ -40,6 +40,9 @@ def _normalize_origins(value: str) -> list[object]:
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me")
+    if SECRET_KEY == "dev-secret-change-me" and not DEBUG:
+        import warnings
+        warnings.warn("SECRET_KEY is still the default value — generate a real key for production")
     DEBUG = _to_bool(os.getenv("DEBUG", "false"))
 
     CORS_ORIGINS = _normalize_origins(
@@ -76,9 +79,15 @@ class Config:
     SMTP_FROM_NAME = os.getenv("SMTP_FROM_NAME", "DeepSeek Oracle")
     SMTP_TIMEOUT_S = int(os.getenv("SMTP_TIMEOUT_S", "60"))
 
-    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "volcano")
-    LLM_MODEL = os.getenv("LLM_MODEL", "doubao-seed-1-8-251228")
+    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "fallback")
+    LLM_MODEL = os.getenv("LLM_MODEL", "claude-sonnet-4-6")
     PROMPT_VERSION = os.getenv("PROMPT_VERSION", "v1")
+
+    # ── Dual-model fallback config (used when LLM_PROVIDER=fallback) ──
+    LLM_PRIMARY_PROVIDER = os.getenv("LLM_PRIMARY_PROVIDER", "anthropic")
+    LLM_PRIMARY_MODEL = os.getenv("LLM_PRIMARY_MODEL", "claude-sonnet-4-6")
+    LLM_FALLBACK_PROVIDER = os.getenv("LLM_FALLBACK_PROVIDER", "deepseek")
+    LLM_FALLBACK_MODEL = os.getenv("LLM_FALLBACK_MODEL", "deepseek-v4-pro")
 
     VOLCANO_API_KEY = os.getenv("ARK_API_KEY", "")
     VOLCANO_MODEL = os.getenv("ARK_API_MODEL", os.getenv("ARK_API_model", ""))
@@ -98,5 +107,20 @@ class Config:
         "QWEN_BASE_URL", "https://dashscope.aliyuncs.com/compatible-mode/v1"
     )
 
+    ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+    ANTHROPIC_BASE_URL = os.getenv("ANTHROPIC_BASE_URL", "https://api.b.ai/v1")
+    ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-6")
+
+    NVIDIA_API_KEY = os.getenv("NVIDIA_API_KEY", "")
+    NVIDIA_BASE_URL = os.getenv("NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1")
+    NVIDIA_MODEL = os.getenv("NVIDIA_MODEL", "nvidia/gpt-oss-120b")
+
     CALENDAR_PRECOMPUTE_DAY = int(os.getenv("CALENDAR_PRECOMPUTE_DAY", "15"))
     SCHEDULER_POLL_SECONDS = int(os.getenv("SCHEDULER_POLL_SECONDS", "3600"))
+
+    # ---------------------------------------------------------------
+    # 内容生成 (Pexels + NanoBanana)
+    # ---------------------------------------------------------------
+    PEXELS_API_KEY = os.getenv("PEXELS_API_KEY", "")
+    NANOBANANA_API_KEY = os.getenv("NANOBANANA_API_KEY", "")
+    NANOBANANA_BASE_URL = os.getenv("NANOBANANA_BASE_URL", "")

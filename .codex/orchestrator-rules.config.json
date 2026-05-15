@@ -1,0 +1,130 @@
+{
+  "orchestrator": {
+    "version": "1.0.0",
+    "name": "DeepSeek Oracle 多智能体调度引擎",
+    "description": "集中管理智能体调用策略、并发控制、熔断和重试规则"
+  },
+
+  "dispatch_rules": {
+    "concurrency": {
+      "max_parallel_specialists": 2,
+      "actionizer_runs_after_all_specialists": true,
+      "safety_checks_are_sequential": true
+    },
+    "priority": {
+      "safety_precheck": 100,
+      "safety_postcheck": 100,
+      "ziwei_long_reading": 80,
+      "meihua_short_reading": 80,
+      "daily_card": 70,
+      "philosophy_guidance": 70,
+      "tarot": 60,
+      "actionizer": 50,
+      "content_generation": 40
+    },
+    "timeouts": {
+      "safety_check_ms": 5000,
+      "specialist_ms": 30000,
+      "actionizer_ms": 10000,
+      "content_generation_ms": 15000,
+      "total_pipeline_ms": 120000
+    }
+  },
+
+  "circuit_breaker": {
+    "enabled": true,
+    "failure_threshold": 5,
+    "recovery_timeout_seconds": 60,
+    "half_open_max_requests": 3
+  },
+
+  "retry_policy": {
+    "max_retries": 2,
+    "backoff_strategy": "exponential",
+    "backoff_base_ms": 1000,
+    "retry_on": ["timeout", "rate_limit", "server_error"],
+    "no_retry_on": ["validation_error", "auth_error", "safety_refuse"]
+  },
+
+  "fallback": {
+    "enabled": true,
+    "if_tool_calling_fails": "keyword_router",
+    "if_specialist_fails": "use_fallback_text",
+    "fallback_texts": {
+      "ziwei": "当前阶段的整体格局倾向于稳中求进。建议先梳理手头资源，明确本年度最核心的主线目标。",
+      "meihua": "整体节奏可以推进，但更适合先稳后快。前半段适合确认信息和准备，后半段适合关键行动。",
+      "daily_card": "今天的整体节奏更适合专注做好一件高价值的事情，不宜同时铺开太多战线。",
+      "philosophy": "先回到内心最真实的判断，把这个判断落实到一个具体行动上，哪怕很小也好。",
+      "tarot": "你当前正处在一个收束旧模式、建立新节奏的过渡阶段。旧的方式已经不再完全适用，但新的模式尚未完全成型。"
+    }
+  },
+
+  "routing_keywords": {
+    "long_term": [
+      "人生", "长期", "未来", "几年", "走势", "格局", "大运", "规划", "命盘",
+      "事业方向", "婚姻长期", "十年", "五年", "三年", "晚年", "一辈子",
+      "下半年", "明年", "后年", "长远", "趋势", "方向", "终身", "整体运势"
+    ],
+    "short_term": [
+      "今天", "明天", "本周", "这周", "近期", "这次", "要不要", "面试", "告白",
+      "考试", "短期", "下周", "最近", "马上", "这件事", "该不该", "能不能",
+      "行不行", "适不适合", "这个月", "接下来"
+    ],
+    "emotion": [
+      "焦虑", "压力", "内耗", "迷茫", "难过", "情绪", "害怕", "自我成长", "修心",
+      "心烦", "失眠", "不开心", "委屈", "无力感", "烦躁", "崩溃"
+    ],
+    "daily": [
+      "每日", "日卡", "今日宜忌", "今日运势", "今天适合", "日运", "晨间"
+    ],
+    "tarot": ["塔罗", "牌阵", "抽牌"]
+  },
+
+  "content_integration": {
+    "image_generation": {
+      "providers": {
+        "pexels": {
+          "api_key_env": "PEXELS_API_KEY",
+          "base_url": "https://api.pexels.com",
+          "endpoints": {
+            "search_photos": "/v1/search",
+            "search_videos": "/videos/search",
+            "curated": "/v1/curated"
+          },
+          "default_params": {
+            "per_page": 3,
+            "orientation": "portrait",
+            "locale": "zh-CN"
+          }
+        },
+        "nanobanana": {
+          "api_key_env": "NANOBANANA_API_KEY",
+          "base_url_env": "NANOBANANA_BASE_URL",
+          "endpoints": {
+            "generate": "/v1/images/generate"
+          },
+          "default_params": {
+            "style": "ink-wash",
+            "size": "1024x1024"
+          }
+        }
+      },
+      "trigger_on_intents": ["daily_card", "long_term", "mindset"],
+      "max_images_per_response": 1
+    }
+  },
+
+  "monitoring": {
+    "metrics": {
+      "track_latency_per_stage": true,
+      "track_safety_refuse_rate": true,
+      "track_fallback_rate": true,
+      "track_consistency_score": true
+    },
+    "alerts": {
+      "fallback_rate_exceeds_p80": 0.15,
+      "safety_refuse_rate_spike": 0.05,
+      "pipeline_timeout_rate": 0.10
+    }
+  }
+}

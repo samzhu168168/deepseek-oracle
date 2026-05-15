@@ -8,7 +8,7 @@ import json
 import hashlib
 import requests
 from datetime import datetime
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 # from flask_cors import cross_origin  # Commented out due to installation issues
 
 # Create a dummy cross_origin decorator
@@ -21,8 +21,6 @@ license_bp = Blueprint('license', __name__)
 
 # ── 配置 ────────────────────────────────────────────────
 GUMROAD_PRODUCT_ID = os.getenv('GUMROAD_PRODUCT_ID', 'bhpmxr')  # 从你的 Gumroad URL 取
-ANTHROPIC_API_KEY = os.getenv('ANTHROPIC_API_KEY')
-ANTHROPIC_BASE_URL = os.getenv('ANTHROPIC_BASE_URL', 'https://api.laozhang.ai')  # 第三方代理
 
 # 简单内存缓存（生产环境换成 Redis 或数据库）
 _report_cache: dict[str, dict] = {}
@@ -115,30 +113,15 @@ def generate_full_report():
     # ── 构建 AI 提示词 ──
     prompt = _build_report_prompt(person1, person2, score, element_pair, current_year)
 
-    # ── 调用 Claude API (通过第三方代理) ──
+    # ── 调用 LLM (通过统一的 provider 系统，自动享受 fallback) ──
     try:
-        response = requests.post(
-            f'{ANTHROPIC_BASE_URL}/v1/messages',
-            headers={
-                'Content-Type': 'application/json',
-                'x-api-key': ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01',
-            },
-            json={
-                'model': 'claude-sonnet-4-20250514',
-                'max_tokens': 2000,
-                'messages': [
-                    {
-                        'role': 'user',
-                        'content': prompt,
-                    }
-                ],
-            },
-            timeout=60,
-        )
-        response.raise_for_status()
-        result = response.json()
-        raw_text = result['content'][0]['text']
+        from app.llm_providers import create_provider
+
+        provider_name = str(current_app.config.get("LLM_PROVIDER", "fallback"))
+        model = str(current_app.config.get("LLM_MODEL", "claude-sonnet-4-6"))
+        provider = create_provider(provider_name, model, app_config=current_app.config)
+        result = provider.generate(prompt, timeout_s=60)
+        raw_text = (result.content or "").strip()
     except Exception as e:
         return jsonify({'success': False, 'error': f'Report generation failed: {str(e)}'}), 500
 

@@ -1,0 +1,208 @@
+{
+  "pipeline": {
+    "name": "Elemental Bond Oracle Agent Pipeline",
+    "version": "1.0.0",
+    "description": "多智能体自动化流水线 — 从用户请求到结构化回答的完整编排",
+    "enabled": true
+  },
+
+  "stages": [
+    {
+      "id": "pre_safety",
+      "name": "安全预检",
+      "skill": "oracle-safety-guardian",
+      "mode": "pre",
+      "description": "用户输入安全审查：识别违法、自伤、医疗、金融等高风险内容",
+      "mandatory": true,
+      "timeout_ms": 5000
+    },
+    {
+      "id": "intent_routing",
+      "name": "意图路由",
+      "skill": "oracle-agent-team-orchestrator",
+      "description": "根据用户输入关键词和上下文，路由到合适的专家智能体组合",
+      "mandatory": true,
+      "timeout_ms": 3000
+    },
+    {
+      "id": "specialist_execution",
+      "name": "专家分析",
+      "description": "并行/串行调用选中的专家智能体",
+      "mandatory": true,
+      "specialists": {
+        "ziwei": {
+          "skill": "oracle-ziwei-agent",
+          "tool": "ziwei_long_reading",
+          "triggers": ["人生", "长期", "未来", "走势", "格局", "大运", "规划", "命盘", "事业方向", "婚姻长期"],
+          "description": "紫微斗数长线趋势解读",
+          "max_tokens": 2000,
+          "temperature": 0.3
+        },
+        "meihua": {
+          "skill": "oracle-meihua-agent",
+          "tool": "meihua_short_reading",
+          "triggers": ["今天", "本周", "近期", "要不要", "面试", "考试", "短期", "该不该"],
+          "description": "梅花易数短期占断",
+          "max_tokens": 1500,
+          "temperature": 0.3
+        },
+        "tarot": {
+          "skill": "oracle-tarot-agent",
+          "tool": "tarot",
+          "triggers": ["塔罗", "牌阵", "抽牌", "象征"],
+          "description": "塔罗象征解读（仅西方/混合模式）",
+          "max_tokens": 1200,
+          "temperature": 0.5,
+          "requires_west_mode": true
+        },
+        "daily_card": {
+          "skill": "oracle-daily-card-composer",
+          "tool": "daily_card",
+          "triggers": ["每日", "日卡", "今日宜忌", "今日运势", "今天适合", "日运"],
+          "description": "每日运势卡片生成",
+          "max_tokens": 800,
+          "temperature": 0.4
+        },
+        "philosophy": {
+          "skill": "oracle-philosophy-rag-agent",
+          "tool": "philosophy_guidance",
+          "triggers": ["焦虑", "压力", "内耗", "迷茫", "情绪", "自我成长", "修心"],
+          "description": "国学心法解读与情绪疏导",
+          "max_tokens": 1500,
+          "temperature": 0.5
+        }
+      }
+    },
+    {
+      "id": "actionizer",
+      "name": "行动化转化",
+      "skill": "oracle-actionizer",
+      "tool": "actionizer",
+      "description": "将抽象建议转化为带时间标记的具体行动清单",
+      "mandatory": true,
+      "timeout_ms": 5000,
+      "max_tasks": 5
+    },
+    {
+      "id": "content_generation",
+      "name": "内容生成（图片/视频）",
+      "description": "为回答附加可视化内容",
+      "mandatory": false,
+      "generators": {
+        "pexels": {
+          "type": "stock_media",
+          "api_key_env": "PEXELS_API_KEY",
+          "base_url": "https://api.pexels.com",
+          "capabilities": ["photo_search", "video_search"],
+          "max_results": 3,
+          "timeout_ms": 8000
+        },
+        "nanobanana": {
+          "type": "ai_image_gen",
+          "api_key_env": "NANOBANANA_API_KEY",
+          "base_url_env": "NANOBANANA_BASE_URL",
+          "capabilities": ["text_to_image"],
+          "timeout_ms": 15000
+        }
+      }
+    },
+    {
+      "id": "post_safety",
+      "name": "安全后检",
+      "skill": "oracle-safety-guardian",
+      "mode": "post",
+      "description": "生成内容安全审查：确保不含绝对化断言、恐惧营销或越界指导",
+      "mandatory": true,
+      "timeout_ms": 5000
+    },
+    {
+      "id": "consistency_audit",
+      "name": "一致性审计",
+      "skill": "oracle-consistency-auditor",
+      "description": "定期审计长期结论的一致性，防止漂移",
+      "mandatory": false,
+      "schedule": "weekly",
+      "samples_required": 5
+    }
+  ],
+
+  "routing": {
+    "matrix": [
+      {"intent": "long_term", "primary": "ziwei", "secondary": "philosophy", "actionizer": true},
+      {"intent": "short_term", "primary": "meihua", "secondary": null, "actionizer": true},
+      {"intent": "dual_track", "primary": "meihua", "secondary": "ziwei", "actionizer": true},
+      {"intent": "daily_card", "primary": "daily_card", "secondary": null, "actionizer": true},
+      {"intent": "mindset", "primary": "philosophy", "secondary": null, "actionizer": true},
+      {"intent": "symbolic", "primary": "tarot", "secondary": null, "actionizer": true}
+    ],
+    "default_intent": "short_term",
+    "default_primary": "meihua",
+    "max_specialists": 3,
+    "east_only_mvp": true
+  },
+
+  "safety": {
+    "risk_levels": {
+      "S0": {"decision": "allow", "disclaimer": "none"},
+      "S1": {"decision": "allow", "disclaimer": "light"},
+      "S2": {"decision": "rewrite", "disclaimer": "strong"},
+      "S3": {"decision": "rewrite_or_refuse", "disclaimer": "strong"},
+      "S4": {"decision": "refuse", "disclaimer": "strong"}
+    },
+    "forbidden_phrases": ["一定", "必须", "不做就会出事", "保证赚钱", "必然发生"],
+    "preferred_phrases": ["可能", "更适合", "建议考虑", "倾向于"],
+    "disclaimer_texts": {
+      "none": "以上内容用于启发和自我反思，请结合现实情况自主判断。",
+      "light": "以上内容为 AI 解读，仅供参考，不替代你对重大人生决策的独立判断。",
+      "strong": "以上内容为 AI 生成，仅供参考，不构成投资、医疗、法律等专业建议。"
+    }
+  },
+
+  "output_contract": {
+    "sections": [
+      "安抚与共情",
+      "核心解读",
+      "可执行建议",
+      "风险提示",
+      "可追问方向"
+    ],
+    "action_item_format": {
+      "task": "string (具体可完成的行动)",
+      "when": "string (时间窗口: 今天/本周/本月)",
+      "reason": "string (一行理由)"
+    },
+    "max_follow_up_questions": 3,
+    "max_action_items": 5,
+    "default_language": "zh-hans"
+  },
+
+  "schedules": {
+    "daily_card_auto": {
+      "enabled": true,
+      "cron": "0 8 * * *",
+      "description": "每日早上8点自动生成当日运势卡片",
+      "skill": "oracle-daily-card-composer",
+      "timezone": "Asia/Shanghai"
+    },
+    "consistency_audit_weekly": {
+      "enabled": true,
+      "cron": "0 2 * * 1",
+      "description": "每周一凌晨2点审计长期结论一致性",
+      "skill": "oracle-consistency-auditor",
+      "timezone": "Asia/Shanghai"
+    },
+    "security_review_post_deploy": {
+      "enabled": true,
+      "trigger": "post_deploy",
+      "description": "部署后自动运行安全审查",
+      "skill": "post-dev-security-review"
+    },
+    "content_cache_refresh": {
+      "enabled": false,
+      "cron": "0 */6 * * *",
+      "description": "每6小时刷新内容缓存（图片/视频素材）",
+      "generator": "pexels",
+      "timezone": "Asia/Shanghai"
+    }
+  }
+}

@@ -9,6 +9,7 @@ from .export import export_bp
 from .history import history_bp
 from .insights import insights_bp
 from .license import license_bp
+from .og_image import og_image_bp
 from .oracle import oracle_bp
 from .proxy import proxy_bp
 from .task import task_bp
@@ -27,9 +28,10 @@ def register_blueprints(app: Flask) -> None:
         (oracle_bp, "/api"),
         (proxy_bp, "/api"),  # 代理接口，用于转发被封锁的外部API
         (license_bp, None),  # Already has /api prefix in routes
-        (email_bp, None)     # Already has /api prefix in routes
+        (email_bp, None),    # Already has /api prefix in routes
+        (og_image_bp, None), # OG image has /api prefix in route
     ]
-    
+
     for blueprint, prefix in blueprints:
         if prefix:
             app.register_blueprint(blueprint, url_prefix=prefix)

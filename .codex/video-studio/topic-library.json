@@ -1,0 +1,135 @@
+{
+  "brand": {
+    "name": "Elemental Bond",
+    "url": "https://www.elemental.bond",
+    "tagline": "Discover your elemental blueprint. Ancient Eastern wisdom meets AI.",
+    "tone": "calm, mystical, modern, trustworthy",
+    "target_audience": "US millennials & Gen Z curious about self-discovery",
+    "content_pillars": [
+      "What is [ZiWei/BaZi/IChing]? (Education)",
+      "Your [sign/element] says about your relationships (Curiosity)",
+      "Today's cosmic energy for [zodiac] (Daily engagement)",
+      "Real users share their readings (Social proof)",
+      "Eastern wisdom vs Western astrology (Comparison hook)"
+    ]
+  },
+
+  "script_templates": {
+    "hook_types": [
+      {
+        "name": "curiosity_gap",
+        "pattern": "Your birth date hides a secret about your love life... and it's not what you think.",
+        "best_for": "education, comparison"
+      },
+      {
+        "name": "shocking_fact",
+        "pattern": "Only 3% of people know their true elemental type. Are you one of them?",
+        "best_for": "daily_engagement, education"
+      },
+      {
+        "name": "relatable_problem",
+        "pattern": "Keep attracting the same type of person? There's a 2000-year-old reason why.",
+        "best_for": "social_proof, relationships"
+      },
+      {
+        "name": "before_after",
+        "pattern": "Before I found my elemental match → After I understood my blueprint",
+        "best_for": "testimonials, comparison"
+      },
+      {
+        "name": "question_challenge",
+        "pattern": "Western zodiac says you're incompatible. Ancient Chinese wisdom disagrees.",
+        "best_for": "comparison, curiosity"
+      }
+    ],
+    "body_structure": {
+      "education": "Concept intro (5s) → How it works (10s) → Why it matters (10s)",
+      "curiosity": "The reveal (5s) → What it means (10s) → Call to discover yours (5s)",
+      "daily": "Today's theme (5s) → What to do (10s) → What to avoid (5s)",
+      "social_proof": "The struggle (5s) → The discovery (10s) → The result (5s)"
+    },
+    "cta_types": [
+      "Discover your elemental blueprint → elemental.bond (link in bio)",
+      "Find out who you're truly compatible with → elemental.bond",
+      "Your free daily reading is waiting → elemental.bond",
+      "Stop guessing. Start knowing. → elemental.bond"
+    ]
+  },
+
+  "topic_library": [
+    {
+      "id": "what-is-ziwei",
+      "title": "What is ZiWei DouShu?",
+      "angles": [
+        "The 2000-year-old personality system more accurate than Myers-Briggs",
+        "Why Chinese emperors used star charts to make life decisions",
+        "Your birth chart has 12 palaces — here's what each one controls"
+      ]
+    },
+    {
+      "id": "compatibility-secrets",
+      "title": "Relationship Compatibility",
+      "angles": [
+        "Why your 'perfect match' keeps failing — the element clash explained",
+        "3 signs you're with someone whose elements destroy yours",
+        "The 5-element compatibility cheat sheet"
+      ]
+    },
+    {
+      "id": "daily-element",
+      "title": "Daily Elemental Reading",
+      "angles": [
+        "Today's elemental energy and what it means for your decisions",
+        "Your element's power hour today (and when to lay low)",
+        "Morning check-in: what the stars say about your day"
+      ]
+    },
+    {
+      "id": "iching-basics",
+      "title": "IChing for Beginners",
+      "angles": [
+        "Flip 3 coins, unlock 64 life answers — IChing explained in 60s",
+        "The ancient decision-making tool Silicon Valley won't tell you about",
+        "How to ask the IChing a question (and actually get a useful answer)"
+      ]
+    },
+    {
+      "id": "astrology-vs-doushu",
+      "title": "East vs West Astrology",
+      "angles": [
+        "Western astrology vs Chinese star mapping — which is more precise?",
+        "Your Sun sign says one thing. Your ZiWei chart says another. Why?",
+        "The 12 zodiac signs vs 14 main stars — you're missing 2 dimensions"
+      ]
+    },
+    {
+      "id": "elemental-types",
+      "title": "The 5 Elements",
+      "angles": [
+        "Wood, Fire, Earth, Metal, Water — which one rules your personality?",
+        "Why 'opposites attract' is scientifically wrong in elemental theory",
+        "Your element changes every 10 years — here's what's coming next"
+      ]
+    }
+  ],
+
+  "batch_production": {
+    "weekly_plan": {
+      "monday": { "pillar": "education", "topic": "what-is-ziwei", "angle": 0 },
+      "tuesday": { "pillar": "curiosity", "topic": "compatibility-secrets", "angle": 1 },
+      "wednesday": { "pillar": "daily_engagement", "topic": "daily-element", "angle": 0 },
+      "thursday": { "pillar": "education", "topic": "iching-basics", "angle": 0 },
+      "friday": { "pillar": "comparison", "topic": "astrology-vs-doushu", "angle": 0 },
+      "saturday": { "pillar": "social_proof", "topic": "elemental-types", "angle": 0 },
+      "sunday": { "pillar": "curiosity", "topic": "compatibility-secrets", "angle": 2 }
+    },
+    "output_format": {
+      "video_duration": "30-45s",
+      "aspect_ratio": "9:16",
+      "platforms": ["TikTok", "Instagram Reels", "YouTube Shorts"],
+      "language": "English",
+      "subtitles": "always_on",
+      "background_music": "lo-fi / ambient / eastern instrumental"
+    }
+  }
+}

@@ -2,8 +2,7 @@
  * Paid Reading Component - The Oracle
  * Shows locked deep insights with unlock options
  */
-import React, { useState } from 'react';
-import { PaymentGuideModal } from './PaymentGuideModal';
+import React from 'react';
 import './PaidReading.css';
 
 interface LockedSectionProps {
@@ -36,36 +35,6 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
   onUnlock,
   className = '',
 }) => {
-  const [showGuideModal, setShowGuideModal] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<'basic' | 'premium'>('basic');
-
-  const handleUnlockClick = (tier: 'basic' | 'premium') => {
-    setSelectedTier(tier);
-    setShowGuideModal(true);
-  };
-
-  const handleConfirmPayment = () => {
-    setShowGuideModal(false);
-    onUnlock(selectedTier);
-    
-    // Show follow-up instructions
-    setTimeout(() => {
-      const message = 
-        '✨ After payment:\n\n' +
-        '1️⃣ Check your email for the License Key\n' +
-        '2️⃣ Return to this page\n' +
-        '3️⃣ Click "Enter License Key" to unlock your full reading\n\n' +
-        '💡 Questions? Contact support';
-      
-      alert(message);
-    }, 1000);
-  };
-
-  const tierPrices = {
-    basic: '$24.90',
-    premium: '$27',
-  };
-
   return (
     <div className={`paid-reading-locked ${className}`}>
       <div className="paid-reading-header">
@@ -114,9 +83,9 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
             <li>✓ 2026 timeline guidance</li>
             <li>✓ Specific action steps</li>
           </ul>
-          <button 
+          <button
             className="unlock-btn unlock-btn-basic"
-            onClick={() => handleUnlockClick('basic')}
+            onClick={() => onUnlock('basic')}
           >
             Unlock Full Reading
           </button>
@@ -138,9 +107,9 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
             <li>✓ Detailed charts & visuals</li>
             <li>✓ Save & share forever</li>
           </ul>
-          <button 
+          <button
             className="unlock-btn unlock-btn-premium"
-            onClick={() => handleUnlockClick('premium')}
+            onClick={() => onUnlock('premium')}
           >
             Get PDF Report
           </button>
@@ -152,14 +121,6 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
           ✨ The Oracle's Promise: 60 years of pattern recognition, decoded for you
         </p>
       </div>
-
-      <PaymentGuideModal
-        isOpen={showGuideModal}
-        onClose={() => setShowGuideModal(false)}
-        onConfirm={handleConfirmPayment}
-        tier={selectedTier}
-        price={tierPrices[selectedTier]}
-      />
     </div>
   );
 };

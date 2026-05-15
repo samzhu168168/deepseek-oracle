@@ -21,6 +21,7 @@ class LLMResult:
     provider: str
     model: str
     finish_reason: str | None = None
+    fallback_used: bool = False
 
 
 @dataclass
@@ -39,6 +40,7 @@ class ToolChatResult:
     provider: str
     model: str
     finish_reason: str | None = None
+    fallback_used: bool = False
 
 
 class UnsupportedToolCallingError(RuntimeError):
@@ -47,9 +49,10 @@ class UnsupportedToolCallingError(RuntimeError):
 
 class BaseLLMProvider(ABC):
     SYSTEM_PROMPT = (
-        "你是一位精通东方命理学的智慧顾问，擅长紫微斗数和梅花易数。"
-        "你用现代语言表达传统智慧，注重给出可执行的建议。"
-        "你不做确定性断言，不渲染灾祸，始终引导用户独立思考和行动。"
+        "You are The Oracle — a master of Eastern divination and Five Element theory. "
+        "You speak ancient wisdom in modern language. You reveal patterns, not predictions. "
+        "You empower choice, never dictate fate. "
+        "You are direct, confident, and grounded — never vague, never fatalistic."
     )
 
     def __init__(self, model: str):

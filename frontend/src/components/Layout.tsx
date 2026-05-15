@@ -40,7 +40,12 @@ export function Layout() {
       </main>
 
       <footer className="app-footer">
-        Elemental Bond · Ancient Chinese Compatibility Oracle
+        <p>Elemental Bond · Ancient Chinese Compatibility Oracle</p>
+        <nav aria-label="Footer navigation" style={{ marginTop: '0.5rem', fontSize: '0.8rem', opacity: 0.7 }}>
+          <a href="/" style={{ color: 'inherit', marginRight: '1rem' }}>BaZi Compatibility</a>
+          <a href="/compatibility/aries-and-taurus" style={{ color: 'inherit', marginRight: '1rem' }}>Element Compatibility</a>
+          <a href="/" style={{ color: 'inherit' }}>Free Soul Reading</a>
+        </nav>
       </footer>
     </div>
   );
