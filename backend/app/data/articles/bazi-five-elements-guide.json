@@ -1,0 +1,59 @@
+{
+  "id": "bazi-five-elements-guide",
+  "slug": "bazi-five-elements-guide",
+  "title": "The Complete Guide to the Five Elements in BaZi Astrology",
+  "description": "Everything you need to know about Wood, Fire, Earth, Metal, and Water in your birth chart. Understand the generative and controlling cycles.",
+  "category": "bazi-guide",
+  "tags": [
+    "bazi",
+    "five-elements",
+    "wu-xing",
+    "beginners-guide",
+    "elemental-theory"
+  ],
+  "published": "2026-05-04",
+  "updated": "2026-05-16",
+  "author": "Elemental Bond Oracle",
+  "reading_time_minutes": 10,
+  "meta": {
+    "title": "Complete Guide to the Five Elements (Wu Xing) in BaZi | Elemental Bond",
+    "description": "Master the Five Elements of BaZi astrology: Wood, Fire, Earth, Metal, and Water. Learn the generative and controlling cycles and how they shape your destiny.",
+    "keywords": "five elements bazi, wu xing guide, chinese astrology elements, wood fire earth metal water"
+  },
+  "content": {
+    "hook": "The Five Elements — Wood, Fire, Earth, Metal, and Water — are the building blocks of BaZi analysis. Everything in your birth chart, from your Day Master to your luck cycles, is expressed through these elemental energies.",
+    "body_sections": [
+      {
+        "heading": "What Are the Five Elements?",
+        "body": "The Five Elements (Wu Xing, 五行) are not static substances but dynamic phases of energy. They describe how energy transforms and moves through all phenomena — including your personality, relationships, and life path. In BaZi, each of your Four Pillars contains a Heavenly Stem and an Earthly Branch, and each of these is associated with one of the Five Elements.\n\nYour Day Master (日主) — the Heavenly Stem of your Day Pillar — is your core elemental type. Everything else in your chart is analyzed in relation to this central element."
+      },
+      {
+        "heading": "The Generative (Sheng) Cycle",
+        "body": "The generative cycle describes how each element creates and nourishes the next:\n\n**Wood feeds Fire** — Trees provide fuel for flame. Wood-type energy gives rise to passion and expression.\n\n**Fire creates Earth** — Ash returns to the soil. Fire's intensity settles into stability and grounding.\n\n**Earth produces Metal** — Minerals form within the earth. Structure and precision emerge from patience.\n\n**Metal collects Water** — Metal surfaces condense moisture. Clarity gives way to depth and flow.\n\n**Water nourishes Wood** — Rain feeds the forest. Intuition and emotion enable growth.\n\nThis cycle represents natural support and harmonious relationships. When two elements are connected by the generative cycle, they tend to understand and benefit each other."
+      },
+      {
+        "heading": "The Controlling (Ke) Cycle",
+        "body": "The controlling cycle describes how each element regulates and balances another:\n\n**Wood parts Earth** — Roots break through soil. Growth prevents stagnation.\n\n**Earth dams Water** — Riverbanks channel the flood. Stability contains emotion.\n\n**Water extinguishes Fire** — Rain puts out the flame. Depth cools intensity.\n\n**Fire melts Metal** — Heat transforms rigid structures. Passion softens rigidity.\n\n**Metal cuts Wood** — An axe shapes the tree. Precision prunes excess growth.\n\nThis cycle represents healthy tension and mutual regulation. It is not inherently negative — it is the mechanism that prevents any one element from becoming excessive. A chart with too much harmony and no controlling relationships may lack dynamism."
+      },
+      {
+        "heading": "The Five Element Types in Relationships",
+        "body": "**Wood Types** are visionary and growth-oriented. They seek partners who can match their ambition and give them space to expand. Best matches: Water (nourishes Wood) and Fire (gives Wood purpose).\n\n**Fire Types** are passionate and charismatic. They need partners who can handle their intensity and appreciate their warmth. Best matches: Wood (feeds Fire) and Earth (gives Fire stability).\n\n**Earth Types** are grounded and nurturing. They value reliability and long-term security. Best matches: Fire (creates Earth) and Metal (gives Earth structure).\n\n**Metal Types** are precise and principled. They respect integrity and need partners who share their values. Best matches: Earth (produces Metal) and Water (gives Metal depth).\n\n**Water Types** are intuitive and deep. They need emotional authenticity and intellectual stimulation. Best matches: Metal (generates Water) and Wood (gives Water purpose)."
+      },
+      {
+        "heading": "How to Find Your Elemental Type",
+        "body": "Your core elemental type is determined by your Day Master — the Heavenly Stem of your Day Pillar. To find it, you need your complete birth date (year, month, day, and hour). The BaZi calculation converts this into four pairs of Heavenly Stems and Earthly Branches.\n\nYour Day Master will be one of the 10 Heavenly Stems:\n- **Yang Wood (甲 Jia):** Strong, upright, like a tall tree\n- **Yin Wood (乙 Yi):** Flexible, resilient, like a vine\n- **Yang Fire (丙 Bing):** Bright, radiant, like the sun\n- **Yin Fire (丁 Ding):** Warm, focused, like a candle flame\n- **Yang Earth (戊 Wu):** Mountain-like, stable, protective\n- **Yin Earth (己 Ji):** Fertile soil, nurturing, adaptable\n- **Yang Metal (庚 Geng):** Uncut ore, strong, persistent\n- **Yin Metal (辛 Xin):** Refined metal, precise, elegant\n- **Yang Water (壬 Ren):** Ocean, vast, powerful\n- **Yin Water (癸 Gui):** Rain, subtle, intuitive"
+      },
+      {
+        "heading": "Element Balance and Missing Elements",
+        "body": "A well-balanced chart has all Five Elements present. When an element is missing or weak, its corresponding life areas may present challenges. For example:\n\n- **Missing Wood:** Difficulty with planning, growth, and vision\n- **Missing Fire:** Lack of passion, visibility, or joy\n- **Missing Earth:** Instability, lack of grounding\n- **Missing Metal:** Weak boundaries, indecision\n- **Missing Water:** Poor emotional intelligence, rigidity\n\nElement remedies — using colors, directions, crystals, and lifestyle adjustments — can help restore balance. See our dedicated guide on BaZi Element Remedies for practical solutions."
+      }
+    ],
+    "key_insight": "The Five Elements are a lens for understanding all relationship dynamics. Every connection can be mapped onto the generative or controlling cycle, revealing why some relationships feel effortless and others require conscious work.",
+    "cta": "Discover your elemental type and see how it matches with your partner. Get your free BaZi reading now."
+  },
+  "related_articles": [
+    "understanding-day-master-bazi",
+    "element-remedy-guide-bazi",
+    "four-pillars-bazi-explained"
+  ]
+}

@@ -17,3 +17,5 @@ __pycache__
 .git
 .gitattributes
 .husky
+scripts/ziwei_dataset/
+reference_patterns.ts

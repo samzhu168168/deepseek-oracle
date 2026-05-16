@@ -280,6 +280,8 @@ export default function HomePage() {
                   id="person-a-date"
                   type="date"
                   className="oracle-input"
+                  inputMode="numeric"
+                  autoComplete="bday"
                   value={personA.date}
                   onChange={(event) => setPersonA((prev) => ({ ...prev, date: event.target.value }))}
                   required
@@ -291,6 +293,7 @@ export default function HomePage() {
                   id="person-a-time"
                   type="time"
                   className="oracle-input"
+                  inputMode="numeric"
                   value={personA.time}
                   onChange={(event) => setPersonA((prev) => ({ ...prev, time: event.target.value }))}
                   placeholder="Leave blank if unknown"
@@ -323,6 +326,8 @@ export default function HomePage() {
                   id="person-b-date"
                   type="date"
                   className="oracle-input"
+                  inputMode="numeric"
+                  autoComplete="bday"
                   value={personB.date}
                   onChange={(event) => setPersonB((prev) => ({ ...prev, date: event.target.value }))}
                   required
@@ -334,6 +339,7 @@ export default function HomePage() {
                   id="person-b-time"
                   type="time"
                   className="oracle-input"
+                  inputMode="numeric"
                   value={personB.time}
                   onChange={(event) => setPersonB((prev) => ({ ...prev, time: event.target.value }))}
                   placeholder="Leave blank if unknown"

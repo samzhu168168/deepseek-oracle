@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { MarkdownRenderer } from "../components/MarkdownRenderer";
+import { ShareButtons } from "../components/ShareButtons";
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
 const LOADING_MESSAGES = [
@@ -45,6 +46,15 @@ export default function BaZiPage() {
   const [reading, setReading] = useState<BaZiReading | null>(null);
 
   const apiBase = import.meta.env.VITE_API_URL || "";
+
+  // Dynamic share/OG values from reading results
+  const ogImageUrl = reading
+    ? `${SITE_URL}/api/og-image/bazi?dm=${encodeURIComponent(reading.dayMaster.split("\n")[0].slice(0, 30))}&name=${encodeURIComponent(name || "My BaZi")}&score=72`
+    : `${SITE_URL}/og-image.png`;
+  const shareUrl = `${SITE_URL}/bazi`;
+  const shareTitle = reading
+    ? `My BaZi Blueprint: ${reading.dayMaster.split("\n")[0].slice(0, 40)} — Discover YOUR pattern at elemental.bond`
+    : "Discover your BaZi birth chart at Elemental Bond";
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -91,9 +101,24 @@ export default function BaZiPage() {
 
   return (
     <div className="landing-page fade-in" style={{ maxWidth: "720px", margin: "0 auto", padding: "24px 16px" }}>
+      {/* Dynamic OG image for BaZi results */}
       <Helmet>
-        <title>Free BaZi Reading — Personal Chinese Astrology Birth Chart | Elemental Bond</title>
-        <meta name="description" content="Discover your personal BaZi birth chart. Free Four Pillars analysis reveals your Day Master, Five Element balance, personality, career potential, and 2026 luck phases." />
+        <title>{reading ? `My BaZi Blueprint — ${reading.dayMaster.split("\n")[0].slice(0, 40)} | Elemental Bond` : "Free BaZi Reading — Personal Chinese Astrology Birth Chart | Elemental Bond"}</title>
+        <meta name="description" content={reading ? `My BaZi reading reveals ${reading.dayMaster.split("\n")[0].slice(0, 60)}. Discover YOUR personal Four Pillars chart. Free analysis.` : "Discover your personal BaZi birth chart. Free Four Pillars analysis reveals your Day Master, Five Element balance, personality, career potential, and 2026 luck phases."} />
+        <meta property="og:title" content={reading ? `My BaZi Blueprint — ${reading.dayMaster.split("\n")[0].slice(0, 40)} | Elemental Bond` : "Free BaZi Reading — Personal Chinese Astrology Birth Chart | Elemental Bond"} />
+        <meta property="og:description" content={reading ? `My BaZi reading reveals ${reading.dayMaster.split("\n")[0].slice(0, 60)}. Discover YOUR personal Four Pillars chart.` : "Discover your personal BaZi birth chart. Free Four Pillars analysis reveals your Day Master, Five Element balance, personality, career potential, and 2026 luck phases."} />
+        <meta property="og:url" content={`${SITE_URL}/bazi`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Free BaZi Reading — Personal Chinese Astrology Birth Chart" />
+        <meta property="og:site_name" content="Elemental Bond" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={reading ? `My BaZi Blueprint — ${reading.dayMaster.split("\n")[0].slice(0, 40)} | Elemental Bond` : "Free BaZi Reading — Personal Chinese Astrology Birth Chart | Elemental Bond"} />
+        <meta name="twitter:description" content={reading ? `My BaZi reading reveals ${reading.dayMaster.split("\n")[0].slice(0, 60)}. Discover YOUR personal Four Pillars chart.` : "Discover your personal BaZi birth chart. Free Four Pillars analysis reveals your Day Master, Five Element balance, personality, career potential, and 2026 luck phases."} />
+        <meta name="twitter:image" content={ogImageUrl} />
         <link rel="canonical" href={`${SITE_URL}/bazi`} />
       </Helmet>
 
@@ -290,6 +315,17 @@ export default function BaZiPage() {
               </div>
             </div>
           </section>
+
+          {/* Share buttons */}
+          <div style={{ textAlign: "center", padding: "20px 0", borderTop: "1px solid rgba(196, 149, 106, 0.15)", marginTop: "8px" }}>
+            <p style={{ color: "var(--oracle-muted)", fontSize: "13px", marginBottom: "12px" }}>
+              Share your BaZi blueprint
+            </p>
+            <ShareButtons
+              url={shareUrl}
+              title={shareTitle}
+            />
+          </div>
 
           {/* CTA back to compatibility */}
           <div style={{ textAlign: "center", padding: "24px 0", borderTop: "1px solid rgba(196, 149, 106, 0.2)" }}>

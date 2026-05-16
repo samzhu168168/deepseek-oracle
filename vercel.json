@@ -39,6 +39,26 @@
       "dest": "/frontend/og-image.png"
     },
     {
+      "src": "/sw.js",
+      "headers": { "cache-control": "public, max-age=0, must-revalidate" },
+      "dest": "/frontend/sw.js"
+    },
+    {
+      "src": "/manifest.json",
+      "headers": { "cache-control": "public, max-age=31536000, immutable" },
+      "dest": "/frontend/manifest.json"
+    },
+    {
+      "src": "/icons/(.*)",
+      "headers": { "cache-control": "public, max-age=31536000, immutable" },
+      "dest": "/frontend/icons/$1"
+    },
+    {
+      "src": "/offline.html",
+      "headers": { "cache-control": "public, max-age=0, must-revalidate" },
+      "dest": "/frontend/offline.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/frontend/index.html"
     }

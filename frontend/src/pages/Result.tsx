@@ -13,6 +13,7 @@ import { PreviewReading } from "../components/PreviewReading";
 import { PaidReading } from "../components/PaidReading";
 import { LicenseKeyGuide } from "../components/LicenseKeyGuide";
 import { PayPalButton } from "../components/PayPalButton";
+import { ShareButtons } from "../components/ShareButtons";
 import type { BondAnalysisRequest, BondAnalysisResponse } from "../types";
 
 type StoredReport = {
@@ -330,28 +331,6 @@ export default function ResultPage() {
     }
   };
 
-  const handleShare = async () => {
-    // Copy share URL to clipboard (primary) with image download as fallback
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      // Brief visual feedback could go here
-    } catch {
-      // Fallback: download image
-      const dataUrl = await generateShareImage();
-      if (dataUrl) {
-        const link = document.createElement("a");
-        link.href = dataUrl;
-        link.download = "soul-resonance.png";
-        link.click();
-      }
-    }
-  };
-
-  const handleShareToX = async () => {
-    const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
-    window.open(intentUrl, "_blank", "noopener,noreferrer");
-  };
-
   const handleLicenseSuccess = (data: FullReportData) => {
     setFullReportData(data);
     setLicenseModalOpen(false);
@@ -483,12 +462,11 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
           </div>
         </div>
         <div className="result-scorecard__share">
-          <InkButton type="button" onClick={handleShare}>
-            Copy Share Link
-          </InkButton>
-          <InkButton type="button" kind="secondary" onClick={handleShareToX}>
-            Share to X / Twitter
-          </InkButton>
+          <ShareButtons
+            url={shareUrl}
+            title={shareText}
+            platforms={["copy", "twitter"]}
+          />
         </div>
       </section>
 

@@ -153,3 +153,78 @@ def _svg_fallback(e1: str, e2: str, score: str, label: str):
 </svg>"""
     from flask import Response
     return Response(svg, mimetype="image/svg+xml", headers={"Cache-Control": "public, max-age=86400"})
+
+
+@og_image_bp.get("/api/og-image/bazi")
+def bazi_og_image():
+    """Dynamic OG image for BaZi personal reading results.
+
+    Query params:
+      dm    — Day Master element (e.g. "Wood", "Fire")
+      year  — Year pillar (e.g. "Jia-Chen")
+      score — Numerical score (0-100)
+      name  — User's name
+    """
+    day_master = request.args.get("dm", "Wood").strip()
+    year_pillar = request.args.get("year", "").strip()
+    score = request.args.get("score", "72").strip()
+    name = request.args.get("name", "Your Destiny").strip()
+
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except ImportError:
+        # SVG fallback for BaZi
+        display_name = name[:20]
+        svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d1b4b"/>
+      <stop offset="100%" stop-color="#1a0a3d"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <text x="600" y="80" text-anchor="middle" fill="#94a3b8" font-size="20" font-family="serif" letter-spacing="4">
+    THE ORACLE · ELEMENTAL BOND
+  </text>
+  <text x="600" y="180" text-anchor="middle" fill="#bb8fff" font-size="28" font-family="serif" letter-spacing="2">
+    YOUR BAZI BLUEPRINT
+  </text>
+  <text x="600" y="250" text-anchor="middle" fill="#f7f2ff" font-size="20" font-family="serif">
+    {display_name}
+  </text>
+  <text x="600" y="310" text-anchor="middle" fill="#f7f2ff" font-size="42" font-family="serif" font-weight="bold">
+    Day Master: {day_master}
+  </text>
+  <text x="600" y="380" text-anchor="middle" fill="#f97316" font-size="80" font-family="serif" font-weight="bold">
+    {score} / 100
+  </text>
+  <text x="600" y="590" text-anchor="middle" fill="#94a3b8" font-size="20" font-family="serif">
+    elemental.bond — Ancient wisdom. Modern clarity.
+  </text>
+</svg>"""
+        from flask import Response
+        return Response(svg, mimetype="image/svg+xml", headers={"Cache-Control": "public, max-age=86400"})
+
+    img = Image.new("RGB", (1200, 630))
+    _draw_gradient(img)
+    draw = ImageDraw.Draw(img)
+
+    font_brand = _load_font(20)
+    font_subtitle = _load_font(28)
+    font_name = _load_font(20)
+    font_title = _load_font(42)
+    font_score = _load_font(80, bold=True)
+
+    cy, cx = 630 // 2, 1200 // 2
+
+    _draw_centered(draw, "THE ORACLE · ELEMENTAL BOND", font_brand, MUTED, cx, 60)
+    _draw_centered(draw, "YOUR BAZI BLUEPRINT", font_subtitle, ACCENT, cx, cy - 100)
+    _draw_centered(draw, name[:30], font_name, MUTED, cx, cy - 55)
+    _draw_centered(draw, f"Day Master: {day_master}", font_title, WHITE, cx, cy + 5)
+    _draw_centered(draw, f"{score} / 100", font_score, SCORE_COLOR, cx, cy + 75)
+    _draw_centered(draw, "elemental.bond  —  Ancient wisdom. Modern clarity.", font_brand, MUTED, cx, 590)
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    return send_file(buf, mimetype="image/png", max_age=86400)

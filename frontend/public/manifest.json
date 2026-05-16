@@ -1,0 +1,29 @@
+{
+  "name": "Elemental Bond",
+  "short_name": "Bond",
+  "description": "Ancient BaZi wisdom decodes your relationship's hidden pattern. No algorithms. Just elemental truth.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a16",
+  "theme_color": "#0d1b4b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["lifestyle", "spirituality"]
+}
