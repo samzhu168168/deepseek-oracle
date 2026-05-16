@@ -62,6 +62,15 @@ def create_app() -> Flask:
     )
 
     @app.before_request
+    def redirect_www() -> None:
+        """Redirect www.elemental.bond to elemental.bond (for API routes)."""
+        host = request.headers.get("Host", "")
+        if host.startswith("www."):
+            url = request.url.replace("://www.", "://", 1)
+            from flask import redirect
+            return redirect(url, code=301)
+
+    @app.before_request
     def attach_request_id() -> None:
         g.request_id = f"req_{uuid.uuid4().hex}"
         g.request_started_at = time.perf_counter()
