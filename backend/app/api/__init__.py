@@ -3,7 +3,10 @@ from flask import Flask
 
 from .analyze import analyze_bp
 from .bazi import bazi_bp
-from .content import content_bp
+try:
+    from .content import content_bp
+except Exception:
+    content_bp = None
 from .divination import divination_bp
 from .divination_stream import divination_stream_bp
 from .email import email_bp
@@ -39,6 +42,8 @@ def register_blueprints(app: Flask) -> None:
     ]
 
     for blueprint, prefix in blueprints:
+        if blueprint is None:
+            continue
         if prefix:
             app.register_blueprint(blueprint, url_prefix=prefix)
         else:
