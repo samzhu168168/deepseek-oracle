@@ -66,6 +66,7 @@
   "env": {
     "DATABASE_PATH": "/tmp/data.db",
     "REDIS_URL": "",
-    "PYTHONPATH": "backend"
+    "PYTHONPATH": "backend",
+    "FLASK_ENV": "production"
   }
 }
