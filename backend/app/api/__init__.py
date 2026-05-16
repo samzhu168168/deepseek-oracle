@@ -11,6 +11,7 @@ from .insights import insights_bp
 from .license import license_bp
 from .og_image import og_image_bp
 from .oracle import oracle_bp
+from .paypal import paypal_bp
 from .proxy import proxy_bp
 from .task import task_bp
 
@@ -30,6 +31,7 @@ def register_blueprints(app: Flask) -> None:
         (license_bp, None),  # Already has /api prefix in routes
         (email_bp, None),    # Already has /api prefix in routes
         (og_image_bp, None), # OG image has /api prefix in route
+        (paypal_bp, None),   # PayPal endpoints have /api prefix
     ]
 
     for blueprint, prefix in blueprints:

@@ -12,6 +12,7 @@ import { TeaserReading } from "../components/TeaserReading";
 import { PreviewReading } from "../components/PreviewReading";
 import { PaidReading } from "../components/PaidReading";
 import { LicenseKeyGuide } from "../components/LicenseKeyGuide";
+import { PayPalButton } from "../components/PayPalButton";
 import type { BondAnalysisRequest, BondAnalysisResponse } from "../types";
 
 type StoredReport = {
@@ -85,10 +86,10 @@ const buildPolygonPoints = (values: number[], radius: number, center: number) =>
 
 const getRelationshipLabel = (score: number) => {
   if (score >= 85) {
-    return "âš?Electric Tension Pair";
+    return "ï¿½?Electric Tension Pair";
   }
   if (score >= 70) {
-    return "âœ?Balanced Harmony Pair";
+    return "ï¿½?Balanced Harmony Pair";
   }
   if (score >= 55) {
     return "ðŸŒ™ Growth-Oriented Pair";
@@ -181,6 +182,8 @@ export default function ResultPage() {
   const [emailUnlocked, setEmailUnlocked] = useState(false);
   const [previewData, setPreviewData] = useState<string | null>(null);
   const [paywallModalOpen, setPaywallModalOpen] = useState(false);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [paypalLoading, setPaypalLoading] = useState(false);
   const [, setShareImageUrl] = useState(`${SITE_URL}/og-image.png`);
   const [postPaymentFlow, setPostPaymentFlow] = useState(false);
   const shareCardRef = useRef<HTMLDivElement | null>(null);
@@ -287,7 +290,7 @@ export default function ResultPage() {
   const elementCombo = normalizedReport?.teaser?.five_element_compatibility || "Water meets Wood";
   const elementPair = elementCombo.replace(/\s*meets\s*/i, "-").replace(/\s+/g, " ").trim();
   const elements = elementPair.split("-").map((s) => s.trim());
-  const resultTitle = `${elementPair} Compatibility â€?Soul Resonance Score ${averageScore}/100 | Elemental Bond`;
+  const resultTitle = `${elementPair} Compatibility ï¿½?Soul Resonance Score ${averageScore}/100 | Elemental Bond`;
   const resultDescription = `Your ${elementPair} connection reveals a ${relationshipLabel.toLowerCase()}. ${averageScore}/100 Soul Resonance. Discover your hidden pattern, 2026 timing windows, and karmic growth edge.`;
 
   // â”€â”€ Unique shareable URL with encoded result data â”€â”€
@@ -302,7 +305,7 @@ export default function ResultPage() {
     return `${SITE_URL}/?r=${encoded}`;
   }, [elements, averageScore, relationshipLabel]);
 
-  const shareText = `My Soul Resonance Score: ${averageScore}/100\nElemental Bond: ${elementCombo}\nDiscover yours â†?${shareUrl}`;
+  const shareText = `My Soul Resonance Score: ${averageScore}/100\nElemental Bond: ${elementCombo}\nDiscover yours ï¿½?${shareUrl}`;
 
   const generateShareImage = async () => {
     if (!shareCardRef.current) {
@@ -364,7 +367,7 @@ export default function ResultPage() {
       const previews = {
         high: `I see ${elementPair.replace('-', ' meeting ')}.
 
-${elementPair.split('-')[0]} wants to burn fast, make decisions now, feel everything intensely. ${elementPair.split('-')[1]} wants to flow, take time, process slowly. This creates a push-pull dynamic that feels exhausting â€?${elementPair.split('-')[0]} thinks ${elementPair.split('-')[1]} is avoiding, ${elementPair.split('-')[1]} thinks ${elementPair.split('-')[0]} is overwhelming.
+${elementPair.split('-')[0]} wants to burn fast, make decisions now, feel everything intensely. ${elementPair.split('-')[1]} wants to flow, take time, process slowly. This creates a push-pull dynamic that feels exhausting ï¿½?${elementPair.split('-')[0]} thinks ${elementPair.split('-')[1]} is avoiding, ${elementPair.split('-')[1]} thinks ${elementPair.split('-')[0]} is overwhelming.
 
 But here's what most people miss: this tension is your growth edge. ${elementPair.split('-')[0]} learns patience. ${elementPair.split('-')[1]} learns courage. The thing you love about them is the thing that drives you crazy. That's not a coincidence.
 
@@ -375,9 +378,9 @@ But this is just the surface. The full pattern reveals the hidden dynamics, your
 
 This is a complementary dynamic where each element brings what the other lacks. ${elementPair.split('-')[0]} provides energy and initiative. ${elementPair.split('-')[1]} provides stability and grounding.
 
-The tension shows up in decision-making. ${elementPair.split('-')[0]} wants to move fast. ${elementPair.split('-')[1]} wants to think it through. This creates friction, but it's productive friction â€?if you learn to work with it.
+The tension shows up in decision-making. ${elementPair.split('-')[0]} wants to move fast. ${elementPair.split('-')[1]} wants to think it through. This creates friction, but it's productive friction ï¿½?if you learn to work with it.
 
-The Decision Paralysis: When you're trying to plan anything â€?a vacation, a move, a major purchase â€?${elementPair.split('-')[0]} gets impatient with ${elementPair.split('-')[1]}'s "slowness." ${elementPair.split('-')[1]} feels rushed by ${elementPair.split('-')[0]}'s "impulsiveness."
+The Decision Paralysis: When you're trying to plan anything ï¿½?a vacation, a move, a major purchase ï¿½?${elementPair.split('-')[0]} gets impatient with ${elementPair.split('-')[1]}'s "slowness." ${elementPair.split('-')[1]} feels rushed by ${elementPair.split('-')[0]}'s "impulsiveness."
 
 But this is just the surface. The full reading reveals your specific growth protocol and 2026 activation windows.`,
         low: `I see ${elementPair.replace('-', ' meeting ')}.
@@ -527,23 +530,15 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
                 <MarkdownRenderer content={normalizedReport.full_report || ""} />
               </div>
               <p className="result-full__note">
-                âœ?Your Elemental Signature and 2026 Activation Windows are included in your full reading.
+                ï¿½?Your Elemental Signature and 2026 Activation Windows are included in your full reading.
               </p>
             </>
           )}
         </section>
       ) : (
         <PaidReading
-          onUnlock={(tier) => {
-            if (tier === 'basic') {
-              // Direct Gumroad purchase â€?redirect back to result page after payment
-              const returnUrl = encodeURIComponent(`${SITE_URL}/result?unlocked=true&ref=gumroad`);
-              window.open(`https://samzhu168.gumroad.com/l/bhpmxr?wanted=true&return_url=${returnUrl}`, '_blank');
-            } else {
-              // PDF Report purchase
-              const returnUrl = encodeURIComponent(`${SITE_URL}/result?unlocked=true&ref=gumroad`);
-              window.open(`https://samzhu168.gumroad.com/l/bhpmxr?wanted=true&return_url=${returnUrl}`, '_blank');
-            }
+          onUnlock={(_tier) => {
+            setPaymentModalOpen(true);
           }}
         />
       )}
@@ -558,9 +553,9 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
             <p className="paywall-modal__subtitle">One-time payment. Instant delivery to your email.</p>
             <p className="paywall-modal__score">Soul Resonance Score: {averageScore} / 100</p>
             <ul className="paywall-modal__list">
-              <li>âœ?800-word personalized BaZi analysis</li>
-              <li>âœ?2026 timing windows for your relationship</li>
-              <li>âœ?Specific action steps for your element pair</li>
+              <li>ï¿½?800-word personalized BaZi analysis</li>
+              <li>ï¿½?2026 timing windows for your relationship</li>
+              <li>ï¿½?Specific action steps for your element pair</li>
             </ul>
             <a
               className="paywall-modal__cta"
@@ -568,9 +563,88 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
               target="_blank"
               rel="noreferrer"
             >
-              Yes, Reveal My Blueprint â€?$24.90
+              Yes, Reveal My Blueprint ï¿½?$24.90
             </a>
             <p className="paywall-modal__note">Secure payment via Gumroad</p>
+          </div>
+        </div>
+      ) : null}
+
+      {/* --- Payment Method Modal (Gumroad + PayPal) --- */}
+      {paymentModalOpen ? (
+        <div className="paywall-modal" style={{zIndex: 1100}}>
+          <div className="paywall-modal__backdrop" onClick={() => setPaymentModalOpen(false)} />
+          <div className="paywall-modal__panel" role="dialog" aria-modal="true" style={{maxWidth: "500px"}}>
+            <button className="paywall-modal__close" type="button" onClick={() => setPaymentModalOpen(false)}>
+              x
+            </button>
+            <p className="paywall-modal__title">Unlock Your Full Blueprint</p>
+            <p className="paywall-modal__subtitle">Choose your payment method</p>
+            <p className="paywall-modal__score">Soul Resonance Score: {averageScore} / 100</p>
+
+            {/* Option 1: Gumroad (Credit Card) */}
+            <div style={{marginBottom: "16px", padding: "16px", border: "1px solid #e0dcd6", borderRadius: "10px"}}>
+              <h4 style={{margin: "0 0 8px", fontSize: "15px", fontWeight: 600}}>Credit Card / Debit Card</h4>
+              <p style={{fontSize: "13px", color: "#666", margin: "0 0 12px"}}>
+                Securely processed via Gumroad. License key emailed to you.
+              </p>
+              <button
+                className="payment-guide-btn-primary"
+                style={{width: "100%", padding: "12px", border: "none", borderRadius: "8px", background: "linear-gradient(135deg, #c4956a, #a67c52)", color: "#fff", fontSize: "15px", fontWeight: 600, cursor: "pointer"}}
+                onClick={() => {
+                  const returnUrl = encodeURIComponent(`${SITE_URL}/result?unlocked=true&ref=gumroad`);
+                  window.open(`https://samzhu168.gumroad.com/l/bhpmxr?wanted=true&return_url=${returnUrl}`, "_blank");
+                  setPaymentModalOpen(false);
+                }}
+              >
+                Pay with Card -- $24.90
+              </button>
+              <p style={{fontSize: "11px", color: "#999", textAlign: "center", margin: "8px 0 0"}}>
+                Visa, Mastercard, Amex accepted
+              </p>
+            </div>
+
+            {/* Option 2: PayPal */}
+            <div style={{padding: "16px", border: "1px solid #e0dcd6", borderRadius: "10px"}}>
+              <h4 style={{margin: "0 0 8px", fontSize: "15px", fontWeight: 600}}>PayPal</h4>
+              <p style={{fontSize: "13px", color: "#666", margin: "0 0 12px"}}>
+                Pay with your PayPal account. Report unlocked instantly.
+              </p>
+              {paypalLoading ? (
+                <p style={{textAlign: "center", color: "#888", fontSize: "14px", padding: "12px"}}>
+                  Processing payment...
+                </p>
+              ) : (
+                <PayPalButton
+                  price="24.90"
+                  person1={{
+                    date: payload.person_a?.date || "",
+                    time: payload.person_a?.time || "",
+                    gender: payload.person_a?.gender || "Male",
+                  }}
+                  person2={{
+                    date: payload.person_b?.date || "",
+                    time: payload.person_b?.time || "",
+                    gender: payload.person_b?.gender || "Male",
+                  }}
+                  score={averageScore}
+                  elementPair={elementPair}
+                  onSuccess={(report) => {
+                    setFullReportData({...report, licenseKey: "paypal"});
+                    setPaymentModalOpen(false);
+                  }}
+                  onError={(msg) => {
+                    console.error("PayPal error:", msg);
+                  }}
+                  onStart={() => setPaypalLoading(true)}
+                  onFinish={() => setPaypalLoading(false)}
+                />
+              )}
+            </div>
+
+            <p style={{fontSize: "11px", color: "#999", textAlign: "center", marginTop: "16px"}}>
+              Secure payment. No refunds after delivery.
+            </p>
           </div>
         </div>
       ) : null}
@@ -655,7 +729,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
             </div>
           ) : averageScore < 60 ? (
             <div style={{ fontSize: "72px", fontWeight: 700, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
-              Karmic Lesson Detected ðŸŒªï¸?            </div>
+              Karmic Lesson Detected ðŸŒªï¿½?            </div>
           ) : (
             <div style={{ fontSize: "64px", fontWeight: 600, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
               Cosmic Connection
@@ -664,7 +738,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", zIndex: 1 }}>
           <div style={{ fontSize: "28px", letterSpacing: "3px", textTransform: "uppercase", opacity: 0.8 }}>
-            Magnetic Connection âœ?          </div>
+            Magnetic Connection ï¿½?          </div>
           <div style={{ fontSize: "160px", fontWeight: 700, textShadow: "0 24px 80px rgba(70, 32, 120, 0.6)" }}>
             {averageScore}
           </div>
@@ -691,20 +765,20 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
 
       <section className="result-testimonials">
         <div className="result-testimonials__card">
-          <p>"It felt like a mirror to our real dynamic â€?eerily precise and deeply grounding."</p>
-          <p>â€?M.L., Seattle</p>
+          <p>"It felt like a mirror to our real dynamic ï¿½?eerily precise and deeply grounding."</p>
+          <p>ï¿½?M.L., Seattle</p>
         </div>
         <div className="result-testimonials__card">
           <p>"The 2026 window timing was the exact clarity I needed to plan our next steps."</p>
-          <p>â€?J.K., Toronto</p>
+          <p>ï¿½?J.K., Toronto</p>
         </div>
         <div className="result-testimonials__card">
           <p>"I finally understood the hidden pattern behind our push-pull cycle."</p>
-          <p>â€?A.R., Singapore</p>
+          <p>ï¿½?A.R., Singapore</p>
         </div>
       </section>
       <p className="result-share-footer">
-        Want to know what your score means? Share and tag us â€?we read every one.
+        Want to know what your score means? Share and tag us ï¿½?we read every one.
       </p>
 
       <EmailGateModal

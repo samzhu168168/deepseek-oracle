@@ -115,6 +115,11 @@ class Config:
     NVIDIA_BASE_URL = os.getenv("NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1")
     NVIDIA_MODEL = os.getenv("NVIDIA_MODEL", "nvidia/gpt-oss-120b")
 
+    # ── PayPal ──
+    PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID", "")
+    PAYPAL_SECRET = os.getenv("PAYPAL_SECRET", "")
+    PAYPAL_SANDBOX = _to_bool(os.getenv("PAYPAL_SANDBOX", "false"))
+
     CALENDAR_PRECOMPUTE_DAY = int(os.getenv("CALENDAR_PRECOMPUTE_DAY", "15"))
     SCHEDULER_POLL_SECONDS = int(os.getenv("SCHEDULER_POLL_SECONDS", "3600"))
 
