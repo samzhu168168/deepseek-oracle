@@ -12,6 +12,7 @@ from app.llm_providers import create_provider
 from app.models import DivinationRepo
 from app.services.ziwei_service import ZiweiService
 from app.services.zwds_patterns import detect_patterns, get_ming_gong_summary
+from app.services.zwds_dataset import find_samples, format_few_shot
 from app.utils.errors import AppError, business_error
 from app.prompts.oracle_system_prompt import (
     ORACLE_SYSTEM_PROMPT,
@@ -102,6 +103,23 @@ class DivinationService:
             if ming_summary.get("nature"):
                 lines.append(f"\n命宫主星: {ming_summary['nature']}（{'、'.join(ming_summary['keywords'])})")
             patterns_text = "\n".join(lines)
+
+        # Load few-shot samples from dataset
+        few_shot_text = ""
+        try:
+            birth_date = birth_info.get("date", "")
+            if birth_date and "-" in str(birth_date):
+                parts = str(birth_date).split("-")
+                year = int(parts[0])
+                month = int(parts[1]) if len(parts) > 1 else None
+                dataset_samples = find_samples(year=year, month=month, limit=1)
+                if dataset_samples:
+                    few_shot_text = (
+                        "\n【参考命盘示例】\n"
+                        + format_few_shot(dataset_samples[0])
+                    )
+        except Exception:
+            pass  # Dataset is optional; silently skip on error
         partner_chart_summary = ""
         partner_patterns_text = ""
         if isinstance(partner_birth_info, dict):
@@ -213,6 +231,7 @@ class DivinationService:
                 "DETECTED ZWDS PATTERNS:\n"
                 f"Person A:\n{patterns_text}\n\n"
                 f"Person B:\n{partner_patterns_text}\n\n"
+                f"{few_shot_text}\n"
                 "Now speak as The Oracle. Reveal the pattern. Empower the choice.\n"
             )
             time_mode_instruction = (
@@ -247,6 +266,7 @@ class DivinationService:
                 f"时间模式：{time_mode_a}\n"
                 f"命盘摘要：\n{chart_summary}\n"
                 f"命盘格局：\n{patterns_text}\n"
+                f"{few_shot_text}\n"
                 "输出格式：总论、事业、情感、财富、健康、关键窗口（3条）、行动建议（3条）。"
             )
         reading = self._complete_with_fallback(
