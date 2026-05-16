@@ -2,6 +2,7 @@ from __future__ import annotations
 from flask import Flask
 
 from .analyze import analyze_bp
+from .bazi import bazi_bp
 from .divination import divination_bp
 from .divination_stream import divination_stream_bp
 from .email import email_bp
@@ -19,6 +20,7 @@ from .task import task_bp
 def register_blueprints(app: Flask) -> None:
     """Register all API blueprints with the Flask app."""
     blueprints = [
+        (bazi_bp, None),  # BaZi reading has /api prefix in routes
         (divination_bp, "/api"),
         (divination_stream_bp, None),  # Streaming endpoints
         (analyze_bp, "/api/divination"),

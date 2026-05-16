@@ -11,6 +11,7 @@ from flask import current_app
 from app.llm_providers import create_provider
 from app.models import DivinationRepo
 from app.services.ziwei_service import ZiweiService
+from app.services.zwds_patterns import detect_patterns, get_ming_gong_summary
 from app.utils.errors import AppError, business_error
 from app.prompts.oracle_system_prompt import (
     ORACLE_SYSTEM_PROMPT,
@@ -81,11 +82,46 @@ class DivinationService:
         astrolabe_data = self.ziwei_service.get_astrolabe_data(**birth_info)
         chart_text = self.ziwei_service.build_text_description(astrolabe_data)
         chart_summary = self._trim_chart_text(chart_text)
+
+        # Detect ZWDS patterns to enrich the reading
+        detected_patterns = detect_patterns(astrolabe_data)
+        ming_summary = get_ming_gong_summary(astrolabe_data)
+        patterns_text = ""
+        if detected_patterns:
+            lines = ["【命盘格局识别】"]
+            for pat in detected_patterns:
+                cond = pat.get("conditions", {})
+                breaking = cond.get("breaking") or []
+                bonus = cond.get("bonus") or []
+                extra = ""
+                if breaking:
+                    extra = f" ⚠️破格: {'; '.join(breaking)}"
+                elif bonus:
+                    extra = f" ✅加分: {'; '.join(bonus)}"
+                lines.append(f"- {pat['name']}（{pat['level']}）{extra}")
+            if ming_summary.get("nature"):
+                lines.append(f"\n命宫主星: {ming_summary['nature']}（{'、'.join(ming_summary['keywords'])})")
+            patterns_text = "\n".join(lines)
         partner_chart_summary = ""
+        partner_patterns_text = ""
         if isinstance(partner_birth_info, dict):
             partner_astrolabe_data = self.ziwei_service.get_astrolabe_data(**partner_birth_info)
             partner_chart_text = self.ziwei_service.build_text_description(partner_astrolabe_data)
             partner_chart_summary = self._trim_chart_text(partner_chart_text)
+            partner_patterns = detect_patterns(partner_astrolabe_data)
+            if partner_patterns:
+                p_lines = ["【Person B 命盘格局】"]
+                for pat in partner_patterns:
+                    cond = pat.get("conditions", {})
+                    breaking = cond.get("breaking") or []
+                    bonus = cond.get("bonus") or []
+                    extra = ""
+                    if breaking:
+                        extra = f" ⚠️破格: {'; '.join(breaking)}"
+                    elif bonus:
+                        extra = f" ✅加分: {'; '.join(bonus)}"
+                    p_lines.append(f"- {pat['name']}（{pat['level']}）{extra}")
+                partner_patterns_text = "\n".join(p_lines)
 
         if isinstance(partner_birth_info, dict):
             person_a_year = str(birth_info.get("date", "")).split("-")[0]
@@ -174,6 +210,9 @@ class DivinationService:
                 "into The Oracle voice, revealing patterns and empowering choices.\n\n"
                 "LOCKED DATA:\n"
                 f"{json.dumps(validated_data, ensure_ascii=False)}\n\n"
+                "DETECTED ZWDS PATTERNS:\n"
+                f"Person A:\n{patterns_text}\n\n"
+                f"Person B:\n{partner_patterns_text}\n\n"
                 "Now speak as The Oracle. Reveal the pattern. Empower the choice.\n"
             )
             time_mode_instruction = (
@@ -207,6 +246,7 @@ class DivinationService:
                 f"用户问题：{question}\n"
                 f"时间模式：{time_mode_a}\n"
                 f"命盘摘要：\n{chart_summary}\n"
+                f"命盘格局：\n{patterns_text}\n"
                 "输出格式：总论、事业、情感、财富、健康、关键窗口（3条）、行动建议（3条）。"
             )
         reading = self._complete_with_fallback(
