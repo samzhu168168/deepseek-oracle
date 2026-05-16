@@ -1,5 +1,13 @@
 {
   "version": 2,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.elemental.bond" }],
+      "destination": "https://elemental.bond/$1",
+      "permanent": true
+    }
+  ],
   "builds": [
     {
       "src": "api/index.py",
