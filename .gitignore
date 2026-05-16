@@ -17,7 +17,8 @@ backend/.env
 *.db
 
 node_modules/
-frontend/.npm_cache/
+frontend/.npm-cache/
+.npm_cache/
 backend/iztro_service/.npm_cache/
 
 # Logs
@@ -54,3 +55,5 @@ fortune_result.md
 
 docs/
 docker-compose.public.yml
+
+.vercel
