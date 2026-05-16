@@ -222,7 +222,7 @@ def _detect_fu_xiang_chao_yuan(palaces: list[dict], ming: dict, ming_branch: int
     patterns.append({
         "name": "府相朝垣",
         "level": "good" if breaking else "excellent",
-        "description": "天府天相分守命宫三方四正，文武并济、权印双辉，主一生衣食丰足、地位崇高。古书云"府相朝垣千钟食禄"，常见于政界、企业管理者。",
+        "description": "天府天相分守命宫三方四正，文武并济、权印双辉，主一生衣食丰足、地位崇高。古书云「府相朝垣千钟食禄」，常见于政界、企业管理者。",
         "palaces": [tianfu.get("name", ""), tianxiang.get("name", "")],
         "conditions": {"required": required, "bonus": bonus, "breaking": breaking},
         "source": "《紫微斗数全书·府相朝垣格》",
@@ -252,7 +252,7 @@ def _detect_yang_liang_chang_lu(palaces: list[dict], ming_branch: int, patterns:
     patterns.append({
         "name": "阳梁昌禄",
         "level": "good" if breaking else "excellent",
-        "description": "太阳、天梁、文昌、禄存四星齐会命宫三方，号称"科举之星"，主清贵显达、考运极佳，宜走学术、文教、研究、专业认证之路，一生功名易就。",
+        "description": "太阳、天梁、文昌、禄存四星齐会命宫三方，号称「科举之星」，主清贵显达、考运极佳，宜走学术、文教、研究、专业认证之路，一生功名易就。",
         "palaces": [sun.get("name", ""), liang.get("name", "")],
         "conditions": {"required": required, "bonus": bonus, "breaking": breaking},
         "source": "《紫微斗数全书·阳梁昌禄格》",
@@ -299,7 +299,7 @@ def _detect_huo_tan_ling_tan(palaces: list[dict], ming_branch: int, patterns: li
             "level": "good" if breaking else "excellent",
             "description": (
                 f"贪狼遇{sha_name}{'同宫' if tan_branch == sha_branch else '三方会照'}，"
-                f"主突发横财、突如其来的机遇。古书云"贪狼遇火铃，必发横财"，但来得快去得也快，宜见好就收。"
+                f"主突发横财、突如其来的机遇。古书云「贪狼遇火铃，必发横财」，但来得快去得也快，宜见好就收。"
                 f"{'本盘破格条件已触发，发力打折。' if breaking else ''}"
             ),
             "palaces": [tan.get("name", ""), sha_palace.get("name", "")],
@@ -336,7 +336,7 @@ def _detect_wu_tan(palaces: list[dict], ming_branch: int, patterns: list[dict]) 
     patterns.append({
         "name": "武贪格",
         "level": "good" if breaking else "excellent",
-        "description": "武曲贪狼会命，财星与桃花欲望星交辉，古书云"武贪不发少年人"——三十岁后方能厚积薄发。主中年以后大富大贵，财源由人脉、应酬、欲望管理而来，适合金融、投机、销售、娱乐业。",
+        "description": "武曲贪狼会命，财星与桃花欲望星交辉，古书云「武贪不发少年人」——三十岁后方能厚积薄发。主中年以后大富大贵，财源由人脉、应酬、欲望管理而来，适合金融、投机、销售、娱乐业。",
         "palaces": [wu.get("name", ""), tan.get("name", "")],
         "conditions": {"required": required, "bonus": bonus, "breaking": breaking},
         "source": "《紫微斗数骨髓赋》",
@@ -593,7 +593,7 @@ def _detect_shi_zhong_yin_yu(palaces: list[dict], ming: dict, ming_branch: int, 
     patterns.append({
         "name": "石中隐玉",
         "level": "caution" if breaking else "excellent",
-        "description": "巨门坐命子午，外表平凡而内蕴才学。早年默默无闻、中年方显贵气，宜走专业、研究、口才、传媒。需有禄权或文昌相助方能"凿石见玉"。",
+        "description": "巨门坐命子午，外表平凡而内蕴才学。早年默默无闻、中年方显贵气，宜走专业、研究、口才、传媒。需有禄权或文昌相助方能「凿石见玉」。",
         "palaces": ["命宫"],
         "conditions": {"required": required, "bonus": bonus, "breaking": breaking},
         "source": "《紫微斗数骨髓赋·石中隐玉》",
@@ -620,7 +620,7 @@ def _detect_ming_zhu_chu_hai(palaces: list[dict], ming: dict, ming_branch: int, 
     patterns.append({
         "name": "明珠出海",
         "level": "good" if breaking else "excellent",
-        "description": "命未空宫，对宫丑宫日月同辉拱照，号"明珠出海"。主出生平凡、后天努力出头，宜远赴他乡、学术研究或大公司高位，主大富大贵。",
+        "description": "命未空宫，对宫丑宫日月同辉拱照，号「明珠出海」。主出生平凡、后天努力出头，宜远赴他乡、学术研究或大公司高位，主大富大贵。",
         "palaces": ["命宫", dui.get("name", "")],
         "conditions": {"required": required, "bonus": bonus, "breaking": breaking},
         "source": "《紫微斗数全集·明珠出海》",
@@ -651,7 +651,7 @@ def _detect_zi_wei_in_ming(palaces: list[dict], ming: dict, ming_branch: int, pa
     patterns.append({
         "name": "紫微入命",
         "level": level_,
-        "description": "紫微独坐命宫，帝王之星，自尊心强、有领导魅力。但紫微最忌"在野孤君"——若无左右辅弼相会，反成孤高自傲、易招毁谤。",
+        "description": "紫微独坐命宫，帝王之星，自尊心强、有领导魅力。但紫微最忌「在野孤君」——若无左右辅弼相会，反成孤高自傲、易招毁谤。",
         "palaces": ["命宫"],
         "conditions": {"required": required, "bonus": bonus, "breaking": breaking},
         "source": "《紫微斗数全书》",
@@ -673,7 +673,7 @@ def _detect_fu_bi_jia_ming(palaces: list[dict], ming_branch: int, patterns: list
     patterns.append({
         "name": "辅弼夹命",
         "level": "excellent",
-        "description": "左辅右弼夹命，一生贵人不断、逢凶化吉。适合走仕途、大企业管理，有贵人提携之命。古书云"左辅右弼，终身福厚"。",
+        "description": "左辅右弼夹命，一生贵人不断、逢凶化吉。适合走仕途、大企业管理，有贵人提携之命。古书云「左辅右弼，终身福厚」。",
         "palaces": ["命宫", prev.get("name", ""), next_.get("name", "")],
         "conditions": {"required": required, "bonus": bonus},
         "source": "《紫微斗数全书·辅弼夹命》",
@@ -690,7 +690,7 @@ def _detect_chang_qu_jia_ming(palaces: list[dict], ming_branch: int, patterns: l
     patterns.append({
         "name": "昌曲夹命",
         "level": "excellent",
-        "description": "文昌文曲夹命宫，主聪明俊秀、文采斐然，宜走文教、学术、艺术、写作。古书云"昌曲夹命主科甲"，最利考运。",
+        "description": "文昌文曲夹命宫，主聪明俊秀、文采斐然，宜走文教、学术、艺术、写作。古书云「昌曲夹命主科甲」，最利考运。",
         "palaces": ["命宫", prev.get("name", ""), next_.get("name", "")],
         "conditions": {"required": ["文昌文曲分居命宫前后两宫"]},
         "source": "《紫微斗数全书》",
@@ -725,7 +725,7 @@ def _detect_shuang_lu_chao_yuan(palaces: list[dict], ming: dict, ming_branch: in
     patterns.append({
         "name": "双禄朝垣",
         "level": "excellent",
-        "description": "化禄、禄存同会命宫三方四正，财源涌动、衣食丰足。古书云"双禄朝垣，富比陶朱"，主一生不愁财，多有正财横财兼得。",
+        "description": "化禄、禄存同会命宫三方四正，财源涌动、衣食丰足。古书云「双禄朝垣，富比陶朱」，主一生不愁财，多有正财横财兼得。",
         "palaces": [p.get("name", "") for p in sf],
         "conditions": {
             "required": ["化禄会照三方四正", "禄存会照三方四正"],
@@ -751,7 +751,7 @@ def _detect_san_qi_jia_hui(palaces: list[dict], ming_branch: int, patterns: list
     patterns.append({
         "name": "三奇加会",
         "level": "excellent",
-        "description": "化禄、化权、化科三吉化齐会命宫三方四正，号称"三奇加会"。主一生功名、财富、贵人三全，是紫微斗数最高吉格之一。",
+        "description": "化禄、化权、化科三吉化齐会命宫三方四正，号称「三奇加会」。主一生功名、财富、贵人三全，是紫微斗数最高吉格之一。",
         "palaces": [p.get("name", "") for p in sf],
         "conditions": {"required": ["化禄、化权、化科三吉化齐会命宫三方四正"]},
         "source": "《紫微斗数全书·三奇加会》",
@@ -817,7 +817,7 @@ def _detect_yang_tuo_jia_ji(palaces: list[dict], ming_branch: int, patterns: lis
         patterns.append({
             "name": "羊陀夹忌",
             "level": "caution",
-            "description": "化忌坐命，左右擎羊陀罗夹命，古书云"羊陀夹忌为败局"，主一生劳碌奔波、坎坷不顺、身心俱疲。需以德行修养与积极做事化解，凡事谨慎为上。",
+            "description": "化忌坐命，左右擎羊陀罗夹命，古书云「羊陀夹忌为败局」，主一生劳碌奔波、坎坷不顺、身心俱疲。需以德行修养与积极做事化解，凡事谨慎为上。",
             "palaces": ["命宫", prev.get("name", ""), next_.get("name", "")],
             "conditions": {"required": ["化忌坐命", "擎羊陀罗分居命宫前后两宫"]},
             "source": "《紫微斗数骨髓赋·羊陀夹忌》",
@@ -852,7 +852,7 @@ def _detect_kong_jie_jia_ming(palaces: list[dict], ming_branch: int, patterns: l
     patterns.append({
         "name": "空劫夹命",
         "level": "caution",
-        "description": "地空地劫夹命，主财来财去、思想脱俗、易遁入宗教哲学。古书云"空劫夹命，财不聚"。宜技艺、宗教、研究等不重物质之业。",
+        "description": "地空地劫夹命，主财来财去、思想脱俗、易遁入宗教哲学。古书云「空劫夹命，财不聚」。宜技艺、宗教、研究等不重物质之业。",
         "palaces": ["命宫", prev.get("name", ""), next_.get("name", "")],
         "conditions": {"required": ["地空地劫分居命宫前后两宫"]},
         "source": "《紫微斗数全书》",
@@ -878,7 +878,7 @@ def _detect_ju_huo_yang(palaces: list[dict], ming_branch: int, patterns: list[di
     patterns.append({
         "name": "巨火羊",
         "level": "caution",
-        "description": "巨门、火星、擎羊三星会照，古书云"巨火羊，终身缢死"——古时凶格。现代理解为：易因口舌、激烈冲突而招大祸。需修身养性、慎言慎行，避免极端情绪。",
+        "description": "巨门、火星、擎羊三星会照，古书云「巨火羊，终身缢死」——古时凶格。现代理解为：易因口舌、激烈冲突而招大祸。需修身养性、慎言慎行，避免极端情绪。",
         "palaces": ["命宫"],
         "conditions": {"required": ["巨门、火星、擎羊三星会照三方四正"]},
         "source": "《紫微斗数骨髓赋·巨火羊》",
@@ -891,7 +891,7 @@ def _detect_ling_chang_tuo_wu(palaces: list[dict], ming_branch: int, patterns: l
     patterns.append({
         "name": "铃昌陀武",
         "level": "caution",
-        "description": "铃星、文昌、陀罗、武曲四星齐会，古书云"铃昌陀武，限至投河"——古时大凶格。本命有此组合本身不必恐慌，但流年大限触发时需高度警觉重大决策、情绪起伏、水边活动。",
+        "description": "铃星、文昌、陀罗、武曲四星齐会，古书云「铃昌陀武，限至投河」——古时大凶格。本命有此组合本身不必恐慌，但流年大限触发时需高度警觉重大决策、情绪起伏、水边活动。",
         "palaces": ["命宫"],
         "conditions": {"required": ["铃星、文昌、陀罗、武曲四星会照三方四正"]},
         "source": "《紫微斗数骨髓赋·铃昌陀武》",
@@ -911,7 +911,7 @@ def _detect_ma_tou_dai_jian(palaces: list[dict], ming: dict, ming_branch: int, p
     patterns.append({
         "name": "马头带箭",
         "level": "good" if bonus else "caution",
-        "description": "擎羊于午宫坐命，号"马头带箭"。古书云"威镇边疆"——主刚毅果决、有冲杀之力，宜军警武职、运动员、外科医师。但同时主危险与意外，需配合杀破狼或贵人方为大格，否则反主血光。",
+        "description": "擎羊于午宫坐命，号「马头带箭」。古书云「威镇边疆」——主刚毅果决、有冲杀之力，宜军警武职、运动员、外科医师。但同时主危险与意外，需配合杀破狼或贵人方为大格，否则反主血光。",
         "palaces": ["命宫"],
         "conditions": {"required": required, "bonus": bonus, "breaking": breaking},
         "source": "《紫微斗数骨髓赋·马头带箭》",
@@ -1005,7 +1005,7 @@ def _detect_hua_ke_ru_ming_shen(palaces: list[dict], ming_branch: int, shen_bran
                 patterns.append({
                     "name": "化科入命" if is_ming else "化科入身",
                     "level": "good",
-                    "description": f"{s['name']}化科入{'命' if is_ming else '身'}宫，主名声、文书、学术运。倪师讲化科是「贵人星」——{s['name']}化科带来的是被人看重的特质，宜从事文书、教育、研究、咨询、文创等"以名取利"的方向。",
+                    "description": f"{s['name']}化科入{'命' if is_ming else '身'}宫，主名声、文书、学术运。倪师讲化科是「贵人星」——{s['name']}化科带来的是被人看重的特质，宜从事文书、教育、研究、咨询、文创等「以名取利」的方向。",
                     "palaces": ["命宫" if is_ming else "身宫"],
                     "conditions": {"required": [f"{s['name']}化科入{'命' if is_ming else '身'}宫"]},
                     "source": "《紫微斗数全书·四化论》",
@@ -1072,7 +1072,7 @@ def _detect_kui_yue_tong_hui(palaces: list[dict], ming_branch: int, patterns: li
     patterns.append({
         "name": "魁钺同会",
         "level": "good",
-        "description": "天魁天钺同会命宫三方四正，主"天乙贵人"加持，关键时刻总有贵人提携。倪师说「魁钺夹命，必为贵人」——遇到困难时身边会出现得力相助者，宜主动维护人脉。",
+        "description": "天魁天钺同会命宫三方四正，主「天乙贵人」加持，关键时刻总有贵人提携。倪师说「魁钺夹命，必为贵人」——遇到困难时身边会出现得力相助者，宜主动维护人脉。",
         "palaces": ["命宫"],
         "conditions": {"required": ["天魁、天钺同会命宫三方四正"]},
         "source": "《紫微斗数全书·魁钺论》",
@@ -1093,7 +1093,7 @@ def _detect_ke_quan_shuang_hui(palaces: list[dict], ming_branch: int, patterns: 
     patterns.append({
         "name": "科权双会",
         "level": "good",
-        "description": "化科 + 化权 同会三方四正，主名权双美——既有学识/名声（科），又有掌控力（权），宜走"专业权威"路线（如医生、律师、教授、技术骨干），名利双收且根基扎实。",
+        "description": "化科 + 化权 同会三方四正，主名权双美——既有学识/名声（科），又有掌控力（权），宜走「专业权威」路线（如医生、律师、教授、技术骨干），名利双收且根基扎实。",
         "palaces": ["命宫"],
         "conditions": {"required": ["化科、化权同会命宫三方四正"]},
         "source": "《紫微斗数全书·四化会照》",
