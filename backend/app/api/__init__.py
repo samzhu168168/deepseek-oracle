@@ -3,10 +3,7 @@ from flask import Flask
 
 from .analyze import analyze_bp
 from .bazi import bazi_bp
-try:
-    from .content import content_bp
-except Exception:
-    content_bp = None
+# content_bp — conditionally imported below
 from .divination import divination_bp
 from .divination_stream import divination_stream_bp
 from .email import email_bp
@@ -25,7 +22,7 @@ def register_blueprints(app: Flask) -> None:
     """Register all API blueprints with the Flask app."""
     blueprints = [
         (bazi_bp, None),  # BaZi reading has /api prefix in routes
-        (content_bp, None),  # Content API has /api prefix in routes
+        # content_bp temporarily removed for debugging
         (divination_bp, "/api"),
         (divination_stream_bp, None),  # Streaming endpoints
         (analyze_bp, "/api/divination"),
