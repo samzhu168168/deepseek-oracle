@@ -1,6 +1,5 @@
 /** ShareButtons — reusable social share component */
 import { useState } from "react";
-import { InkButton } from "./InkButton";
 
 interface ShareButtonsProps {
   /** The full URL to share */
@@ -62,26 +61,26 @@ export function ShareButtons({ url, title, platforms }: ShareButtonsProps) {
   };
 
   return (
-    <div className="share-buttons" style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center" }}>
+    <div className="share-buttons">
       {buttons.includes("copy") && (
-        <InkButton type="button" onClick={handleCopyLink}>
-          {copied ? "Link Copied!" : "Copy Link"}
-        </InkButton>
+        <button type="button" className="share-button" onClick={handleCopyLink}>
+          {copied ? "✓" : "🔗"}
+        </button>
       )}
       {buttons.includes("twitter") && (
-        <InkButton type="button" kind="secondary" onClick={handleShareTwitter}>
-          Share on X
-        </InkButton>
+        <button type="button" className="share-button" onClick={handleShareTwitter}>
+          𝕏
+        </button>
       )}
       {buttons.includes("facebook") && (
-        <InkButton type="button" kind="secondary" onClick={handleShareFacebook}>
-          Share on Facebook
-        </InkButton>
+        <button type="button" className="share-button" onClick={handleShareFacebook}>
+          f
+        </button>
       )}
       {buttons.includes("whatsapp") && (
-        <InkButton type="button" kind="secondary" onClick={handleShareWhatsApp}>
-          Share on WhatsApp
-        </InkButton>
+        <button type="button" className="share-button" onClick={handleShareWhatsApp}>
+          💬
+        </button>
       )}
     </div>
   );

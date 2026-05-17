@@ -125,17 +125,6 @@ export default function BaZiPage() {
     }
   }, []);
 
-  const pillarStyle = {
-    display: "inline-block",
-    padding: "12px 20px",
-    margin: "4px",
-    borderRadius: "8px",
-    background: "rgba(196, 149, 106, 0.1)",
-    border: "1px solid rgba(196, 149, 106, 0.25)",
-    fontWeight: 600,
-    fontSize: "15px",
-  };
-
   return (
     <div className="landing-page fade-in" style={{ maxWidth: "720px", margin: "0 auto", padding: "24px 16px" }}>
       {/* Dynamic OG image for BaZi results */}
@@ -237,10 +226,10 @@ export default function BaZiPage() {
               YOUR FOUR PILLARS
             </p>
             <div style={{ textAlign: "center", margin: "16px 0" }}>
-              <span style={pillarStyle}>Year: {reading.fourPillars.year || "—"}</span>
-              <span style={pillarStyle}>Month: {reading.fourPillars.month || "—"}</span>
-              <span style={pillarStyle}>Day: {reading.fourPillars.day || "—"}</span>
-              <span style={pillarStyle}>Hour: {reading.fourPillars.hour || "—"}</span>
+              <span className="pillar-tag">Year: {reading.fourPillars.year || "—"}</span>
+              <span className="pillar-tag">Month: {reading.fourPillars.month || "—"}</span>
+              <span className="pillar-tag">Day: {reading.fourPillars.day || "—"}</span>
+              <span className="pillar-tag">Hour: {reading.fourPillars.hour || "—"}</span>
             </div>
           </section>
 

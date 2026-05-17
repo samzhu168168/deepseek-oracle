@@ -124,11 +124,11 @@ export function Layout() {
           <a href="https://twitter.com/elementalbond" target="_blank" rel="noopener noreferrer">X / Twitter</a>
           <a href="https://instagram.com/elementalbond" target="_blank" rel="noopener noreferrer">Instagram</a>
         </nav>
-        <nav aria-label="Footer navigation" style={{ marginTop: "0.5rem", fontSize: "0.8rem", opacity: 0.7 }}>
-          <a href="/" style={{ color: "inherit", marginRight: "1rem" }}>BaZi Compatibility</a>
-          <a href="/bazi" style={{ color: "inherit", marginRight: "1rem" }}>BaZi Reading</a>
-          <a href="/articles" style={{ color: "inherit", marginRight: "1rem" }}>Articles</a>
-          <a href="/compatibility/aries-and-taurus" style={{ color: "inherit" }}>Element Compatibility</a>
+        <nav className="app-footer__nav">
+          <a href="/">BaZi Compatibility</a>
+          <a href="/bazi">BaZi Reading</a>
+          <a href="/articles">Articles</a>
+          <a href="/compatibility/aries-and-taurus">Element Compatibility</a>
         </nav>
       </footer>
     </div>

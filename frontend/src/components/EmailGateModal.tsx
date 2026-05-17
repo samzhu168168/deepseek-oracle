@@ -117,27 +117,27 @@ export function EmailGateModal({
       style={{
         position: 'fixed',
         inset: 0,
-        background: 'rgba(10, 10, 22, 0.85)',
+        background: 'rgba(5, 7, 20, 0.85)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 999,
-        backdropFilter: 'blur(8px)',
+        backdropFilter: 'blur(12px)',
         animation: 'fadeIn 0.3s ease',
       }}
     >
       <div
         style={{
-          background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
-          borderRadius: '20px',
+          background: 'linear-gradient(135deg, #12152A 0%, #1A1E38 100%)',
+          borderRadius: '24px',
           padding: '48px 40px',
           width: '100%',
-          maxWidth: '520px',
+          maxWidth: '480px',
           margin: '0 20px',
           position: 'relative',
-          boxShadow: '0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(139, 111, 232, 0.15)',
           animation: 'slideUp 0.3s ease',
-          border: '1px solid rgba(210, 187, 255, 0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.06)',
         }}
       >
         {/* Close button */}
@@ -287,9 +287,9 @@ export function EmailGateModal({
               padding: '18px',
               background:
                 submitting || !email.trim()
-                  ? 'rgba(196, 167, 255, 0.3)'
-                  : 'linear-gradient(135deg, #8b7a9f, #c4a7ff)',
-              color: submitting || !email.trim() ? '#888' : '#1a1a2e',
+                  ? 'rgba(240, 179, 75, 0.2)'
+                  : 'linear-gradient(135deg, #F0B34B, #D4942E)',
+              color: submitting || !email.trim() ? '#666' : '#0A0E1A',
               border: 'none',
               borderRadius: '12px',
               fontSize: '17px',
@@ -335,9 +335,9 @@ export function EmailGateModal({
           style={{
             marginTop: '28px',
             padding: '16px',
-            background: 'rgba(196, 167, 255, 0.08)',
+            background: 'rgba(139, 111, 232, 0.08)',
             borderRadius: '12px',
-            border: '1px solid rgba(196, 167, 255, 0.15)',
+            border: '1px solid rgba(139, 111, 232, 0.15)',
           }}
         >
           <div

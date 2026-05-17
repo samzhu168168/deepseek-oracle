@@ -200,26 +200,27 @@ export function LicenseKeyModal({
       style={{
         position: 'fixed',
         inset: 0,
-        background: 'rgba(0,0,0,0.6)',
+        background: 'rgba(5, 7, 20, 0.85)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 1000,
-        backdropFilter: 'blur(4px)',
+        backdropFilter: 'blur(12px)',
         animation: 'fadeIn 0.2s ease',
       }}
     >
       <div
         style={{
-          background: '#fff',
-          borderRadius: '16px',
+          background: 'linear-gradient(135deg, #12152A, #1A1E38)',
+          borderRadius: '24px',
           padding: '40px 36px',
           width: '100%',
           maxWidth: '460px',
           margin: '0 16px',
           position: 'relative',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+          boxShadow: '0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(139, 111, 232, 0.15)',
           animation: 'slideUp 0.25s ease',
+          border: '1px solid rgba(255,255,255,0.06)',
         }}
       >
         {/* 关闭按钮 */}
@@ -248,15 +249,15 @@ export function LicenseKeyModal({
         {(step === 'input' || step === 'error') && (
           <>
             <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '13px', color: '#c4956a', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '8px' }}>
+              <div style={{ fontSize: '13px', color: '#F0B34B', fontWeight: 600, letterSpacing: '0.08em', marginBottom: '8px' }}>
                 ALREADY PURCHASED
               </div>
-              <h2 style={{ fontSize: '22px', fontWeight: 700, color: '#1a1a1a', margin: 0, lineHeight: 1.3 }}>
+              <h2 style={{ fontSize: '22px', fontWeight: 700, color: '#EDEDF0', margin: 0, lineHeight: 1.3 }}>
                 Enter Your License Key
               </h2>
-              <p style={{ fontSize: '14px', color: '#666', marginTop: '10px', lineHeight: 1.6 }}>
+              <p style={{ fontSize: '14px', color: 'rgba(237,237,240,0.6)', marginTop: '10px', lineHeight: 1.6 }}>
                 Check your email from Gumroad — your key looks like{' '}
-                <code style={{ background: '#f5f5f5', padding: '2px 6px', borderRadius: '4px', fontSize: '12px' }}>
+                <code style={{ background: 'rgba(255,255,255,0.1)', padding: '2px 6px', borderRadius: '4px', fontSize: '12px', color: '#EDEDF0' }}>
                   XXXX-XXXX-XXXX-XXXX
                 </code>
               </p>
@@ -275,14 +276,14 @@ export function LicenseKeyModal({
                   width: '100%',
                   padding: '14px 16px',
                   fontSize: '15px',
-                  border: errorMsg ? '1.5px solid #e55' : '1.5px solid #e0dcd6',
-                  borderRadius: '10px',
+                  border: errorMsg ? '1.5px solid #FF6B6B' : '1.5px solid rgba(255,255,255,0.1)',
+                  borderRadius: '12px',
                   outline: 'none',
                   boxSizing: 'border-box',
                   fontFamily: 'monospace',
                   letterSpacing: '0.05em',
-                  background: '#faf9f7',
-                  color: '#1a1a1a',
+                  background: 'rgba(255,255,255,0.05)',
+                  color: '#EDEDF0',
                   transition: 'border-color 0.2s',
                 }}
               />
@@ -300,8 +301,8 @@ export function LicenseKeyModal({
                   width: '100%',
                   marginTop: '16px',
                   padding: '16px',
-                  background: licenseKey.trim() ? 'linear-gradient(135deg, #c4956a, #a67c52)' : '#e0dcd6',
-                  color: licenseKey.trim() ? '#fff' : '#999',
+                  background: licenseKey.trim() ? 'linear-gradient(135deg, #F0B34B, #D4942E)' : 'rgba(255,255,255,0.08)',
+                  color: licenseKey.trim() ? '#0A0E1A' : '#666',
                   border: 'none',
                   borderRadius: '10px',
                   fontSize: '16px',
@@ -314,13 +315,13 @@ export function LicenseKeyModal({
                 Unlock My Full Blueprint →
               </button>
 
-              <p style={{ textAlign: 'center', fontSize: '12px', color: '#999', marginTop: '12px' }}>
+              <p style={{ textAlign: 'center', fontSize: '12px', color: 'rgba(237,237,240,0.4)', marginTop: '12px' }}>
                 Lost your key?{' '}
                 <a
                   href="https://app.gumroad.com/library"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: '#c4956a', textDecoration: 'none' }}
+                  style={{ color: '#F0B34B', textDecoration: 'none' }}
                 >
                   Find it in your Gumroad library →
                 </a>
