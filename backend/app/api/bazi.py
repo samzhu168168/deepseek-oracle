@@ -9,22 +9,22 @@ bazi_bp = Blueprint("bazi", __name__)
 
 
 def _build_bazi_prompt(date: str, time_str: str, gender: str, name: str) -> str:
-    return f"""You are a master BaZi astrologer. Return ONLY valid JSON.
+    return f"""You are a master BaZi astrologer. Return ONLY valid JSON — no markdown, no code fences, no extra text.
 
 Input: {name or 'Unknown'} | {date} | {time_str or 'unknown'} | {gender} | Year {datetime.now().year}
 
-Calculate the Four Pillars (Year/Month/Day/Hour stems-branches). Keep each field short (1-2 sentences):
+Generate a personal birth chart reading. Each field must be clean English text with NO special Unicode characters (no emoji, no Chinese characters, no non-ASCII symbols). Use plain ASCII text only.
 
 {{
-  "fourPillars": {{"year":"","month":"","day":"","hour":""}},
-  "dayMaster": "Day Master element and meaning (1-2 sentences)",
-  "fiveElementBalance": "Element balance (1-2 sentences)",
-  "personality": "Key traits (1-2 sentences)",
-  "careerAndWealth": "Career (1-2 sentences)",
-  "relationships": "Relationships (1-2 sentences)",
-  "luckPhases": {{"currentPhase":"","currentYear":"","nextYear":""}},
-  "elementRemedy": "Element tip (1 sentence)",
-  "summary": "Overview (2 sentences)"
+  "fourPillars": {{"year":"Heavenly Stem-Earthly Branch pair","month":"","day":"","hour":""}},
+  "dayMaster": "Day Master element and its meaning (1-2 sentences)",
+  "fiveElementBalance": "Which elements are strong/weak and what this means (1-2 sentences)",
+  "personality": "Key personality traits from the chart (1-2 sentences)",
+  "careerAndWealth": "Career tendencies and wealth potential (1-2 sentences)",
+  "relationships": "Relationship patterns and preferences (1-2 sentences)",
+  "luckPhases": {{"currentPhase":"Current decade luck phase (1 sentence)","currentYear":"This year's outlook (1 sentence)","nextYear":"Coming year outlook (1 sentence)"}},
+  "elementRemedy": "Which element to strengthen and how (1 sentence)",
+  "summary": "Overall reading summary (2 sentences)"
 }}"""
 
 

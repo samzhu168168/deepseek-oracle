@@ -618,16 +618,18 @@ def get_divination_service() -> DivinationService:
 
 
 def _build_bond_prompt(person_a: dict[str, Any], person_b: dict[str, Any], full: bool) -> str:
-    mode = "FULL" if full else "TEASER"
+    prompt_template = ORACLE_FULL_PROMPT if full else ORACLE_TEASER_PROMPT
     return (
-        "You are an expert relationship astrologer and BaZi advisor. "
-        "Generate a relationship compatibility report. "
-        f"Mode: {mode}. "
-        "The teaser must be about 150 words. "
-        "The full report must be about 800 words only when Mode is FULL. "
-        "Use English. "
-        f"Person A birth info: {person_a}. "
-        f"Person B birth info: {person_b}."
+        f"{ORACLE_SYSTEM_PROMPT}\n\n"
+        f"{prompt_template}\n\n"
+        "## Birth Data\n\n"
+        f"**Person A** — Date: {person_a.get('date', '')}, "
+        f"Time: {person_a.get('time', 'unknown')}, "
+        f"Gender: {person_a.get('gender', '')}\n"
+        f"**Person B** — Date: {person_b.get('date', '')}, "
+        f"Time: {person_b.get('time', 'unknown')}, "
+        f"Gender: {person_b.get('gender', '')}\n\n"
+        "Now speak as The Oracle. Reveal the pattern. Empower the choice."
     )
 
 
