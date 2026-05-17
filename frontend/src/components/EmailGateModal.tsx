@@ -7,8 +7,8 @@ interface EmailGateModalProps {
   isOpen: boolean
   onClose: () => void
   onSuccess: (email: string) => void
-  score: number
-  elementPair: string
+  score?: number
+  elementPair?: string
 }
 
 export function EmailGateModal({
@@ -62,8 +62,8 @@ export function EmailGateModal({
         body: JSON.stringify({
           email: trimmedEmail,
           source: 'email_gate',
-          score,
-          element_pair: elementPair,
+          ...(score !== undefined ? { score } : {}),
+          ...(elementPair !== undefined ? { element_pair: elementPair } : {}),
         }),
         signal: controller.signal
       })
@@ -206,17 +206,19 @@ export function EmailGateModal({
 
         {/* Description */}
         <div style={{ marginBottom: '32px', textAlign: 'center' }}>
-          <p
-            style={{
-              color: '#d2bbff',
-              fontSize: '16px',
-              lineHeight: 1.6,
-              margin: '0 0 20px',
-            }}
-          >
-            Your <strong style={{ color: '#f7f2ff' }}>{elementPair}</strong> bond scored{' '}
-            <strong style={{ color: '#f7f2ff' }}>{score}/100</strong>.
-          </p>
+          {score !== undefined && elementPair ? (
+            <p
+              style={{
+                color: '#d2bbff',
+                fontSize: '16px',
+                lineHeight: 1.6,
+                margin: '0 0 20px',
+              }}
+            >
+              Your <strong style={{ color: '#f7f2ff' }}>{elementPair}</strong> bond scored{' '}
+              <strong style={{ color: '#f7f2ff' }}>{score}/100</strong>.
+            </p>
+          ) : null}
           <p
             style={{
               color: '#b8a3e0',
@@ -225,8 +227,9 @@ export function EmailGateModal({
               margin: 0,
             }}
           >
-            Enter your email to unlock the complete compatibility preview + your 2026 timing
-            insights.
+            {score !== undefined && elementPair
+              ? 'Enter your email to unlock the complete compatibility preview + your 2026 timing insights.'
+              : 'Enter your email to unlock your Day Master, Five Element balance, and personality profile.'}
           </p>
         </div>
 

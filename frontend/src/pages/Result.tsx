@@ -331,8 +331,10 @@ export default function ResultPage() {
     }
   };
 
-  const handleLicenseSuccess = (data: FullReportData) => {
-    setFullReportData(data);
+  const handleLicenseSuccess = (data: FullReportData | { licenseKey: string }) => {
+    if ('fullAnalysis' in data) {
+      setFullReportData(data);
+    }
     setLicenseModalOpen(false);
   };
 

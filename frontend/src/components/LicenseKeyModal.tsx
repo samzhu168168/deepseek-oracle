@@ -24,14 +24,18 @@ export interface FullReportData {
 interface LicenseKeyModalProps {
   isOpen: boolean
   onClose: () => void
-  onSuccess: (data: FullReportData) => void
+  onSuccess: (data: FullReportData | { licenseKey: string }) => void
   // 把当前的结果数据传入，用于生成完整报告
-  resultPayload: {
+  resultPayload?: {
     person1: { date: string; time: string; gender: string }
     person2: { date: string; time: string; gender: string }
     score: number
     elementPair: string // e.g. "Water-Wood"
   }
+  // 跳过 report generation（BaZi 场景：数据已在前端）
+  skipReportGeneration?: boolean
+  // 指定产品 ID（BaZi 场景用 "swpdpb"）
+  productId?: string
 }
 
 type Step = 'input' | 'verifying' | 'generating' | 'error'
@@ -41,6 +45,8 @@ export function LicenseKeyModal({
   onClose,
   onSuccess,
   resultPayload,
+  skipReportGeneration = false,
+  productId,
 }: LicenseKeyModalProps) {
   const [step, setStep] = useState<Step>('input')
   const [licenseKey, setLicenseKey] = useState('')
@@ -86,7 +92,10 @@ export function LicenseKeyModal({
       const verifyRes = await fetch(`${apiBaseUrl}/api/verify-license`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ license_key: key }),
+        body: JSON.stringify({
+          license_key: key,
+          ...(productId ? { product_id: productId } : {}),
+        }),
         signal: controller1.signal
       })
 
@@ -111,7 +120,19 @@ export function LicenseKeyModal({
         return
       }
 
+      // 如果是 BaZi 场景（skipReportGeneration），跳过 AI 报告生成，直接解锁
+      if (skipReportGeneration) {
+        onSuccess({ licenseKey: key })
+        return
+      }
+
       // Step 2: 生成完整报告 with timeout
+      if (!resultPayload) {
+        setStep('error')
+        setErrorMsg('Missing result data. Please try again.')
+        return
+      }
+
       setStep('generating')
       
       const controller2 = new AbortController()

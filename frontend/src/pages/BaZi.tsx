@@ -1,9 +1,11 @@
 /** BaZi personal reading page — individual birth chart analysis */
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { MarkdownRenderer } from "../components/MarkdownRenderer";
 import { ShareButtons } from "../components/ShareButtons";
+import { EmailGateModal } from "../components/EmailGateModal";
+import { LicenseKeyModal } from "../components/LicenseKeyModal";
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
 const LOADING_MESSAGES = [
@@ -44,6 +46,14 @@ export default function BaZiPage() {
   const [msgIndex, setMsgIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [reading, setReading] = useState<BaZiReading | null>(null);
+
+  // Monetization state
+  const [emailUnlocked, setEmailUnlocked] = useState(false);
+  const [paidUnlocked, setPaidUnlocked] = useState(false);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [licenseModalOpen, setLicenseModalOpen] = useState(false);
+  const [postPaymentFlow, setPostPaymentFlow] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   const apiBase = import.meta.env.VITE_API_URL || "";
 
@@ -87,6 +97,33 @@ export default function BaZiPage() {
       setLoading(false);
     }
   };
+
+  // Auto-open email gate 3 seconds after reading loads
+  useEffect(() => {
+    if (reading && !emailUnlocked && !emailModalOpen) {
+      const timer = setTimeout(() => setEmailModalOpen(true), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [reading, emailUnlocked, emailModalOpen]);
+
+  // Show paywall 8 seconds after reading loads
+  useEffect(() => {
+    if (reading && !showPaywall) {
+      const timer = setTimeout(() => setShowPaywall(true), 8000);
+      return () => clearTimeout(timer);
+    }
+  }, [reading, showPaywall]);
+
+  // Detect Gumroad purchase redirect (?unlocked=true&ref=gumroad)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("unlocked") === "true" && params.get("ref") === "gumroad") {
+      setPostPaymentFlow(true);
+      setLicenseModalOpen(true);
+      // Clean URL without reload
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
 
   const pillarStyle = {
     display: "inline-block",
@@ -220,7 +257,8 @@ export default function BaZiPage() {
             </div>
           </section>
 
-          {/* Day Master */}
+          {/* ── Email Gate: Day Master + Five Elements + Personality ── */}
+          {emailUnlocked && (<>
           <section className="free-reading" style={{ marginBottom: "16px" }}>
             <div className="free-reading-header">
               <div className="oracle-symbol">&#9674;</div>
@@ -258,7 +296,45 @@ export default function BaZiPage() {
               </div>
             </div>
           </section>
+          </>)} {/* end emailUnlocked */}
 
+          {/* ── Paywall: prompt to purchase full reading ── */}
+          {showPaywall && !paidUnlocked && !postPaymentFlow && (
+          <section className="free-reading" style={{
+            marginBottom: "16px",
+            border: "1px dashed rgba(196, 149, 106, 0.4)",
+            background: "rgba(196, 149, 106, 0.03)",
+          }}>
+            <div className="free-reading-header" style={{ opacity: 0.6 }}>
+              <span style={{ fontSize: "18px", marginRight: "8px" }}>🔒</span>
+              <h2 className="free-reading-title">CAREER & WEALTH</h2>
+            </div>
+            <div className="free-reading-content" style={{ textAlign: "center", padding: "32px 20px" }}>
+              <div style={{ fontSize: "36px", marginBottom: "12px", opacity: 0.4 }}>🔒</div>
+              <h3 style={{ color: "var(--oracle-text)", fontSize: "18px", margin: "0 0 8px" }}>
+                Unlock Your Complete Blueprint
+              </h3>
+              <p style={{ color: "var(--oracle-muted)", fontSize: "14px", lineHeight: 1.7, maxWidth: "400px", margin: "0 auto 20px" }}>
+                Get the full picture: career potential, relationship dynamics, luck phases, and
+                personalized element remedies — all based on your unique birth chart.
+              </p>
+              <a
+                href="https://samzhu168.gumroad.com/l/swpdpb"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="oracle-button oracle-cta-button"
+                style={{ textDecoration: "none", display: "inline-block", fontSize: "15px" }}
+              >
+                &#10024; Get Full Reading — $24.00
+              </a>
+              <p style={{ color: "var(--oracle-muted)", fontSize: "12px", marginTop: "12px" }}>
+                One-time purchase. Lifetime access. Instant delivery.
+              </p>
+            </div>
+          </section>
+          )}
+
+          {paidUnlocked && (<>
           {/* Career */}
           <section className="free-reading" style={{ marginBottom: "16px" }}>
             <div className="free-reading-header">
@@ -315,6 +391,7 @@ export default function BaZiPage() {
               </div>
             </div>
           </section>
+          </>)}
 
           {/* Share buttons */}
           <div style={{ textAlign: "center", padding: "20px 0", borderTop: "1px solid rgba(196, 149, 106, 0.15)", marginTop: "8px" }}>
@@ -338,6 +415,32 @@ export default function BaZiPage() {
           </div>
         </div>
       )}
+
+      {/* Email Gate Modal */}
+      <EmailGateModal
+        isOpen={emailModalOpen}
+        onClose={() => setEmailModalOpen(false)}
+        onSuccess={(_email) => {
+          setEmailUnlocked(true);
+          setEmailModalOpen(false);
+        }}
+      />
+
+      {/* License Key Modal (for paid unlock) */}
+      <LicenseKeyModal
+        isOpen={licenseModalOpen}
+        onClose={() => {
+          setLicenseModalOpen(false);
+          setPostPaymentFlow(false);
+        }}
+        onSuccess={() => {
+          setPaidUnlocked(true);
+          setLicenseModalOpen(false);
+          setPostPaymentFlow(false);
+        }}
+        skipReportGeneration={true}
+        productId="swpdpb"
+      />
     </div>
   );
 }

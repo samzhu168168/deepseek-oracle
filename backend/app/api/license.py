@@ -21,6 +21,7 @@ license_bp = Blueprint('license', __name__)
 
 # ── 配置 ────────────────────────────────────────────────
 GUMROAD_PRODUCT_ID = os.getenv('GUMROAD_PRODUCT_ID', 'bhpmxr')  # 从你的 Gumroad URL 取
+GUMROAD_PRODUCT_ID_BAZI = os.getenv('GUMROAD_PRODUCT_ID_BAZI', 'swpdpb')  # BaZi personal reading
 
 # 简单内存缓存（生产环境换成 Redis 或数据库）
 _report_cache: dict[str, dict] = {}
@@ -39,11 +40,20 @@ def verify_license():
     if not license_key:
         return jsonify({'success': False, 'error': 'License key is required.'}), 400
 
+    # 支持传入 product_id，用于多产品（如 BaZi 用 swpdpb，兼容性用 bhpmxr）
+    raw_pid = (data.get('product_id') or '').strip()
+    if raw_pid == 'bazi':
+        product_id = GUMROAD_PRODUCT_ID_BAZI
+    elif raw_pid:
+        product_id = raw_pid
+    else:
+        product_id = GUMROAD_PRODUCT_ID
+
     try:
         resp = requests.post(
             'https://api.gumroad.com/v2/licenses/verify',
             data={
-                'product_id': GUMROAD_PRODUCT_ID,
+                'product_id': product_id,
                 'license_key': license_key,
                 'increment_uses_count': 'false',  # 不消耗使用次数
             },
