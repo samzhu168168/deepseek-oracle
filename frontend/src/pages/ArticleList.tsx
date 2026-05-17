@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
-const apiBase = import.meta.env.VITE_API_URL || "";
+const apiBase = import.meta.env.PROD ? "" : (import.meta.env.VITE_API_URL || "");
 
 interface ArticleMeta {
   id: string;

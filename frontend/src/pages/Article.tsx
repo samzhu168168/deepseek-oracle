@@ -5,7 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { MarkdownRenderer } from "../components/MarkdownRenderer";
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
-const apiBase = import.meta.env.VITE_API_URL || "";
+const apiBase = import.meta.env.PROD ? "" : (import.meta.env.VITE_API_URL || "");
 
 interface ArticleContent {
   hook: string;

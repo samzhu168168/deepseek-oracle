@@ -54,7 +54,7 @@ export function PayPalButton({
   const [error, setError] = useState("");
 
   // Determine API base URL (same origin in prod, VITE_API_URL in dev)
-  const apiBase = import.meta.env.VITE_API_URL || "";
+  const apiBase = import.meta.env.PROD ? "" : (import.meta.env.VITE_API_URL || "");
 
   useEffect(() => {
     if (loaded) return;
