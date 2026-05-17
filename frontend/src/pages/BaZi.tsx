@@ -82,9 +82,9 @@ export default function BaZiPage() {
     }, 3000);
 
     try {
-      // Timeout guard: abort if API takes > 30s
+      // Timeout guard: abort if API takes > 12s (Vercel Hobby 10s limit + buffer)
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000);
+      const timeoutId = setTimeout(() => controller.abort(), 12000);
       const resp = await fetch(`${apiBase}/api/divination/bazi`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -92,6 +92,10 @@ export default function BaZiPage() {
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
+      if (!resp.ok) {
+        const body = await resp.text().catch(() => "");
+        throw new Error(`Server error (${resp.status}): ${body.slice(0, 100)}`);
+      }
       const data = await resp.json();
       if (!data.success) throw new Error(data.error || "Reading failed");
       // Validate reading object has expected fields before setting state
@@ -227,7 +231,17 @@ export default function BaZiPage() {
             </div>
           </div>
 
-          {error && <p className="error-text">{error}</p>}
+          {error && (
+            <div className="bazi-error">
+              <p className="bazi-error-text">{error}</p>
+              <button
+                onClick={() => { setError(null); setLoading(false); }}
+                className="oracle-button bazi-retry-btn"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
 
           {loading ? (
             <div className="oracle-loading">
@@ -237,7 +251,7 @@ export default function BaZiPage() {
               </p>
             </div>
           ) : (
-            <button type="submit" className="oracle-button oracle-cta-button mt-md" style={{ width: '100%' }}>
+            <button type="submit" className="oracle-button oracle-cta-button mt-md bazi-submit-btn">
               &#10024; Reveal My BaZi
             </button>
           )}

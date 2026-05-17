@@ -766,6 +766,35 @@ a:hover { color: var(--oracle-text); }
   margin-top: var(--space-md);
 }
 
+.bazi-submit-btn { width: 100%; }
+
+.bazi-error {
+  text-align: center;
+  padding: var(--space-lg);
+  margin-top: var(--space-md);
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: var(--radius-md);
+}
+.bazi-error-text {
+  color: #FF6B6B;
+  font-size: 0.875rem;
+  margin-bottom: var(--space-md);
+}
+.bazi-retry-btn {
+  background: transparent;
+  color: var(--oracle-text-secondary);
+  border: 1px solid var(--oracle-border);
+  padding: 10px 24px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.bazi-retry-btn:hover {
+  border-color: var(--oracle-accent-gold);
+  color: var(--oracle-accent-gold);
+}
+
 .bazi-share {
   text-align: center;
   padding: 20px 0;

@@ -38,7 +38,11 @@ def create_app() -> Flask:
 
     setup_logging(app)
 
-    init_db(app.config["DATABASE_PATH"])
+    # Defensive: init_db may fail on Vercel Hobby if /tmp is readonly
+    try:
+        init_db(app.config["DATABASE_PATH"])
+    except Exception as exc:
+        print(f"WARNING: Database init failed — app will run without persistence: {exc}")
     app.extensions["system_log_repo"] = SystemLogRepo(app.config["DATABASE_PATH"])
 
     redis_conn = None
