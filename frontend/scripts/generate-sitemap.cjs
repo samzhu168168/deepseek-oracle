@@ -18,11 +18,14 @@ const ARTICLES_JSON = path.resolve(
   "metadata.json",
 );
 const OUTPUT = path.resolve(__dirname, "..", "public", "sitemap.xml");
+const ROUTES_OUTPUT = path.resolve(__dirname, "..", "public", "routes.json");
 
 const SIGNS = [
   "aries", "taurus", "gemini", "cancer", "leo", "virgo",
   "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
 ];
+
+const ELEMENTS = ["wood", "fire", "earth", "metal", "water"];
 
 const STATIC_URLS = [
   { loc: "/", priority: "1.0" },
@@ -57,6 +60,18 @@ function main() {
     }
   }
 
+  // BaZi element pages: 5 × 5 = 25
+  for (const e1 of ELEMENTS) {
+    for (const e2 of ELEMENTS) {
+      urls.push({
+        loc: `${SITE_URL}/compatibility/elements/${e1}-and-${e2}`,
+        lastmod: "2026-05-17",
+        changefreq: "monthly",
+        priority: "0.75",
+      });
+    }
+  }
+
   // Article pages
   try {
     const metadata = JSON.parse(fs.readFileSync(ARTICLES_JSON, "utf-8"));
@@ -86,6 +101,19 @@ ${urls.map((u) => `  <url>
 
   fs.writeFileSync(OUTPUT, xml, "utf-8");
   console.log(`[sitemap] Generated ${urls.length} URLs → ${OUTPUT}`);
+
+  // Also write routes.json for prerender script
+  var routePaths = [];
+  routePaths.push("/");
+  routePaths.push("/articles");
+  for (var i = 0; i < urls.length; i++) {
+    var p = urls[i].loc.replace(SITE_URL, "");
+    if (p && (p.includes("/articles/") || p.includes("/compatibility/elements/"))) {
+      routePaths.push(p);
+    }
+  }
+  fs.writeFileSync(ROUTES_OUTPUT, JSON.stringify(routePaths), "utf-8");
+  console.log("[sitemap] Generated " + routePaths.length + " routes → " + ROUTES_OUTPUT);
 }
 
 main();

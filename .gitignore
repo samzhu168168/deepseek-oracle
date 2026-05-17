@@ -62,3 +62,5 @@ docker-compose.public.yml
 scripts/ziwei_dataset/*.zip.*
 scripts/ziwei_dataset/*.zip
 scripts/ziwei_dataset/samples/
+
+.env*.local

@@ -6,6 +6,7 @@ import ArticleListPage from "./pages/ArticleList";
 import ArticlePage from "./pages/Article";
 import BaZiPage from "./pages/BaZi";
 import CompatibilityPage from "./pages/Compatibility";
+import ElementCompatibilityPage from "./pages/ElementCompatibility";
 import HomePage from "./pages/Home";
 import ResultPage from "./pages/Result";
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/compatibility/elements/:element1-and-:element2" element={<ElementCompatibilityPage />} />
             <Route path="/compatibility/:sign1-and-:sign2" element={<CompatibilityPage />} />
             <Route path="/bazi" element={<BaZiPage />} />
             <Route path="/articles" element={<ArticleListPage />} />
