@@ -415,13 +415,21 @@ a:hover { color: var(--oracle-text); }
   color: #0A0E1A;
 }
 
-.oracle-button-secondary {
+.oracle-cta-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 12px rgba(240, 179, 75, 0.2);
+  transition-duration: 0.05s;
+}
+
+.oracle-button-secondary,
+.oracle-button--secondary {
   background: transparent;
   color: var(--oracle-text);
   border: 1px solid var(--oracle-border);
 }
 
-.oracle-button-secondary:hover {
+.oracle-button-secondary:hover,
+.oracle-button--secondary:hover {
   border-color: var(--oracle-accent-gold);
   color: var(--oracle-accent-gold);
   background: var(--oracle-gold-dim);
@@ -524,9 +532,16 @@ a:hover { color: var(--oracle-text); }
 .hero-divider {
   width: 60px;
   height: 3px;
-  background: linear-gradient(90deg, var(--oracle-accent-gold), transparent);
+  background: linear-gradient(90deg, var(--oracle-accent-gold), var(--oracle-cosmic-purple), transparent);
+  background-size: 200% 100%;
   border-radius: 2px;
   margin: var(--space-lg) auto 0;
+  animation: shimmerGlow 4s ease-in-out infinite;
+}
+
+@keyframes shimmerGlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 /* ── Landing Page Layout ── */
@@ -721,6 +736,14 @@ a:hover { color: var(--oracle-text); }
   font-size: 15px;
   color: var(--oracle-text-muted);
   margin-top: var(--space-md);
+}
+
+/* Loading hint under loading animation */
+.bond-form__loading-hint {
+  font-size: 0.85rem;
+  color: var(--oracle-text-muted);
+  margin-top: var(--space-sm);
+  font-style: italic;
 }
 .bazi-pillars {
   display: flex;
@@ -1067,6 +1090,11 @@ a:hover { color: var(--oracle-text); }
   50% { opacity: 0.5; }
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
 @keyframes glowPulse {
   0%, 100% { box-shadow: 0 0 20px rgba(139, 111, 232, 0.1); }
   50% { box-shadow: 0 0 40px rgba(139, 111, 232, 0.2); }
@@ -1079,6 +1107,11 @@ a:hover { color: var(--oracle-text); }
 
 .fade-in { animation: fadeIn 0.5s ease-out; }
 .slide-up { animation: slideUp 0.4s ease-out; }
+
+/* ── Oracle Symbol Floating Animation ── */
+.oracle-symbol-hero {
+  animation: float 4s ease-in-out infinite;
+}
 
 /* ════════════════════════════════════════
    UTILITY CLASSES

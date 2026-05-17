@@ -363,7 +363,7 @@ export default function HomePage() {
           <div className="oracle-loading">
             <span className="oracle-loading-icon">◈</span>
             <p className="bond-form__loading-text">{LOADING_MESSAGES[loadingMessageIndex]}</p>
-            <p className="text-muted mt-sm" style={{ fontSize: '0.9rem' }}>
+            <p className="bond-form__loading-hint">
               The Oracle is reading your pattern...
             </p>
           </div>
