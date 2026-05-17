@@ -31,7 +31,10 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    CORS(app, resources={r"/*": {"origins": "*"}})
+    cors_origins = app.config.get("CORS_ORIGINS", "*")
+    # Fall back to wildcard if origins list is empty (e.g. misconfigured env)
+    CORS(app, resources={r"/*": {"origins": cors_origins or "*"}},
+         supports_credentials=False)
 
     setup_logging(app)
 

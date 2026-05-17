@@ -1,6 +1,11 @@
 import axios from "axios";
 
-const apiBaseUrl = import.meta.env.VITE_API_URL || "";
+// In production (Vercel), always use relative URLs so /api/* routes hit
+// the serverless functions — never call the old Render backend directly.
+// In development, respect VITE_API_URL (e.g. http://localhost:5000).
+const apiBaseUrl = import.meta.env.PROD
+  ? ""
+  : (import.meta.env.VITE_API_URL || "");
 
 const api = axios.create({
   baseURL: apiBaseUrl,

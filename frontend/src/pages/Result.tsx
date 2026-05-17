@@ -552,9 +552,9 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
 
       {/* --- Payment Method Modal (Gumroad + PayPal) --- */}
       {paymentModalOpen ? (
-        <div className="paywall-modal" style={{zIndex: 1100}}>
+        <div className="paywall-modal paywall-modal--payment">
           <div className="paywall-modal__backdrop" onClick={() => setPaymentModalOpen(false)} />
-          <div className="paywall-modal__panel" role="dialog" aria-modal="true" style={{maxWidth: "500px"}}>
+          <div className="paywall-modal__panel paywall-modal__panel--sm" role="dialog" aria-modal="true">
             <button className="paywall-modal__close" type="button" onClick={() => setPaymentModalOpen(false)}>
               x
             </button>

@@ -935,6 +935,10 @@ a:hover { color: var(--oracle-text); }
 }
 
 /* ── Paywall Modal ── */
+/* Payment modal sits above the teaser modal */
+.paywall-modal--payment { z-index: 1100; }
+.paywall-modal__panel--sm { max-width: 500px; }
+
 .paywall-modal {
   position: fixed;
   inset: 0;
@@ -1265,30 +1269,20 @@ a:hover { color: var(--oracle-text); }
 }
 
 /* ════════════════════════════════════════
-   RESPONSIVE
+   EMAIL GATE MODAL
    ════════════════════════════════════════ */
-@media (max-width: 768px) {
-  :root {
-    --space-xl: 24px;
-    --space-2xl: 32px;
-    --space-3xl: 48px;
-  }
-
-  .top-nav {
-    padding: 0 var(--space-md);
-  }
-
-  .top-nav__links { display: none; }
-  .mobile-menu-toggle { display: flex; }
-  .mobile-drawer-overlay { display: block; }
-  .mobile-drawer { display: flex; flex-direction: column; }
-
-  .app-main {
-    width: min(72rem, calc(100% - 1.5rem));
-    padding-top: var(--space-lg);
-  }
-
-  .oracle-card {
-    padding: var(--space-lg);
-  }
+.email-gate-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 7, 20, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  backdrop-filter: blur(12px);
+  animation: fadeIn 0.3s ease;
 }
+
+.email-gate-panel {
+  background: linear-gradient(135deg, #12152A 0%, #1A1E38 100%);
+  border-radius: var(--radi

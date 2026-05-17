@@ -39,11 +39,11 @@ def _normalize_origins(value: str) -> list[object]:
 
 
 class Config:
+    DEBUG = _to_bool(os.getenv("DEBUG", "false"))
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-change-me")
     if SECRET_KEY == "dev-secret-change-me" and not DEBUG:
         import warnings
         warnings.warn("SECRET_KEY is still the default value — generate a real key for production")
-    DEBUG = _to_bool(os.getenv("DEBUG", "false"))
 
     CORS_ORIGINS = _normalize_origins(
         os.getenv(
@@ -76,7 +76,7 @@ class Config:
     SMTP_USERNAME = os.getenv("SMTP_USERNAME", "")
     SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
     SMTP_FROM_EMAIL = os.getenv("SMTP_FROM_EMAIL", "")
-    SMTP_FROM_NAME = os.getenv("SMTP_FROM_NAME", "DeepSeek Oracle")
+    SMTP_FROM_NAME = os.getenv("SMTP_FROM_NAME", "Elemental Bond")
     SMTP_TIMEOUT_S = int(os.getenv("SMTP_TIMEOUT_S", "60"))
 
     LLM_PROVIDER = os.getenv("LLM_PROVIDER", "fallback")

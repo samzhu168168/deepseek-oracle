@@ -16,7 +16,7 @@ export interface StreamEvent {
  * Stream divination analysis with real-time progress updates
  */
 export async function* analyzeBondStreaming(data: any): AsyncGenerator<StreamEvent> {
-  const apiBaseUrl = import.meta.env.VITE_API_URL || "";
+  const apiBaseUrl = import.meta.env.PROD ? "" : (import.meta.env.VITE_API_URL || "");
 
   const response = await fetch(`${apiBaseUrl}/api/divination/analyze-stream`, {
     method: 'POST',
@@ -69,7 +69,7 @@ export async function* analyzeBondStreaming(data: any): AsyncGenerator<StreamEve
  * Stream full report generation with text chunks
  */
 export async function* generateReportStreaming(data: any): AsyncGenerator<StreamEvent> {
-  const apiBaseUrl = import.meta.env.VITE_API_URL || "";
+  const apiBaseUrl = import.meta.env.PROD ? "" : (import.meta.env.VITE_API_URL || "");
 
   const response = await fetch(`${apiBaseUrl}/api/divination/report-stream`, {
     method: 'POST',

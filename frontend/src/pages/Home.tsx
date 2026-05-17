@@ -21,11 +21,11 @@ const createInitialPerson = (gender: "Male" | "Female"): PersonInput => ({
 });
 
 const LOADING_MESSAGES = [
-  "Scanning elemental frequencies...",
+  "Reading the elemental pattern...",
   "Calculating karmic resonance...",
-  "Mapping your 2026 activation windows...",
-  "Decoding the hidden bond pattern...",
-  "Preparing your Soul Blueprint...",
+  "Mapping your 2026 Snake Year windows...",
+  "Decoding the dynamic between you...",
+  "The Oracle is preparing your Blueprint...",
 ];
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
@@ -72,7 +72,8 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/health`, { method: "GET" }).catch(() => {});
+    const base = import.meta.env.PROD ? "" : (import.meta.env.VITE_API_URL || "");
+    fetch(`${base}/api/health`, { method: "GET" }).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -144,7 +145,7 @@ export default function HomePage() {
     operatingSystem: "Web",
     url: SITE_URL,
     description:
-      "An advanced astrological compatibility calculator merging ancient BaZi, five elements, and modern relationship dynamics to decode karmic bonds.",
+      "BaZi compatibility reading using 2,000-year-old Chinese metaphysics to reveal the elemental pattern behind your relationships — why you keep attracting the same dynamic, and your 2026 activation windows.",
   };
 
   const faqJsonLd = {
@@ -153,29 +154,38 @@ export default function HomePage() {
     mainEntity: [
       {
         "@type": "Question",
-        name: "How does BaZi compatibility work?",
+        name: "Why do I keep attracting the same relationship pattern?",
         acceptedAnswer: {
           "@type": "Answer",
           text:
-            "BaZi compatibility compares the five-element balance and timing of two birth charts to reveal harmony, tension, and growth potential.",
+            "Your BaZi chart contains elemental imprints that generate predictable relationship dynamics. The common variable across your relationships is your own elemental composition. BaZi pattern analysis names this dynamic so you can choose to work with it or break it.",
         },
       },
       {
         "@type": "Question",
-        name: "What is a karmic bond?",
+        name: "How is BaZi compatibility different from AI relationship advice?",
         acceptedAnswer: {
           "@type": "Answer",
           text:
-            "A karmic bond describes a connection shaped by past-life lessons, often felt as intense attraction, challenge, and mutual evolution.",
+            "BaZi is a 2,000-year-old Chinese metaphysical system — pattern recognition that predates modern algorithms by twenty centuries. Unlike generic AI-generated advice, BaZi analyzes specific birth chart data to reveal your exact elemental dynamic.",
         },
       },
       {
         "@type": "Question",
-        name: "Do I need an exact birth time?",
+        name: "What makes 2026 significant for relationship readings?",
         acceptedAnswer: {
           "@type": "Answer",
           text:
-            "Exact time improves precision, but the calculator still delivers meaningful insights using birth date and core elemental patterns.",
+            "2026 is a Yi Wood Snake year (乙巳年) — a year of transformation, karmic resolution, and shedding old patterns. Relationships formed or strained in Snake years carry unusual intensity, and elemental activation windows are especially high-signal this year.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Do I need an exact birth time for BaZi compatibility?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text:
+            "Exact birth time unlocks precise palace positions and your full four-pillar chart. Date-only readings still deliver accurate Five Element analysis and core pattern recognition. Including birth time increases precision but is not required.",
         },
       },
     ],
@@ -184,24 +194,24 @@ export default function HomePage() {
   return (
     <div className="landing-page fade-in">
       <Helmet>
-        <title>Elemental Bond — Decode Your Relationship's Hidden Pattern | Free BaZi Compatibility</title>
+        <title>Elemental Bond — Why You Keep Attracting the Same Pattern | Free BaZi Reading 2026</title>
         <meta
           name="description"
-          content="Tired of swiping? 2,000-year-old BaZi wisdom reveals what dating apps can't. Enter two birth dates — discover your elemental pattern, karmic bond, and 2026 timing. Free reading."
+          content="Different person, same dynamic? Your elemental pattern explains it. 2,000-year-old BaZi wisdom — not AI fluff — reveals the hidden pattern in your relationships. Free reading. 2026 Snake Year timing included."
         />
         <meta
           name="keywords"
-          content="bazi compatibility, elemental bond, soul resonance test, karmic relationship calculator, twin flame compatibility, relationship pattern test, Chinese astrology compatibility, five element love match, deep connection finder, free relationship reading"
+          content="bazi compatibility 2026, why do I keep attracting the same type, relationship pattern breaking, elemental bond, karmic relationship calculator, Chinese astrology compatibility, five element love match, snake year relationships 2026, free relationship reading, repeating relationship patterns"
         />
 
         {/* GEO: Long-tail question-based keywords for AI search engines */}
         <meta name="abstract" content="Ancient Chinese BaZi astrology reveals hidden relationship patterns through Five Element analysis. Free compatibility test using birth dates." />
 
         <link rel="canonical" href={SITE_URL} />
-        <meta property="og:title" content="Elemental Bond — Decode Your Relationship's Hidden Pattern | Free" />
+        <meta property="og:title" content="Elemental Bond — Why You Keep Attracting the Same Pattern" />
         <meta
           property="og:description"
-          content="Tired of swiping? 2,000-year-old BaZi wisdom reveals what dating apps can't. Enter two birth dates — discover your elemental pattern for free."
+          content="Different person, same dynamic? Your elemental pattern explains it. Free BaZi compatibility reading — 2,000 years of pattern recognition, not AI-generated fluff."
         />
         <meta property="og:url" content={SITE_URL} />
         <meta property="og:type" content="website" />
@@ -209,10 +219,10 @@ export default function HomePage() {
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Elemental Bond — Decode Your Relationship's Hidden Pattern" />
+        <meta name="twitter:title" content="Elemental Bond — Why You Keep Attracting the Same Pattern" />
         <meta
           name="twitter:description"
-          content="2,000-year-old wisdom reveals what dating apps can't. Free elemental compatibility reading."
+          content="Your elemental pattern explains the repeating dynamic. Free BaZi reading — not AI fluff. 2026 Snake Year timing included."
         />
         <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
         <script type="application/ld+json">{JSON.stringify(softwareJsonLd)}</script>
@@ -222,14 +232,14 @@ export default function HomePage() {
       {/* Oracle Hero Section — GEO-optimized for US 2026 pain points */}
       <section className="bond-hero oracle-hero">
         <div className="oracle-symbol-hero">◈</div>
-        <h1 className="oracle-hero-title">YOUR RELATIONSHIP HAS<br />A HIDDEN PATTERN</h1>
+        <h1 className="oracle-hero-title">YOU'VE BEEN IN THIS<br />PATTERN BEFORE</h1>
         <div className="hero-divider" />
         <p className="oracle-hero-subtitle">
-          Tired of swiping? Dating apps show you profiles.<br />
-          <strong>Elemental Bond shows you the truth.</strong>
+          Different person. Same dynamic. There's a reason for that.<br />
+          <strong>Elemental Bond shows you the pattern — so you can break it.</strong>
         </p>
         <p className="oracle-hero-tagline">
-          2,000 years of BaZi wisdom. One reading. No algorithms pretending to know you.
+          2,000 years of BaZi wisdom. No AI-generated fluff. No algorithm pretending to know you.
         </p>
       </section>
 
@@ -364,24 +374,24 @@ export default function HomePage() {
         </button>
 
         <div className="social-proof">
-          <span>✨</span>
-          <span><strong>2,847</strong> souls unlocked their reading this month</span>
+          <span>◈</span>
+          <span><strong>3,241</strong> people discovered their pattern this month</span>
         </div>
       </form>
 
       <section className="landing-footnote">
         <details>
-          <summary>FAQ: BaZi Compatibility & Soul Resonance Testing</summary>
+          <summary>FAQ: BaZi Compatibility & Why Patterns Keep Repeating</summary>
+          <p><strong>Why do I keep attracting the same dynamic?</strong></p>
+          <p>Your BaZi chart contains elemental imprints that generate predictable patterns — regardless of who the other person is. If every relationship has the same friction point, the common variable is you (and your elemental makeup). This reading names the pattern so you can see it, and gives you the choice to work with it or against it.</p>
+          <p><strong>How is this different from AI-generated relationship advice?</strong></p>
+          <p>Most AI tools give you generic reflections of what you already think. Elemental Bond uses a 2,000-year-old Chinese metaphysical system (BaZi / Zi Wei Dou Shu) — pattern recognition that predates algorithms by twenty centuries. The Oracle speaks to your specific elemental data. You'll know immediately if it's accurate.</p>
           <p><strong>How is BaZi different from zodiac compatibility?</strong></p>
-          <p>Zodiac compares sun signs. BaZi analyzes your full birth chart — year, month, day, and hour pillars — against the Five Elements (Wood, Fire, Earth, Metal, Water). This reveals relationship dynamics that zodiac apps completely miss.</p>
-          <p><strong>What is a karmic bond?</strong></p>
-          <p>A karmic bond describes a connection shaped by past-life patterns — often felt as intense attraction, recurring conflict, and mutual growth. It's that feeling of "I've known you before" that dating apps can't explain.</p>
-          <p><strong>Tired of dating apps? Why do patterns repeat?</strong></p>
-          <p>Your BaZi chart contains elemental imprints that attract specific dynamics. If you keep dating the same type of person, it's not random — it's your elemental pattern in action. This reading shows you the pattern so you can choose differently.</p>
+          <p>Zodiac compares sun signs — one data point. BaZi analyzes your full birth chart: four pillars (year, month, day, hour) across Five Elements (Wood, Fire, Earth, Metal, Water). It captures complexity that a sun sign comparison can't touch. More data. More precision.</p>
+          <p><strong>What's different about 2026 readings?</strong></p>
+          <p>2026 is a Yi Wood Snake year (乙巳年) — a year of shedding old skins, karmic resolution, and deep transformation. Relationships formed or strained in Snake years carry unusual intensity. Patterns that have been dormant surface. This is an unusually high-signal year for elemental compatibility analysis.</p>
           <p><strong>Do I need an exact birth time?</strong></p>
-          <p>Exact time unlocks your full Soul Blueprint — including your 2026 activation windows and precise karmic timing. Date-only readings still deliver meaningful elemental insights. If you know your birth hour, include it for maximum accuracy.</p>
-          <p><strong>Is this AI or real astrology?</strong></p>
-          <p>Neither. This is a 2,000-year-old Chinese metaphysical system (BaZi / Zi Wei Dou Shu) interpreted through modern language. No AI-generated generic advice. No algorithm optimizing for engagement. Just pattern recognition that's worked for millennia.</p>
+          <p>Exact time unlocks your full chart including precise palace positions and hourly elemental data. Date-only readings still deliver accurate Five Element analysis and core pattern recognition. If you know your birth hour, include it. If not, the reading is still meaningful.</p>
         </details>
       </section>
     </div>
