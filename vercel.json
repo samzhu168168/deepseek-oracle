@@ -72,21 +72,6 @@
       "dest": "/covers/$1"
     },
     {
-      "src": "/articles/(.*)",
-      "headers": { "cache-control": "public, max-age=0, must-revalidate" },
-      "dest": "/frontend/__prerendered__/articles/$1.html"
-    },
-    {
-      "src": "/compatibility/elements/(.*)",
-      "headers": { "cache-control": "public, max-age=0, must-revalidate" },
-      "dest": "/frontend/__prerendered__/compatibility/elements/$1.html"
-    },
-    {
-      "src": "/",
-      "headers": { "cache-control": "public, max-age=0, must-revalidate" },
-      "dest": "/frontend/__prerendered__/index.html"
-    },
-    {
       "src": "/(.*)",
       "dest": "/frontend/index.html"
     }
