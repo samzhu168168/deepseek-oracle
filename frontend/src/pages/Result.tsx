@@ -291,7 +291,7 @@ export default function ResultPage() {
   const elementCombo = normalizedReport?.teaser?.five_element_compatibility || "Water meets Wood";
   const elementPair = elementCombo.replace(/\s*meets\s*/i, "-").replace(/\s+/g, " ").trim();
   const elements = elementPair.split("-").map((s) => s.trim());
-  const resultTitle = `${elementPair} Compatibility �?Soul Resonance Score ${averageScore}/100 | Elemental Bond`;
+  const resultTitle = `${elementPair} Compatibility - Soul Resonance Score ${averageScore}/100 | Elemental Bond`;
   const resultDescription = `Your ${elementPair} connection reveals a ${relationshipLabel.toLowerCase()}. ${averageScore}/100 Soul Resonance. Discover your hidden pattern, 2026 timing windows, and karmic growth edge.`;
 
   // ── Unique shareable URL with encoded result data ──
@@ -306,7 +306,7 @@ export default function ResultPage() {
     return `${SITE_URL}/?r=${encoded}`;
   }, [elements, averageScore, relationshipLabel]);
 
-  const shareText = `My Soul Resonance Score: ${averageScore}/100\nElemental Bond: ${elementCombo}\nDiscover yours �?${shareUrl}`;
+  const shareText = `My Soul Resonance Score: ${averageScore}/100\nElemental Bond: ${elementCombo}\nDiscover yours at ${shareUrl}`;
 
   const generateShareImage = async () => {
     if (!shareCardRef.current) {
@@ -357,7 +357,7 @@ export default function ResultPage() {
       const previews = {
         high: `I see ${elementPair.replace('-', ' meeting ')}.
 
-${elementPair.split('-')[0]} wants to burn fast, make decisions now, feel everything intensely. ${elementPair.split('-')[1]} wants to flow, take time, process slowly. This creates a push-pull dynamic that feels exhausting �?${elementPair.split('-')[0]} thinks ${elementPair.split('-')[1]} is avoiding, ${elementPair.split('-')[1]} thinks ${elementPair.split('-')[0]} is overwhelming.
+${elementPair.split('-')[0]} wants to burn fast, make decisions now, feel everything intensely. ${elementPair.split('-')[1]} wants to flow, take time, process slowly. This creates a push-pull dynamic that feels exhausting — ${elementPair.split('-')[0]} thinks ${elementPair.split('-')[1]} is avoiding, ${elementPair.split('-')[1]} thinks ${elementPair.split('-')[0]} is overwhelming.
 
 But here's what most people miss: this tension is your growth edge. ${elementPair.split('-')[0]} learns patience. ${elementPair.split('-')[1]} learns courage. The thing you love about them is the thing that drives you crazy. That's not a coincidence.
 
@@ -368,9 +368,9 @@ But this is just the surface. The full pattern reveals the hidden dynamics, your
 
 This is a complementary dynamic where each element brings what the other lacks. ${elementPair.split('-')[0]} provides energy and initiative. ${elementPair.split('-')[1]} provides stability and grounding.
 
-The tension shows up in decision-making. ${elementPair.split('-')[0]} wants to move fast. ${elementPair.split('-')[1]} wants to think it through. This creates friction, but it's productive friction �?if you learn to work with it.
+The tension shows up in decision-making. ${elementPair.split('-')[0]} wants to move fast. ${elementPair.split('-')[1]} wants to think it through. This creates friction, but it's productive friction — if you learn to work with it.
 
-The Decision Paralysis: When you're trying to plan anything �?a vacation, a move, a major purchase �?${elementPair.split('-')[0]} gets impatient with ${elementPair.split('-')[1]}'s "slowness." ${elementPair.split('-')[1]} feels rushed by ${elementPair.split('-')[0]}'s "impulsiveness."
+The Decision Paralysis: When you're trying to plan anything — a vacation, a move, a major purchase — ${elementPair.split('-')[0]} gets impatient with ${elementPair.split('-')[1]}'s "slowness." ${elementPair.split('-')[1]} feels rushed by ${elementPair.split('-')[0]}'s "impulsiveness."
 
 But this is just the surface. The full reading reveals your specific growth protocol and 2026 activation windows.`,
         low: `I see ${elementPair.replace('-', ' meeting ')}.
@@ -519,7 +519,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
                 <MarkdownRenderer content={normalizedReport.full_report || ""} />
               </div>
               <p className="result-full__note">
-                �?Your Elemental Signature and 2026 Activation Windows are included in your full reading.
+                Your Elemental Signature and 2026 Activation Windows are included in your full reading.
               </p>
             </>
           )}
@@ -542,9 +542,9 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
             <p className="paywall-modal__subtitle">One-time payment. Instant delivery to your email.</p>
             <p className="paywall-modal__score">Soul Resonance Score: {averageScore} / 100</p>
             <ul className="paywall-modal__list">
-              <li>�?800-word personalized BaZi analysis</li>
-              <li>�?2026 timing windows for your relationship</li>
-              <li>�?Specific action steps for your element pair</li>
+              <li>800-word personalized BaZi analysis</li>
+              <li>2026 timing windows for your relationship</li>
+              <li>Specific action steps for your element pair</li>
             </ul>
             <a
               className="paywall-modal__cta"
@@ -552,7 +552,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
               target="_blank"
               rel="noreferrer"
             >
-              Yes, Reveal My Blueprint �?$24.90
+              Yes, Reveal My Blueprint — $24.90
             </a>
             <p className="paywall-modal__note">Secure payment via Gumroad</p>
           </div>
@@ -717,7 +717,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
             </div>
           ) : averageScore < 60 ? (
             <div style={{ fontSize: "72px", fontWeight: 700, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
-              Karmic Lesson Detected 🌪�?            </div>
+              Karmic Lesson Detected 🌪</div>
           ) : (
             <div style={{ fontSize: "64px", fontWeight: 600, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
               Cosmic Connection
@@ -726,7 +726,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", zIndex: 1 }}>
           <div style={{ fontSize: "28px", letterSpacing: "3px", textTransform: "uppercase", opacity: 0.8 }}>
-            Magnetic Connection �?          </div>
+            Magnetic Connection          </div>
           <div style={{ fontSize: "160px", fontWeight: 700, textShadow: "0 24px 80px rgba(70, 32, 120, 0.6)" }}>
             {averageScore}
           </div>
@@ -753,20 +753,20 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
 
       <section className="result-testimonials">
         <div className="result-testimonials__card">
-          <p>"It felt like a mirror to our real dynamic �?eerily precise and deeply grounding."</p>
-          <p>�?M.L., Seattle</p>
+          <p>"It felt like a mirror to our real dynamic — eerily precise and deeply grounding."</p>
+          <p>— M.L., Seattle</p>
         </div>
         <div className="result-testimonials__card">
           <p>"The 2026 window timing was the exact clarity I needed to plan our next steps."</p>
-          <p>�?J.K., Toronto</p>
+          <p>— J.K., Toronto</p>
         </div>
         <div className="result-testimonials__card">
           <p>"I finally understood the hidden pattern behind our push-pull cycle."</p>
-          <p>�?A.R., Singapore</p>
+          <p>— A.R., Singapore</p>
         </div>
       </section>
       <p className="result-share-footer">
-        Want to know what your score means? Share and tag us �?we read every one.
+        Want to know what your score means? Share and tag us — we read every one.
       </p>
 
       <EmailGateModal
