@@ -70,7 +70,7 @@ def read_bazi():
         provider_name = str(current_app.config.get("LLM_PROVIDER", "fallback"))
         model = str(current_app.config.get("LLM_MODEL", "claude-sonnet-4-6"))
         provider = create_provider(provider_name, model, app_config=current_app.config)
-        result = provider.generate(prompt, timeout_s=60)
+        result = provider.generate(prompt, timeout_s=25)
         raw_text = (result.content or "").strip()
 
         # Parse AI JSON

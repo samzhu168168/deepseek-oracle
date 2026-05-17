@@ -59,7 +59,7 @@ class Config:
     IZTHON_SRC_PATH = os.getenv("IZTHON_SRC_PATH", "")
     REQUEST_TIMEOUT_S = int(os.getenv("REQUEST_TIMEOUT_S", "60"))
     MAX_TASK_RETRY = int(os.getenv("MAX_TASK_RETRY", "2"))
-    LLM_MAX_RETRIES = int(os.getenv("LLM_MAX_RETRIES", "2"))
+    LLM_MAX_RETRIES = int(os.getenv("LLM_MAX_RETRIES", "1"))
     ORACLE_EAST_ONLY_MVP = _to_bool(os.getenv("ORACLE_EAST_ONLY_MVP", "true"))
 
     AUTH_TOKEN_EXPIRE_HOURS = int(os.getenv("AUTH_TOKEN_EXPIRE_HOURS", "72"))
@@ -87,7 +87,7 @@ class Config:
     LLM_PRIMARY_PROVIDER = os.getenv("LLM_PRIMARY_PROVIDER", "anthropic")
     LLM_PRIMARY_MODEL = os.getenv("LLM_PRIMARY_MODEL", "claude-sonnet-4-6")
     LLM_FALLBACK_PROVIDER = os.getenv("LLM_FALLBACK_PROVIDER", "deepseek")
-    LLM_FALLBACK_MODEL = os.getenv("LLM_FALLBACK_MODEL", "deepseek-v4-pro")
+    LLM_FALLBACK_MODEL = os.getenv("LLM_FALLBACK_MODEL", "deepseek-chat")
 
     VOLCANO_API_KEY = os.getenv("ARK_API_KEY", "")
     VOLCANO_MODEL = os.getenv("ARK_API_MODEL", os.getenv("ARK_API_model", ""))

@@ -635,7 +635,7 @@ def _generate_bond_report(
     person_a: dict[str, Any],
     person_b: dict[str, Any],
     full: bool,
-    timeout_s: int = 60,
+    timeout_s: int = 25,
 ) -> str:
     provider_name = str(current_app.config.get("LLM_PROVIDER", ""))
     model = str(current_app.config.get("LLM_MODEL", ""))
@@ -646,8 +646,8 @@ def _generate_bond_report(
 
 
 def generate_free_report(person_a: dict[str, Any], person_b: dict[str, Any]) -> str:
-    return _generate_bond_report(person_a, person_b, False, 60)
+    return _generate_bond_report(person_a, person_b, False, 25)
 
 
 def generate_full_report(person_a: dict[str, Any], person_b: dict[str, Any]) -> str:
-    return _generate_bond_report(person_a, person_b, True, 60)
+    return _generate_bond_report(person_a, person_b, True, 25)
