@@ -563,35 +563,34 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
             <p className="paywall-modal__score">Soul Resonance Score: {averageScore} / 100</p>
 
             {/* Option 1: Gumroad (Credit Card) */}
-            <div style={{marginBottom: "16px", padding: "16px", border: "1px solid #e0dcd6", borderRadius: "10px"}}>
-              <h4 style={{margin: "0 0 8px", fontSize: "15px", fontWeight: 600}}>Credit Card / Debit Card</h4>
-              <p style={{fontSize: "13px", color: "#666", margin: "0 0 12px"}}>
+            <div className="payment-option">
+              <h4 className="payment-option__title">Credit Card / Debit Card</h4>
+              <p className="payment-option__text">
                 Securely processed via Gumroad. License key emailed to you.
               </p>
               <button
-                className="payment-guide-btn-primary"
-                style={{width: "100%", padding: "12px", border: "none", borderRadius: "8px", background: "linear-gradient(135deg, #c4956a, #a67c52)", color: "#fff", fontSize: "15px", fontWeight: 600, cursor: "pointer"}}
+                className="payment-option__btn"
                 onClick={() => {
                   const returnUrl = encodeURIComponent(`${SITE_URL}/result?unlocked=true&ref=gumroad`);
                   window.open(`https://samzhu168.gumroad.com/l/bhpmxr?wanted=true&return_url=${returnUrl}`, "_blank");
                   setPaymentModalOpen(false);
                 }}
               >
-                Pay with Card -- $24.90
+                Pay with Card — $24.90
               </button>
-              <p style={{fontSize: "11px", color: "#999", textAlign: "center", margin: "8px 0 0"}}>
+              <p className="payment-option__footer">
                 Visa, Mastercard, Amex accepted
               </p>
             </div>
 
             {/* Option 2: PayPal */}
-            <div style={{padding: "16px", border: "1px solid #e0dcd6", borderRadius: "10px"}}>
-              <h4 style={{margin: "0 0 8px", fontSize: "15px", fontWeight: 600}}>PayPal</h4>
-              <p style={{fontSize: "13px", color: "#666", margin: "0 0 12px"}}>
+            <div className="payment-option">
+              <h4 className="payment-option__title">PayPal</h4>
+              <p className="payment-option__text">
                 Pay with your PayPal account. Report unlocked instantly.
               </p>
               {paypalLoading ? (
-                <p style={{textAlign: "center", color: "#888", fontSize: "14px", padding: "12px"}}>
+                <p className="payment-option__loading">
                   Processing payment...
                 </p>
               ) : (
@@ -622,7 +621,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
               )}
             </div>
 
-            <p style={{fontSize: "11px", color: "#999", textAlign: "center", marginTop: "16px"}}>
+            <p className="payment-modal-footer">
               Secure payment. No refunds after delivery.
             </p>
           </div>

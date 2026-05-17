@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import { analyzeBond } from "../api";
-import "../styles/naonai-home.css";
 
 type PersonInput = {
   date: string;
@@ -224,6 +223,7 @@ export default function HomePage() {
       <section className="bond-hero oracle-hero">
         <div className="oracle-symbol-hero">◈</div>
         <h1 className="oracle-hero-title">YOUR RELATIONSHIP HAS<br />A HIDDEN PATTERN</h1>
+        <div className="hero-divider" />
         <p className="oracle-hero-subtitle">
           Tired of swiping? Dating apps show you profiles.<br />
           <strong>Elemental Bond shows you the truth.</strong>
@@ -235,32 +235,19 @@ export default function HomePage() {
 
       {/* ── Shared Result Banner ── */}
       {sharedResult && (
-        <section
-          className="shared-banner"
-          style={{
-            maxWidth: "640px",
-            margin: "0 auto 1.5rem",
-            padding: "1.25rem 1.5rem",
-            borderRadius: "12px",
-            background: "linear-gradient(135deg, rgba(143, 96, 214, 0.15), rgba(92, 56, 132, 0.08))",
-            border: "1px solid rgba(210, 187, 255, 0.2)",
-            textAlign: "center",
-          }}
-        >
-          <p style={{ fontSize: "0.9rem", opacity: 0.7, marginBottom: "0.5rem" }}>
-            ✨ Someone shared their reading with you
-          </p>
-          <p style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.3rem" }}>
+        <section className="shared-banner">
+          <p className="shared-banner__label">✨ Someone shared their reading with you</p>
+          <p className="shared-banner__pair">
             Their{" "}
-            <strong style={{ color: "var(--oracle-accent, #bb8fff)" }}>
+            <strong>
               {sharedResult.element1}-{sharedResult.element2}
             </strong>{" "}
             bond scored{" "}
-            <strong style={{ color: "var(--oracle-accent, #bb8fff)" }}>
+            <strong>
               {sharedResult.score}/100
             </strong>
           </p>
-          <p style={{ fontSize: "0.95rem", opacity: 0.8 }}>
+          <p className="shared-banner__message">
             {sharedResult.label || "What's your pattern? Enter your details below."}
           </p>
         </section>
@@ -366,7 +353,7 @@ export default function HomePage() {
           <div className="oracle-loading">
             <span className="oracle-loading-icon">◈</span>
             <p className="bond-form__loading-text">{LOADING_MESSAGES[loadingMessageIndex]}</p>
-            <p style={{ fontSize: '0.9rem', color: 'var(--oracle-muted)', marginTop: '0.5rem' }}>
+            <p className="text-muted mt-sm" style={{ fontSize: '0.9rem' }}>
               The Oracle is reading your pattern...
             </p>
           </div>
@@ -375,6 +362,11 @@ export default function HomePage() {
         <button type="submit" className="oracle-button oracle-cta-button" disabled={loading}>
           {loading ? "Reading your pattern..." : "✨ Reveal Our Blueprint"}
         </button>
+
+        <div className="social-proof">
+          <span>✨</span>
+          <span><strong>2,847</strong> souls unlocked their reading this month</span>
+        </div>
       </form>
 
       <section className="landing-footnote">
