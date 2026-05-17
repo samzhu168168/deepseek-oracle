@@ -67,6 +67,11 @@
       "dest": "/frontend/offline.html"
     },
     {
+      "src": "/covers/(.*)",
+      "headers": { "cache-control": "public, max-age=31536000, immutable" },
+      "dest": "/covers/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/frontend/index.html"
     }

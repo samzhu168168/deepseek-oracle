@@ -57,3 +57,8 @@ docs/
 docker-compose.public.yml
 
 .vercel
+
+# Large dataset files (too big for git)
+scripts/ziwei_dataset/*.zip.*
+scripts/ziwei_dataset/*.zip
+scripts/ziwei_dataset/samples/
