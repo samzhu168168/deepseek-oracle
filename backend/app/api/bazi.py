@@ -11,7 +11,7 @@ bazi_bp = Blueprint("bazi", __name__)
 def _build_bazi_prompt(date: str, time_str: str, gender: str, name: str) -> str:
     return f"""You are a master BaZi (Chinese Four Pillars) astrologer with 30 years of experience.
 
-Generate a complete, personalized BaZi reading for this person. Return ONLY valid JSON, no markdown, no preamble.
+Generate a concise, personalized BaZi reading. Return ONLY valid JSON, no markdown, no preamble.
 
 Input data:
 - Name: {name or 'Unknown'}
@@ -20,30 +20,29 @@ Input data:
 - Gender: {gender}
 - Current Year: {datetime.now().year}
 
-First calculate the Four Pillars (Year, Month, Day, Hour) based on the Chinese calendar.
-Then analyze the Five Element balance, Day Master strength, and the Ten Gods relationships.
+Calculate the Four Pillars and analyze the chart. Keep outputs VERY concise (2-3 sentences per field).
 
-Return this exact JSON structure (all fields required, minimum 50 words per field):
+Return this exact JSON structure:
 
 {{
   "fourPillars": {{
     "year": "Heavenly Stem-Earthly Branch (e.g. 甲辰)",
     "month": "Heavenly Stem-Earthly Branch (e.g. 丙午)",
-    "day": "Heavenly Stem-Earthly Branch (e.g. 戊戌) — THIS IS THE DAY MASTER",
+    "day": "Heavenly Stem-Earthly Branch (e.g. 戊戌) — THE DAY MASTER",
     "hour": "Heavenly Stem-Earthly Branch (e.g. 壬子)"
   }},
-  "dayMaster": "The Day Master element and its meaning for this person's core nature (80 words)",
-  "fiveElementBalance": "Analysis of the Five Elements: which are strong/weak/missing and what this means (100 words)",
-  "personality": "Key personality traits based on the BaZi chart (100 words)",
-  "careerAndWealth": "Career direction, wealth potential, and best industries based on element preference (80 words)",
-  "relationships": "Relationship patterns — what they attract, what they need, what they repeat (80 words)",
+  "dayMaster": "Day Master element and core nature (2-3 sentences)",
+  "fiveElementBalance": "Element strengths and meaning (2-3 sentences)",
+  "personality": "Key traits from chart (2-3 sentences)",
+  "careerAndWealth": "Career direction and wealth potential (2-3 sentences)",
+  "relationships": "Relationship patterns and needs (2-3 sentences)",
   "luckPhases": {{
-    "currentPhase": "Their current decade luck phase and what it means for their life right now (60 words)",
-    "currentYear": "Key opportunities and cautions for {datetime.now().year} specifically (60 words)",
-    "nextYear": "What to prepare for in the coming year (40 words)"
+    "currentPhase": "Current decade luck phase meaning (2 sentences)",
+    "currentYear": "{datetime.now().year} opportunities and cautions (2 sentences)",
+    "nextYear": "What to prepare for (1-2 sentences)"
   }},
-  "elementRemedy": "Practical advice based on their element balance — colors, directions, activities that support their energy (60 words)",
-  "summary": "One-paragraph overview of this person's destiny pattern (80 words)"
+  "elementRemedy": "Colors, directions, activities to support energy (2 sentences)",
+  "summary": "One-paragraph destiny pattern overview (2-3 sentences)"
 }}"""
 
 
