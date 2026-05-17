@@ -82,14 +82,40 @@ export default function BaZiPage() {
     }, 3000);
 
     try {
+      // Timeout guard: abort if API takes > 30s
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
       const resp = await fetch(`${apiBase}/api/divination/bazi`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ date, time, gender, name }),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
       const data = await resp.json();
       if (!data.success) throw new Error(data.error || "Reading failed");
-      setReading(data.reading);
+      // Validate reading object has expected fields before setting state
+      const r = data.reading || {};
+      setReading({
+        fourPillars: {
+          year: r.fourPillars?.year || "",
+          month: r.fourPillars?.month || "",
+          day: r.fourPillars?.day || "",
+          hour: r.fourPillars?.hour || "",
+        },
+        dayMaster: r.dayMaster || "",
+        fiveElementBalance: r.fiveElementBalance || "",
+        personality: r.personality || "",
+        careerAndWealth: r.careerAndWealth || "",
+        relationships: r.relationships || "",
+        luckPhases: {
+          currentPhase: r.luckPhases?.currentPhase || "",
+          currentYear: r.luckPhases?.currentYear || "",
+          nextYear: r.luckPhases?.nextYear || "",
+        },
+        elementRemedy: r.elementRemedy || "",
+        summary: r.summary || "",
+      });
     } catch (err: any) {
       setError(err.message || "Network error. Please try again.");
     } finally {

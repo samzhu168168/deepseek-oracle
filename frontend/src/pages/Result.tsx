@@ -87,15 +87,15 @@ const buildPolygonPoints = (values: number[], radius: number, center: number) =>
 
 const getRelationshipLabel = (score: number) => {
   if (score >= 85) {
-    return "�?Electric Tension Pair";
+    return "Electric Tension Pair";
   }
   if (score >= 70) {
-    return "�?Balanced Harmony Pair";
+    return "Balanced Harmony Pair";
   }
   if (score >= 55) {
-    return "🌙 Growth-Oriented Pair";
+    return "Growth-Oriented Pair";
   }
-  return "🌑 Karmic Challenge Pair";
+  return "Karmic Challenge Pair";
 };
 
 const readForecastCount = () => {
@@ -312,18 +312,27 @@ export default function ResultPage() {
     if (!shareCardRef.current) {
       return null;
     }
+    // Timeout guard: abort if image generation takes > 5s
+    const timeoutPromise = new Promise<null>((_, reject) =>
+      setTimeout(() => reject(new Error("share image generation timed out")), 5000)
+    );
     try {
-      const dataUrl = await toPng(shareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        width: 1080,
-        height: 1920,
-        style: {
-          width: "1080px",
-          height: "1920px",
-        },
-      });
-      setShareImageUrl(dataUrl);
+      const dataUrl = await Promise.race([
+        toPng(shareCardRef.current, {
+          cacheBust: true,
+          pixelRatio: 2,
+          width: 1080,
+          height: 1920,
+          style: {
+            width: "1080px",
+            height: "1920px",
+          },
+        }),
+        timeoutPromise,
+      ]);
+      if (dataUrl) {
+        setShareImageUrl(dataUrl);
+      }
       return dataUrl;
     } catch (err) {
       console.error('Failed to generate share image:', err);
