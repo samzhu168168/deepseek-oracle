@@ -241,6 +241,11 @@ export default function HomePage() {
         <p className="oracle-hero-tagline">
           2,000 years of BaZi wisdom. No AI-generated fluff. No algorithm pretending to know you.
         </p>
+        <p className="hero-explainer">
+          BaZi is a Chinese metaphysical system that maps your birth data
+          onto a Four Pillars chart. It reveals the hidden elemental dynamic
+          between two people — no astrology signs, no personality quizzes.
+        </p>
       </section>
 
       {/* ── Shared Result Banner ── */}
@@ -377,7 +382,45 @@ export default function HomePage() {
           <span>◈</span>
           <span><strong>3,241</strong> people discovered their pattern this month</span>
         </div>
+
+        <p className="form-new-to-bazi">
+          New to BaZi?{" "}
+          <a href="/articles" className="form-new-to-bazi__link">
+            See how it works →
+          </a>
+        </p>
       </form>
+
+      {/* How It Works — 3-step explainer for US audience */}
+      <section className="how-it-works">
+        <div className="how-it-works__header">
+          <span className="oracle-symbol">◈</span>
+          <h2 className="how-it-works__title">How It Works</h2>
+        </div>
+        <div className="how-it-works__steps">
+          <div className="how-it-works__step">
+            <span className="how-it-works__step-num">01</span>
+            <h3 className="how-it-works__step-title">Enter Two Birth Dates</h3>
+            <p className="how-it-works__step-desc">
+              Add your birth details and your partner's. Time is optional — date-only readings are still accurate.
+            </p>
+          </div>
+          <div className="how-it-works__step">
+            <span className="how-it-works__step-num">02</span>
+            <h3 className="how-it-works__step-title">AI Analyzes Your Elemental Pattern</h3>
+            <p className="how-it-works__step-desc">
+              The Oracle maps your Four Pillars charts, calculates Five Element balance, and identifies your unique dynamic.
+            </p>
+          </div>
+          <div className="how-it-works__step">
+            <span className="how-it-works__step-num">03</span>
+            <h3 className="how-it-works__step-title">Get Your Free Blueprint</h3>
+            <p className="how-it-works__step-desc">
+              Instantly see your Soul Resonance Score, the hidden pattern, and what 2026 means for your relationship.
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section className="landing-footnote">
         <details>
