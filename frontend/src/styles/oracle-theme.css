@@ -722,7 +722,20 @@ a:hover { color: var(--oracle-text); }
   color: var(--oracle-text-muted);
   margin-top: var(--space-md);
 }
-.bazi-pillars { text-align: center; margin: var(--space-md) 0; }
+.bazi-pillars {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: var(--space-lg) 0;
+}
+
+/* Pillar tags bigger on BaZi result page */
+.bazi-pillars .pillar-tag {
+  padding: 14px 24px;
+  font-size: 1rem;
+  min-width: 140px;
+}
 
 .bazi-paywall {
   border: 1px dashed rgba(196, 149, 106, 0.4);

@@ -183,7 +183,7 @@ export default function BaZiPage() {
       </section>
 
       {!reading && (
-        <form onSubmit={handleSubmit} className="bazi-form">
+        <form onSubmit={handleSubmit} className="oracle-form bazi-form">
           <div className="bond-form__fields">
             <div className="field">
               <label className="field__label">Your Name (optional)</label>
@@ -237,7 +237,7 @@ export default function BaZiPage() {
               </p>
             </div>
           ) : (
-            <button type="submit" className="oracle-button oracle-cta-button mt-md">
+            <button type="submit" className="oracle-button oracle-cta-button mt-md" style={{ width: '100%' }}>
               &#10024; Reveal My BaZi
             </button>
           )}
