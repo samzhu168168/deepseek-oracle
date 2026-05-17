@@ -126,7 +126,7 @@ export default function BaZiPage() {
   }, []);
 
   return (
-    <div className="landing-page fade-in" style={{ maxWidth: "720px", margin: "0 auto", padding: "24px 16px" }}>
+    <div className="landing-page fade-in">
       {/* Dynamic OG image for BaZi results */}
       <Helmet>
         <title>{reading ? `My BaZi Blueprint — ${reading.dayMaster.split("\n")[0].slice(0, 40)} | Elemental Bond` : "Free BaZi Reading — Personal Chinese Astrology Birth Chart | Elemental Bond"}</title>
@@ -148,7 +148,7 @@ export default function BaZiPage() {
         <link rel="canonical" href={`${SITE_URL}/bazi`} />
       </Helmet>
 
-      <section className="oracle-hero" style={{ textAlign: "center", marginBottom: "32px" }}>
+      <section className="oracle-hero">
         <div className="oracle-symbol-hero">&#9674;</div>
         <h1 className="oracle-hero-title">YOUR BAZI BLUEPRINT</h1>
         <p className="oracle-hero-subtitle">
@@ -157,8 +157,8 @@ export default function BaZiPage() {
       </section>
 
       {!reading && (
-        <form onSubmit={handleSubmit} style={{ marginBottom: "32px" }}>
-          <div className="bond-form__fields" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <form onSubmit={handleSubmit} className="bazi-form">
+          <div className="bond-form__fields">
             <div className="field">
               <label className="field__label">Your Name (optional)</label>
               <input
@@ -204,14 +204,14 @@ export default function BaZiPage() {
           {error && <p className="error-text">{error}</p>}
 
           {loading ? (
-            <div className="oracle-loading" style={{ textAlign: "center", padding: "24px" }}>
+            <div className="oracle-loading">
               <span className="oracle-loading-icon">&#9674;</span>
-              <p style={{ fontSize: "15px", color: "var(--oracle-muted)", marginTop: "12px" }}>
+              <p className="bazi-loading-text">
                 {LOADING_MESSAGES[msgIndex]}
               </p>
             </div>
           ) : (
-            <button type="submit" className="oracle-button oracle-cta-button" style={{ marginTop: "16px" }}>
+            <button type="submit" className="oracle-button oracle-cta-button mt-md">
               &#10024; Reveal My BaZi
             </button>
           )}
@@ -219,13 +219,13 @@ export default function BaZiPage() {
       )}
 
       {reading && (
-        <div className="result-page" style={{ padding: 0 }}>
+        <div className="result-page">
           {/* Four Pillars Display */}
-          <section className="result-scorecard" style={{ marginBottom: "24px" }}>
-            <p className="result-scorecard__label" style={{ fontSize: "14px", letterSpacing: "0.1em" }}>
+          <section className="result-scorecard">
+            <p className="result-scorecard__label">
               YOUR FOUR PILLARS
             </p>
-            <div style={{ textAlign: "center", margin: "16px 0" }}>
+            <div className="bazi-pillars">
               <span className="pillar-tag">Year: {reading.fourPillars.year || "—"}</span>
               <span className="pillar-tag">Month: {reading.fourPillars.month || "—"}</span>
               <span className="pillar-tag">Day: {reading.fourPillars.day || "—"}</span>
@@ -234,7 +234,7 @@ export default function BaZiPage() {
           </section>
 
           {/* Summary */}
-          <section className="free-reading" style={{ marginBottom: "16px" }}>
+          <section className="free-reading">
             <div className="free-reading-header">
               <div className="oracle-symbol">&#9674;</div>
               <h2 className="free-reading-title">YOUR DESTINY PATTERN</h2>
@@ -248,7 +248,7 @@ export default function BaZiPage() {
 
           {/* ── Email Gate: Day Master + Five Elements + Personality ── */}
           {emailUnlocked && (<>
-          <section className="free-reading" style={{ marginBottom: "16px" }}>
+          <section className="free-reading">
             <div className="free-reading-header">
               <div className="oracle-symbol">&#9674;</div>
               <h2 className="free-reading-title">YOUR DAY MASTER</h2>
@@ -261,7 +261,7 @@ export default function BaZiPage() {
           </section>
 
           {/* Five Elements */}
-          <section className="free-reading" style={{ marginBottom: "16px" }}>
+          <section className="free-reading">
             <div className="free-reading-header">
               <div className="oracle-symbol">&#9674;</div>
               <h2 className="free-reading-title">FIVE ELEMENT BALANCE</h2>
@@ -274,7 +274,7 @@ export default function BaZiPage() {
           </section>
 
           {/* Personality */}
-          <section className="free-reading" style={{ marginBottom: "16px" }}>
+          <section className="free-reading">
             <div className="free-reading-header">
               <div className="oracle-symbol">&#9674;</div>
               <h2 className="free-reading-title">PERSONALITY & NATURE</h2>
@@ -289,21 +289,17 @@ export default function BaZiPage() {
 
           {/* ── Paywall: prompt to purchase full reading ── */}
           {showPaywall && !paidUnlocked && !postPaymentFlow && (
-          <section className="free-reading" style={{
-            marginBottom: "16px",
-            border: "1px dashed rgba(196, 149, 106, 0.4)",
-            background: "rgba(196, 149, 106, 0.03)",
-          }}>
-            <div className="free-reading-header" style={{ opacity: 0.6 }}>
-              <span style={{ fontSize: "18px", marginRight: "8px" }}>🔒</span>
+          <section className="free-reading bazi-paywall">
+            <div className="free-reading-header bazi-paywall-header">
+              <span className="bazi-lock-icon">🔒</span>
               <h2 className="free-reading-title">CAREER & WEALTH</h2>
             </div>
-            <div className="free-reading-content" style={{ textAlign: "center", padding: "32px 20px" }}>
-              <div style={{ fontSize: "36px", marginBottom: "12px", opacity: 0.4 }}>🔒</div>
-              <h3 style={{ color: "var(--oracle-text)", fontSize: "18px", margin: "0 0 8px" }}>
+            <div className="bazi-paywall-body">
+              <div className="bazi-lock-big">🔒</div>
+              <h3 className="bazi-paywall-title">
                 Unlock Your Complete Blueprint
               </h3>
-              <p style={{ color: "var(--oracle-muted)", fontSize: "14px", lineHeight: 1.7, maxWidth: "400px", margin: "0 auto 20px" }}>
+              <p className="bazi-paywall-desc">
                 Get the full picture: career potential, relationship dynamics, luck phases, and
                 personalized element remedies — all based on your unique birth chart.
               </p>
@@ -311,12 +307,11 @@ export default function BaZiPage() {
                 href="https://samzhu168.gumroad.com/l/swpdpb"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="oracle-button oracle-cta-button"
-                style={{ textDecoration: "none", display: "inline-block", fontSize: "15px" }}
+                className="oracle-button oracle-cta-button bazi-paywall-btn"
               >
                 &#10024; Get Full Reading — $24.00
               </a>
-              <p style={{ color: "var(--oracle-muted)", fontSize: "12px", marginTop: "12px" }}>
+              <p className="bazi-paywall-footnote">
                 One-time purchase. Lifetime access. Instant delivery.
               </p>
             </div>
@@ -325,7 +320,7 @@ export default function BaZiPage() {
 
           {paidUnlocked && (<>
           {/* Career */}
-          <section className="free-reading" style={{ marginBottom: "16px" }}>
+          <section className="free-reading">
             <div className="free-reading-header">
               <div className="oracle-symbol">&#9674;</div>
               <h2 className="free-reading-title">CAREER & WEALTH</h2>
@@ -338,7 +333,7 @@ export default function BaZiPage() {
           </section>
 
           {/* Relationships */}
-          <section className="free-reading" style={{ marginBottom: "16px" }}>
+          <section className="free-reading">
             <div className="free-reading-header">
               <div className="oracle-symbol">&#9674;</div>
               <h2 className="free-reading-title">RELATIONSHIPS</h2>
@@ -351,7 +346,7 @@ export default function BaZiPage() {
           </section>
 
           {/* Luck Phases */}
-          <section className="free-reading" style={{ marginBottom: "16px" }}>
+          <section className="free-reading">
             <div className="free-reading-header">
               <div className="oracle-symbol">&#9674;</div>
               <h2 className="free-reading-title">LUCK PHASES & TIMING</h2>
@@ -369,7 +364,7 @@ export default function BaZiPage() {
           </section>
 
           {/* Element Remedy */}
-          <section className="free-reading" style={{ marginBottom: "24px" }}>
+          <section className="free-reading mb-lg">
             <div className="free-reading-header">
               <div className="oracle-symbol">&#9674;</div>
               <h2 className="free-reading-title">ELEMENT REMEDY</h2>
@@ -383,8 +378,8 @@ export default function BaZiPage() {
           </>)}
 
           {/* Share buttons */}
-          <div style={{ textAlign: "center", padding: "20px 0", borderTop: "1px solid rgba(196, 149, 106, 0.15)", marginTop: "8px" }}>
-            <p style={{ color: "var(--oracle-muted)", fontSize: "13px", marginBottom: "12px" }}>
+          <div className="bazi-share">
+            <p className="bazi-share-label">
               Share your BaZi blueprint
             </p>
             <ShareButtons
@@ -394,11 +389,11 @@ export default function BaZiPage() {
           </div>
 
           {/* CTA back to compatibility */}
-          <div style={{ textAlign: "center", padding: "24px 0", borderTop: "1px solid rgba(196, 149, 106, 0.2)" }}>
-            <p style={{ color: "var(--oracle-muted)", fontSize: "14px", marginBottom: "12px" }}>
+          <div className="bazi-cta">
+            <p className="bazi-cta-text">
               Want to see how YOUR chart matches with someone else's?
             </p>
-            <a href="/" className="oracle-button oracle-cta-button" style={{ textDecoration: "none", display: "inline-block" }}>
+            <a href="/" className="oracle-button oracle-cta-button bazi-cta-link">
               &#10024; Check Compatibility
             </a>
           </div>

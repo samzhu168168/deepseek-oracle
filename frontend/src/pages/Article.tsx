@@ -70,10 +70,10 @@ export default function ArticlePage() {
 
   if (loading) {
     return (
-      <div className="landing-page fade-in" style={{ maxWidth: "720px", margin: "0 auto", padding: "48px 16px", textAlign: "center" }}>
+      <div className="landing-page fade-in" style={{ padding: "48px 16px", textAlign: "center" }}>
         <div className="oracle-loading">
           <span className="oracle-loading-icon">&#9674;</span>
-          <p style={{ fontSize: "14px", color: "var(--oracle-muted)", marginTop: "12px" }}>
+          <p className="bazi-loading-text">
             Loading article...
           </p>
         </div>
@@ -83,17 +83,17 @@ export default function ArticlePage() {
 
   if (notFound || !article) {
     return (
-      <div className="landing-page fade-in" style={{ maxWidth: "720px", margin: "0 auto", padding: "48px 16px", textAlign: "center" }}>
+      <div className="landing-page fade-in" style={{ padding: "48px 16px", textAlign: "center" }}>
         <Helmet>
           <title>Article Not Found | Elemental Bond</title>
         </Helmet>
-        <h1 style={{ fontSize: "24px", color: "var(--oracle-accent)", marginBottom: "12px" }}>
+        <h1 style={{ fontSize: "24px", color: "var(--oracle-text)", marginBottom: "12px" }}>
           Article Not Found
         </h1>
-        <p style={{ color: "var(--oracle-muted)", marginBottom: "24px" }}>
+        <p style={{ color: "var(--oracle-text-muted)", marginBottom: "24px" }}>
           This article may have been moved or does not exist.
         </p>
-        <Link to="/articles" className="oracle-button oracle-cta-button" style={{ textDecoration: "none", display: "inline-block" }}>
+        <Link to="/articles" className="oracle-button oracle-cta-button article-cta-link">
           Browse All Articles
         </Link>
       </div>
@@ -104,7 +104,7 @@ export default function ArticlePage() {
   const articleUrl = `${SITE_URL}/articles/${article.slug}`;
 
   return (
-    <div className="landing-page fade-in" style={{ maxWidth: "720px", margin: "0 auto", padding: "24px 16px" }}>
+    <div className="landing-page fade-in">
       <Helmet>
         <title>{article.meta.title}</title>
         <meta name="description" content={article.meta.description} />
@@ -147,18 +147,18 @@ export default function ArticlePage() {
       <div className="article-progress" style={{ width: `${progress}%` }} />
 
       {/* Article header */}
-      <section className="oracle-hero" style={{ textAlign: "center", marginBottom: "32px" }}>
+      <section className="oracle-hero">
         <div className="oracle-symbol-hero">&#9674;</div>
-        <p style={{ fontSize: "12px", color: "var(--oracle-muted)", letterSpacing: "0.1em", marginBottom: "8px" }}>
+        <p className="article-meta-tag">
           {article.category.replace("-", " ").toUpperCase()} · {article.reading_time_minutes} MIN READ
         </p>
-        <h1 className="oracle-hero-title font-display" style={{ fontSize: "22px", lineHeight: 1.3 }}>{article.title}</h1>
-        <p style={{ fontSize: "13px", color: "var(--oracle-muted)", marginTop: "8px" }}>
+        <h1 className="oracle-hero-title" style={{ fontSize: "22px", lineHeight: 1.3 }}>{article.title}</h1>
+        <p className="article-byline">
           By {article.author} · Published {article.published}
         </p>
-        <div style={{ display: "flex", gap: "6px", justifyContent: "center", marginTop: "12px", flexWrap: "wrap" }}>
+        <div className="article-tags">
           {article.tags.map((tag) => (
-            <span key={tag} style={{ fontSize: "11px", padding: "2px 8px", borderRadius: "4px", background: "rgba(187, 143, 255, 0.1)", color: "var(--oracle-muted)" }}>
+            <span key={tag} className="article-tag">
               {tag}
             </span>
           ))}
@@ -168,16 +168,14 @@ export default function ArticlePage() {
       {/* Article body */}
       <div className="article-content">
         {/* Hook */}
-        <p className="article-hook" style={{ fontSize: "16px", lineHeight: 1.6, color: "var(--oracle-accent)", fontStyle: "italic", marginBottom: "24px", padding: "16px", borderLeft: "3px solid var(--oracle-accent)", background: "rgba(187, 143, 255, 0.04)" }}>
+        <p className="article-hook">
           {content.hook}
         </p>
 
         {/* Body sections */}
         {content.body_sections.map((section, i) => (
-          <div key={i} className="article-section" style={{ marginBottom: "24px" }}>
-            <h2 style={{ fontSize: "17px", fontWeight: 600, color: "var(--oracle-accent)", marginBottom: "10px" }}>
-              {section.heading}
-            </h2>
+          <div key={i} className="article-section">
+            <h2>{section.heading}</h2>
             <div className="oracle-reading">
               <MarkdownRenderer content={section.body} />
             </div>
@@ -185,27 +183,27 @@ export default function ArticlePage() {
         ))}
 
         {/* Key insight */}
-        <div className="article-insight" style={{ margin: "32px 0", padding: "20px", background: "rgba(249, 115, 22, 0.06)", border: "1px solid rgba(249, 115, 22, 0.2)", borderRadius: "10px" }}>
-          <p style={{ fontSize: "12px", color: "var(--oracle-score)", letterSpacing: "0.1em", marginBottom: "8px" }}>KEY INSIGHT</p>
-          <p style={{ fontSize: "14px", lineHeight: 1.6, color: "var(--oracle-muted)", fontStyle: "italic" }}>
+        <div className="article-insight">
+          <p className="article-insight__label">KEY INSIGHT</p>
+          <p className="article-insight__text">
             {content.key_insight}
           </p>
         </div>
       </div>
 
       {/* CTA */}
-      <div style={{ textAlign: "center", padding: "24px 0", borderTop: "1px solid rgba(196, 149, 106, 0.2)", marginTop: "32px" }}>
-        <p style={{ color: "var(--oracle-muted)", fontSize: "14px", marginBottom: "16px" }}>
+      <div className="article-cta">
+        <p className="article-cta-text">
           {content.cta}
         </p>
-        <a href="/" className="oracle-button oracle-cta-button" style={{ textDecoration: "none", display: "inline-block" }}>
+        <a href="/" className="oracle-button oracle-cta-button article-cta-link">
           &#10024; Get Your Free Reading
         </a>
       </div>
 
       {/* Back link */}
-      <div style={{ textAlign: "center", marginTop: "16px" }}>
-        <Link to="/articles" style={{ color: "var(--oracle-muted)", fontSize: "13px", textDecoration: "underline" }}>
+      <div className="article-back">
+        <Link to="/articles">
           &larr; Back to all articles
         </Link>
       </div>
