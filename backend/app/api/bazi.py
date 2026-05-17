@@ -9,40 +9,27 @@ bazi_bp = Blueprint("bazi", __name__)
 
 
 def _build_bazi_prompt(date: str, time_str: str, gender: str, name: str) -> str:
-    return f"""You are a master BaZi (Chinese Four Pillars) astrologer with 30 years of experience.
+    return f"""You are a master BaZi (Chinese Four Pillars) astrologer.
 
-Generate a concise, personalized BaZi reading. Return ONLY valid JSON, no markdown, no preamble.
-
-Input data:
+Input:
 - Name: {name or 'Unknown'}
 - Birth Date: {date}
 - Birth Time: {time_str or 'unknown'}
 - Gender: {gender}
 - Current Year: {datetime.now().year}
 
-Calculate the Four Pillars and analyze the chart. Keep outputs VERY concise (2-3 sentences per field).
-
-Return this exact JSON structure:
+Return ONLY valid JSON. Keep each field to 1-2 short sentences (under 30 words).
 
 {{
-  "fourPillars": {{
-    "year": "Heavenly Stem-Earthly Branch (e.g. 甲辰)",
-    "month": "Heavenly Stem-Earthly Branch (e.g. 丙午)",
-    "day": "Heavenly Stem-Earthly Branch (e.g. 戊戌) — THE DAY MASTER",
-    "hour": "Heavenly Stem-Earthly Branch (e.g. 壬子)"
-  }},
-  "dayMaster": "Day Master element and core nature (2-3 sentences)",
-  "fiveElementBalance": "Element strengths and meaning (2-3 sentences)",
-  "personality": "Key traits from chart (2-3 sentences)",
-  "careerAndWealth": "Career direction and wealth potential (2-3 sentences)",
-  "relationships": "Relationship patterns and needs (2-3 sentences)",
-  "luckPhases": {{
-    "currentPhase": "Current decade luck phase meaning (2 sentences)",
-    "currentYear": "{datetime.now().year} opportunities and cautions (2 sentences)",
-    "nextYear": "What to prepare for (1-2 sentences)"
-  }},
-  "elementRemedy": "Colors, directions, activities to support energy (2 sentences)",
-  "summary": "One-paragraph destiny pattern overview (2-3 sentences)"
+  "fourPillars": {{"year":"stems-branch","month":"stems-branch","day":"stems-branch","hour":"stems-branch"}},
+  "dayMaster": "Day Master element and core nature (1-2 sentences)",
+  "fiveElementBalance": "Element balance snapshot (1-2 sentences)",
+  "personality": "Key traits from chart (1-2 sentences)",
+  "careerAndWealth": "Career direction (1-2 sentences)",
+  "relationships": "Relationship patterns (1-2 sentences)",
+  "luckPhases": {{"currentPhase":"current luck phase (1 sentence)","currentYear":"this year opportunities (1 sentence)","nextYear":"next year prep (1 sentence)"}},
+  "elementRemedy": "Supporting elements (1 sentence)",
+  "summary": "Overview of destiny pattern (2 sentences)"
 }}"""
 
 
