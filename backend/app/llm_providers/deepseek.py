@@ -37,6 +37,7 @@ class DeepSeekProvider(BaseLLMProvider):
             ],
             stream=False,
             timeout=timeout_s,
+            extra_body={"thinking": {"type": "disabled"}},
         )
         content = response.choices[0].message.content or ""
         latency_ms = int((time.perf_counter() - start) * 1000)

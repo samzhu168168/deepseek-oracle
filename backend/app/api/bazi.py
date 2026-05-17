@@ -9,27 +9,22 @@ bazi_bp = Blueprint("bazi", __name__)
 
 
 def _build_bazi_prompt(date: str, time_str: str, gender: str, name: str) -> str:
-    return f"""You are a master BaZi (Chinese Four Pillars) astrologer.
+    return f"""You are a master BaZi astrologer. Return ONLY valid JSON.
 
-Input:
-- Name: {name or 'Unknown'}
-- Birth Date: {date}
-- Birth Time: {time_str or 'unknown'}
-- Gender: {gender}
-- Current Year: {datetime.now().year}
+Input: {name or 'Unknown'} | {date} | {time_str or 'unknown'} | {gender} | Year {datetime.now().year}
 
-Return ONLY valid JSON. Keep each field to 1-2 short sentences (under 30 words).
+Calculate the Four Pillars (Year/Month/Day/Hour stems-branches). Keep each field short (1-2 sentences):
 
 {{
-  "fourPillars": {{"year":"stems-branch","month":"stems-branch","day":"stems-branch","hour":"stems-branch"}},
-  "dayMaster": "Day Master element and core nature (1-2 sentences)",
-  "fiveElementBalance": "Element balance snapshot (1-2 sentences)",
-  "personality": "Key traits from chart (1-2 sentences)",
-  "careerAndWealth": "Career direction (1-2 sentences)",
-  "relationships": "Relationship patterns (1-2 sentences)",
-  "luckPhases": {{"currentPhase":"current luck phase (1 sentence)","currentYear":"this year opportunities (1 sentence)","nextYear":"next year prep (1 sentence)"}},
-  "elementRemedy": "Supporting elements (1 sentence)",
-  "summary": "Overview of destiny pattern (2 sentences)"
+  "fourPillars": {{"year":"","month":"","day":"","hour":""}},
+  "dayMaster": "Day Master element and meaning (1-2 sentences)",
+  "fiveElementBalance": "Element balance (1-2 sentences)",
+  "personality": "Key traits (1-2 sentences)",
+  "careerAndWealth": "Career (1-2 sentences)",
+  "relationships": "Relationships (1-2 sentences)",
+  "luckPhases": {{"currentPhase":"","currentYear":"","nextYear":""}},
+  "elementRemedy": "Element tip (1 sentence)",
+  "summary": "Overview (2 sentences)"
 }}"""
 
 
