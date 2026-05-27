@@ -12,18 +12,13 @@ const api = axios.create({
   timeout: 60000,
 });
 
-export async function warmup() {
-  try {
-    await axios.get(`${apiBaseUrl}/health`, { timeout: 60000 });
-  } catch (e) {}
+export async function analyzeBond(data: any) {
+  const response = await api.post("/api/divination/analyze", data);
+  return response.data;
 }
 
-warmup();
-setInterval(warmup, 3 * 60 * 1000);
-
-export async function analyzeBond(data: any) {
-  await warmup();
-  const response = await api.post("/api/divination/analyze", data);
+export async function getElementReading(data: { date: string; gender: string }) {
+  const response = await api.post("/api/divination/bazi", data);
   return response.data;
 }
 

@@ -39,7 +39,7 @@ const ELEMENT_STRENGTHS: Record<Element, string> = {
 };
 
 // Generative cycle: Wood → Fire → Earth → Metal → Water → Wood
-const GENERATIVE_CYCLE: Record<Element, Element> = {
+export const GENERATIVE_CYCLE: Record<Element, Element> = {
   wood: "fire",
   fire: "earth",
   earth: "metal",
@@ -48,7 +48,7 @@ const GENERATIVE_CYCLE: Record<Element, Element> = {
 };
 
 // Controlling cycle: Wood → Earth → Water → Fire → Metal → Wood
-const CONTROLLING_CYCLE: Record<Element, Element> = {
+export const CONTROLLING_CYCLE: Record<Element, Element> = {
   wood: "earth",
   earth: "water",
   water: "fire",
