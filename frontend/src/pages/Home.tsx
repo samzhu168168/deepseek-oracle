@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import { analyzeBond } from "../api";
+import { getPatternCount } from "../utils/counters";
+import { ElementQuiz } from "../components/ElementQuiz";
 
 type PersonInput = {
   date: string;
@@ -45,6 +47,13 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [sharedResult, setSharedResult] = useState<SharedResult>(null);
+  const [patternCount] = useState(() => getPatternCount());
+  const [emailInput, setEmailInput] = useState("");
+
+  const onEmailSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    navigate("/thank-you");
+  };
 
   // ── Detect shared result from URL param ?r=<base64> ──
   useEffect(() => {
@@ -232,14 +241,10 @@ export default function HomePage() {
       {/* Oracle Hero Section — GEO-optimized for US 2026 pain points */}
       <section className="bond-hero oracle-hero">
         <div className="oracle-symbol-hero">◈</div>
-        <h1 className="oracle-hero-title">YOU'VE BEEN IN THIS<br />PATTERN BEFORE</h1>
+        <h1 className="oracle-hero-title">You're not unlucky in love.<br />You're running the wrong element.</h1>
         <div className="hero-divider" />
         <p className="oracle-hero-subtitle">
-          Different person. Same dynamic. There's a reason for that.<br />
-          <strong>Elemental Bond shows you the pattern — so you can break it.</strong>
-        </p>
-        <p className="oracle-hero-tagline">
-          2,000 years of BaZi wisdom. No AI-generated fluff. No algorithm pretending to know you.
+          2,000 years of pattern recognition — not AI-generated fluff.
         </p>
         <p className="hero-explainer">
           BaZi is a Chinese metaphysical system that maps your birth data
@@ -375,12 +380,12 @@ export default function HomePage() {
         ) : null}
 
         <button type="submit" className="oracle-button oracle-cta-button" disabled={loading}>
-          {loading ? "Reading your pattern..." : "✨ Reveal Our Blueprint"}
+          {loading ? "Reading your pattern..." : "Discover My Element — It's Free"}
         </button>
 
         <div className="social-proof">
           <span>◈</span>
-          <span><strong>3,241</strong> people discovered their pattern this month</span>
+          <span><strong>{patternCount.toLocaleString()}</strong> people discovered their pattern this month</span>
         </div>
 
         <p className="form-new-to-bazi">
@@ -419,6 +424,76 @@ export default function HomePage() {
               Instantly see your Soul Resonance Score, the hidden pattern, and what 2026 means for your relationship.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* ── Quick Element Quiz ── */}
+      <section className="element-quiz-section">
+        <ElementQuiz />
+      </section>
+
+      {/* ── BaZi vs Western Astrology — addresses #1 conversion objection ── */}
+      <section className="bazi-vs-astro-section">
+        <div className="bazi-vs-astro__header">
+          <span className="oracle-symbol" aria-hidden="true">◈</span>
+          <h2 className="bazi-vs-astro__title">BaZi vs. Western Astrology</h2>
+          <p className="bazi-vs-astro__subtitle">Why your sun sign is only the beginning</p>
+        </div>
+        <div className="bazi-vs-astro__grid">
+          <div className="bazi-vs-astro__card bazi-vs-astro__card--astro">
+            <h3 className="bazi-vs-astro__card-title">Western Astrology</h3>
+            <ul className="bazi-vs-astro__card-list">
+              <li>One data point: your sun sign</li>
+              <li>Generalized for 1/12 of the population</li>
+              <li>Personality-focused, not timing-aware</li>
+              <li>Same prediction for everyone born in your month</li>
+            </ul>
+          </div>
+          <div className="bazi-vs-astro__card bazi-vs-astro__card--bazi">
+            <h3 className="bazi-vs-astro__card-title">BaZi (Four Pillars)</h3>
+            <ul className="bazi-vs-astro__card-list">
+              <li>Four data points: Year, Month, Day, Hour</li>
+              <li>Unique to YOUR exact birth moment</li>
+              <li>Five Element balance &amp; yearly luck cycles</li>
+              <li>Personalized 2026 Snake Year timing windows</li>
+            </ul>
+          </div>
+        </div>
+        <p className="bazi-vs-astro__note">
+          Western astrology asks "who you are." BaZi reveals "why you are that way — and when things shift."
+          Most people who try both never go back.
+        </p>
+        <div className="bazi-vs-astro__cta">
+          <a href="/bazi" className="oracle-button oracle-cta-button">
+            Try BaZi — It's Free →
+          </a>
+        </div>
+      </section>
+
+      {/* Email Capture — Lead magnet for TikTok & SEO traffic */}
+      <section className="email-capture-section">
+        <div className="email-capture__inner">
+          <span className="oracle-symbol" aria-hidden="true">◈</span>
+          <h2 className="email-capture__title">Get Your Free 2026 Snake Year Love Forecast</h2>
+          <p className="email-capture__desc">
+            Which element patterns are activated for you this year — and when your window opens.
+            Delivered free, no spam.
+          </p>
+          <form className="email-capture__form" onSubmit={onEmailSubmit}>
+            <input
+              type="email"
+              className="email-capture__input"
+              placeholder="your@email.com"
+              value={emailInput}
+              onChange={(e) => setEmailInput(e.target.value)}
+              required
+              aria-label="Email address"
+            />
+            <button type="submit" className="oracle-button email-capture__btn">
+              Send My Forecast →
+            </button>
+          </form>
+          <p className="email-capture__fine">No account required. Unsubscribe anytime.</p>
         </div>
       </section>
 

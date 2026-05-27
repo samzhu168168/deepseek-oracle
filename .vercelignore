@@ -19,3 +19,12 @@ __pycache__
 .husky
 scripts/ziwei_dataset/
 reference_patterns.ts
+素材/
+营销资料/
+backend/.venv/
+backend/iztro_service/node_modules/
+backend/iztro_service/.npm_cache/
+backend/scripts/marketing/
+batch_generate.py
+test_api.html
+test_generate.py
