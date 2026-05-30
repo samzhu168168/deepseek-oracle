@@ -146,15 +146,40 @@ export default function HomePage() {
     }
   };
 
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Elemental Bond",
+    url: SITE_URL,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: { "@type": "EntryPoint", urlTemplate: `${SITE_URL}/?q={search_term_string}` },
+      "query-input": "required name=search_term_string",
+    },
+  };
+
   const softwareJsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "Elemental Bond",
+    name: "Elemental Bond — BaZi Compatibility Calculator",
     applicationCategory: "LifestyleApplication",
     operatingSystem: "Web",
     url: SITE_URL,
     description:
-      "BaZi compatibility reading using 2,000-year-old Chinese metaphysics to reveal the elemental pattern behind your relationships — why you keep attracting the same dynamic, and your 2026 activation windows.",
+      "Free BaZi compatibility calculator using 2,000-year-old Chinese metaphysics. Enter two birth dates to reveal your Five Element dynamic, karmic patterns, and 2026 relationship activation windows.",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      description: "Free BaZi compatibility reading",
+    },
+    featureList: [
+      "Free BaZi compatibility calculator",
+      "Five Element analysis",
+      "Soul Resonance Score",
+      "2026 Snake Year timing windows",
+      "Full report with karmic protocol",
+    ],
   };
 
   const faqJsonLd = {
@@ -206,34 +231,37 @@ export default function HomePage() {
         <title>Elemental Bond — Why You Keep Attracting the Same Pattern | Free BaZi Reading 2026</title>
         <meta
           name="description"
-          content="Different person, same dynamic? Your elemental pattern explains it. 2,000-year-old BaZi wisdom — not AI fluff — reveals the hidden pattern in your relationships. Free reading. 2026 Snake Year timing included."
+          content="Free BaZi compatibility calculator — enter two birth dates and get your Five Element pattern, Soul Resonance Score, and 2026 relationship timeline. 2,000-year-old wisdom, not AI fluff."
         />
         <meta
           name="keywords"
-          content="bazi compatibility 2026, why do I keep attracting the same type, relationship pattern breaking, elemental bond, karmic relationship calculator, Chinese astrology compatibility, five element love match, snake year relationships 2026, free relationship reading, repeating relationship patterns"
+          content="bazi compatibility calculator, bazi compatibility 2026, free bazi reading, five element compatibility test, why do I keep attracting the same type, relationship pattern breaking, elemental bond, karmic relationship calculator, Chinese astrology compatibility, five element love match, snake year relationships 2026"
         />
 
         {/* GEO: Long-tail question-based keywords for AI search engines */}
-        <meta name="abstract" content="Ancient Chinese BaZi astrology reveals hidden relationship patterns through Five Element analysis. Free compatibility test using birth dates." />
+        <meta name="abstract" content="Free BaZi compatibility calculator using ancient Chinese astrology. Enter two birth dates to reveal your Five Element dynamic and relationship patterns." />
 
         <link rel="canonical" href={SITE_URL} />
-        <meta property="og:title" content="Elemental Bond — Why You Keep Attracting the Same Pattern" />
+        <meta property="og:title" content="Elemental Bond — Free BaZi Compatibility Calculator" />
         <meta
           property="og:description"
-          content="Different person, same dynamic? Your elemental pattern explains it. Free BaZi compatibility reading — 2,000 years of pattern recognition, not AI-generated fluff."
+          content="Different person, same dynamic? Free BaZi compatibility calculator — enter two birth dates, get your Five Element pattern and 2026 timing. 2,000-year-old pattern recognition."
         />
         <meta property="og:url" content={SITE_URL} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="Elemental Bond" />
+        <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Elemental Bond — Why You Keep Attracting the Same Pattern" />
+        <meta name="twitter:title" content="Elemental Bond — Free BaZi Compatibility Calculator" />
         <meta
           name="twitter:description"
-          content="Your elemental pattern explains the repeating dynamic. Free BaZi reading — not AI fluff. 2026 Snake Year timing included."
+          content="Free BaZi compatibility calculator. Enter two birth dates — get your Five Element pattern and 2026 timing. Not AI fluff."
         />
         <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
+        <script type="application/ld+json">{JSON.stringify(websiteJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(softwareJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       </Helmet>

@@ -39,6 +39,15 @@ export default function ElementCompatibilityPage() {
   const rel = getRelationship(e1 as never, e2 as never);
   const pageUrl = `${SITE_URL}/compatibility/elements/${e1}-and-${e2}`;
 
+  const webPageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: content.title,
+    description: content.description,
+    url: pageUrl,
+    isPartOf: { "@type": "WebSite", name: "Elemental Bond", url: SITE_URL },
+  };
+
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -61,9 +70,15 @@ export default function ElementCompatibilityPage() {
         <meta property="og:url" content={pageUrl} />
         <meta property="og:type" content="article" />
         <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="Elemental Bond" />
+        <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={content.title} />
         <meta name="twitter:description" content={content.description} />
+        <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
+        <script type="application/ld+json">{JSON.stringify(webPageJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       </Helmet>
 

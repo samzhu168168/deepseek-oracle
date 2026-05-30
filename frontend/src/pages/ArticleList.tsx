@@ -119,15 +119,21 @@ export default function ArticleListPage() {
       <Helmet>
         <title>BaZi & Elemental Compatibility Articles | Elemental Bond</title>
         <meta name="description" content="Explore our library of BaZi astrology articles: Five Element compatibility guides, Day Master personality profiles, and relationship timing insights." />
+        <meta name="keywords" content="bazi articles, bazi compatibility calculator guide, five element compatibility, day master bazi, four pillars astrology, chinese astrology relationships, bazi 2026" />
+        <link rel="canonical" href={`${SITE_URL}/articles`} />
         <meta property="og:title" content="BaZi & Elemental Compatibility Articles | Elemental Bond" />
         <meta property="og:description" content="Explore our library of BaZi astrology articles: Five Element compatibility guides, Day Master personality profiles, and relationship timing insights." />
         <meta property="og:url" content={`${SITE_URL}/articles`} />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="Elemental Bond" />
+        <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="BaZi & Elemental Compatibility Articles | Elemental Bond" />
         <meta name="twitter:description" content="Explore our library of BaZi astrology articles: Five Element compatibility guides, Day Master personality profiles, and relationship timing insights." />
-        <link rel="canonical" href={`${SITE_URL}/articles`} />
+        <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",

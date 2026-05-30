@@ -125,6 +125,7 @@ export default function ArticlePage() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={article.meta.title} />
         <meta name="twitter:description" content={article.meta.description} />
+        <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
         <link rel="canonical" href={articleUrl} />
         <script type="application/ld+json">
           {JSON.stringify({

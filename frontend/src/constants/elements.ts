@@ -144,9 +144,9 @@ export function getElementPairContent(e1: Element, e2: Element): PairContent {
   const keywords2 = ELEMENT_KEYWORDS[e2].slice(0, 3).join(", ");
 
   const content: PairContent = {
-    title: `${label1} and ${label2} BaZi Compatibility — ${relLabel} | Elemental Bond`,
-    description: `${label1} (${ELEMENT_CHINESE[e1].split(" (")[1]?.replace(")", "") || e1}) and ${label2} (${ELEMENT_CHINESE[e2].split(" (")[1]?.replace(")", "") || e2}) in BaZi: ${RELATIONSHIP_DESCRIPTIONS[rel]} Discover strengths, challenges, and your 2026 compatibility windows.`,
-    keywords: `${e1} ${e2} bazi compatibility, ${e1} element ${e2} element relationship, ${e1} ${e2} five element love match, ${e1} ${e2} chinese astrology`,
+    title: `${label1} and ${label2} BaZi Compatibility — Free Calculator | Elemental Bond`,
+    description: `Free BaZi compatibility calculator for ${label1} and ${label2} elements. ${RELATIONSHIP_DESCRIPTIONS[rel]} Discover strengths, challenges, and your 2026 elemental timing windows.`,
+    keywords: `${e1} ${e2} bazi compatibility, bazi compatibility calculator, ${e1} ${e2} five element compatibility, ${e1} element ${e2} element relationship, ${e1} ${e2} five element love match, ${e1} ${e2} chinese astrology`,
     relationshipSummary: RELATIONSHIP_DESCRIPTIONS[rel],
     strengthPoints: RELATIONSHIP_STRENGTHS[rel],
     challengePoints: RELATIONSHIP_CHALLENGES[rel],

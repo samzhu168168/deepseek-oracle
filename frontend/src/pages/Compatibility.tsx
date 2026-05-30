@@ -20,13 +20,22 @@ export default function CompatibilityPage() {
   const sign1 = rawSign1?.trim() ? formatSign(rawSign1) : "Your Sign";
   const sign2 = rawSign2?.trim() ? formatSign(rawSign2) : "Their Sign";
 
-  const title = `${sign1} and ${sign2} Compatibility — Soul Resonance Reading | Elemental Bond`;
-  const description = `${sign1} and ${sign2} compatibility decoded through 2,000-year-old BaZi wisdom. Discover Five Element dynamics, karmic patterns, and your 2026 relationship timeline. Free reading.`;
+  const title = `${sign1} and ${sign2} BaZi Compatibility — Free Reading | Elemental Bond`;
+  const description = `Free BaZi compatibility calculator for ${sign1} and ${sign2}. Discover Five Element dynamics, Soul Resonance Score, karmic patterns, and your 2026 relationship timeline.`;
   const ctaLabel = `Reveal Your ${sign1} & ${sign2} Soul Pattern`;
 
   const pageUrl = rawSign1 && rawSign2
     ? `${SITE_URL}/compatibility/${rawSign1}-and-${rawSign2}`
     : SITE_URL;
+
+  const webPageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description,
+    url: pageUrl,
+    isPartOf: { "@type": "WebSite", name: "Elemental Bond", url: SITE_URL },
+  };
 
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -58,7 +67,7 @@ export default function CompatibilityPage() {
         <meta name="description" content={description} />
         <meta
           name="keywords"
-          content={`${sign1} ${sign2} compatibility, ${sign1.toLowerCase()} ${sign2.toLowerCase()} relationship, ${sign1.toLowerCase()} ${sign2.toLowerCase()} soul bond, ${sign1.toLowerCase()} ${sign2.toLowerCase()} love match, chinese astrology compatibility`}
+          content={`${sign1} ${sign2} compatibility, bazi compatibility calculator, ${sign1.toLowerCase()} ${sign2.toLowerCase()} bazi reading, ${sign1.toLowerCase()} ${sign2.toLowerCase()} five element match, ${sign1.toLowerCase()} ${sign2.toLowerCase()} soul bond, chinese astrology compatibility`}
         />
         <link rel="canonical" href={pageUrl} />
         <meta property="og:title" content={title} />
@@ -66,9 +75,15 @@ export default function CompatibilityPage() {
         <meta property="og:url" content={pageUrl} />
         <meta property="og:type" content="article" />
         <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="Elemental Bond" />
+        <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
+        <script type="application/ld+json">{JSON.stringify(webPageJsonLd)}</script>
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       </Helmet>
 

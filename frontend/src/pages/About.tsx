@@ -9,12 +9,22 @@ export default function AboutPage() {
     <div className="landing-page fade-in" style={{ maxWidth: "720px", margin: "0 auto", padding: "24px 16px" }}>
       <Helmet>
         <title>About Elemental Bond — Ancient BaZi Wisdom for Modern Relationships</title>
-        <meta name="description" content="Elemental Bond brings 2,000-year-old BaZi wisdom to modern relationship questions. No AI fluff. No generic horoscopes. Your birth chart holds the pattern." />
+        <meta name="description" content="Elemental Bond brings 2,000-year-old BaZi wisdom to modern relationship questions. Free BaZi compatibility calculator — no AI fluff, no generic horoscopes. Your birth chart holds the pattern." />
+        <meta name="keywords" content="about elemental bond, bazi compatibility calculator, chinese astrology relationships, five element compatibility, bazi wisdom, four pillars relationships" />
+        <link rel="canonical" href={`${SITE_URL}/about`} />
         <meta property="og:title" content="About Elemental Bond — Ancient BaZi Wisdom for Modern Relationships" />
-        <meta property="og:description" content="Elemental Bond brings 2,000-year-old BaZi wisdom to modern relationship questions. Your birth chart holds the pattern." />
+        <meta property="og:description" content="Elemental Bond brings 2,000-year-old BaZi wisdom to modern relationship questions. Free BaZi compatibility calculator — your birth chart holds the pattern." />
         <meta property="og:url" content={`${SITE_URL}/about`} />
         <meta property="og:type" content="website" />
-        <link rel="canonical" href={`${SITE_URL}/about`} />
+        <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="Elemental Bond" />
+        <meta property="og:locale" content="en_US" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="About Elemental Bond — Ancient BaZi Wisdom for Modern Relationships" />
+        <meta name="twitter:description" content="Free BaZi compatibility calculator. 2,000-year-old Chinese astrology reveals your relationship patterns — not AI fluff." />
+        <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "AboutPage",
