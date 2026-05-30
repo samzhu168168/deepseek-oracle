@@ -1536,6 +1536,11 @@
   .how-it-works__step {
     padding: var(--space-lg);
   }
+
+  /* Fix #2: Form panel padding too wide — 24px×2=48px eats width on 375px */
+  .bond-form__panel {
+    padding: 14px;
+  }
 }
 
 /* ════════════════════════════════════════
@@ -2528,5 +2533,50 @@
 
   .monthly-horoscope-hero__title {
     font-size: 1.125rem;
+  }
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE — 375px (Phone) — Page-specific
+   ════════════════════════════════════════ */
+@media (max-width: 480px) {
+  /* Fix #4: Paywall modal panel — 40px 36px → 28px 20px, prevents content clip */
+  .paywall-modal__panel {
+    padding: 28px 20px;
+  }
+
+  /* Fix #5: Close button touch target too small (≈24px) — must be ≥44px */
+  .paywall-modal__close {
+    top: 8px;
+    right: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 22px;
+  }
+
+  /* Exit intent modal — same close button issue */
+  .exit-intent-close {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    top: 8px;
+    right: 8px;
+  }
+
+  /* Payment option buttons — full width on phone */
+  .payment-option__btn {
+    width: 100%;
+  }
+
+  /* oracle-form inner gap tighter on phone */
+  .oracle-form {
+    padding: var(--space-md) 12px;
   }
 }

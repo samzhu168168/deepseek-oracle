@@ -937,4 +937,30 @@ a:hover { color: var(--oracle-text); }
   .oracle-card {
     padding: var(--space-lg);
   }
+
+  /* Fix #1: Prevent iOS Safari viewport zoom on input focus (requires ≥16px) */
+  .oracle-input,
+  .oracle-select {
+    font-size: 1rem;
+  }
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE — 375px (Phone)
+   ════════════════════════════════════════ */
+@media (max-width: 480px) {
+  /* Fix #3: Scorecard horizontal padding too wide on narrow screens */
+  .result-scorecard {
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  /* Fix #6: Testimonial strip horizontal padding crushes quote text */
+  .hero-testimonial-strip {
+    padding: 12px;
+  }
+
+  /* Fix #7: Oracle hero side padding — give content room to breathe */
+  .oracle-hero {
+    padding: var(--space-xl) 12px var(--space-lg);
+  }
 }
