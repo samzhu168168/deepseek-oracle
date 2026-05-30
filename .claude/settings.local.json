@@ -50,7 +50,8 @@
       "Read(//c/Users/dxwfl/.claude/skills/autoglm-generate-image/**)",
       "Bash(python generate-image.py \"封面图，尺寸1280x720，深紫黑色背景，五行能量感设计风格。画面中央大字标题：Why You Keep Choosing Them，副标题：5-Element Breakup Pattern Guide，底部小字：elemental.bond。左侧有5个发光能量圆圈代表金木水火土，颜色分别是白绿蓝红黄，呈弧线排列。右侧有一个破碎的心形图案，用能量线条构成。整体色调：深紫靛蓝背景，金色文字，高级感，适合Gumroad封面\")",
       "PowerShell(python \"C:\\\\Users\\\\dxwfl\\\\.claude\\\\skills\\\\autoglm-generate-image\\\\generate-image.py\" \"封面图，深紫黑色背景，五行能量感设计风格。画面中央大字标题：Why You Keep Choosing Them，副标题：5-Element Breakup Pattern Guide，底部小字：elemental.bond。左侧有5个发光能量圆圈代表金木水火土。右侧有一个破碎的心形图案用能量线条构成。整体色调深紫靛蓝背景金色文字高级感\")",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(node_modules/.bin/tsc --noEmit)"
     ]
   }
 }
