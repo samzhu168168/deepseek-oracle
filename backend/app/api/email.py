@@ -22,6 +22,7 @@ def _save_email(email: str, source: str, score: int | None, element_pair: str | 
 
 
 @email_bp.route('/api/capture-email', methods=['POST'])
+@email_bp.route('/api/email-capture', methods=['POST'])
 def capture_email():
     data = request.get_json(silent=True) or {}
     email = data.get('email', '').strip()

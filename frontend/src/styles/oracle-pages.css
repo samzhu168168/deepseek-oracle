@@ -2537,6 +2537,75 @@
 }
 
 /* ════════════════════════════════════════
+   INLINE EMAIL CAPTURE
+   ════════════════════════════════════════ */
+.inline-capture {
+  margin: 24px 0;
+  padding: 24px 28px;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(196, 149, 106, 0.2);
+  background: rgba(196, 149, 106, 0.05);
+  text-align: center;
+}
+
+.inline-capture--done {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 28px;
+}
+
+.inline-capture__check {
+  font-size: 18px;
+  color: var(--oracle-accent-gold);
+}
+
+.inline-capture__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--oracle-text);
+  margin: 0 0 4px;
+  letter-spacing: 0.02em;
+}
+
+.inline-capture__subtitle {
+  font-size: 0.875rem;
+  color: var(--oracle-text-muted);
+  margin: 0 0 16px;
+}
+
+.inline-capture__form {
+  display: flex;
+  gap: 10px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.inline-capture__input {
+  flex: 1;
+  min-width: 0;
+}
+
+.inline-capture__btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.inline-capture__note {
+  font-size: 0.75rem;
+  color: var(--oracle-text-muted);
+  margin: 10px 0 0;
+  opacity: 0.7;
+}
+
+.inline-capture__success {
+  font-size: 0.9rem;
+  color: var(--oracle-accent-gold);
+  margin: 0;
+}
+
+/* ════════════════════════════════════════
    RESPONSIVE — 375px (Phone) — Page-specific
    ════════════════════════════════════════ */
 @media (max-width: 480px) {
@@ -2578,5 +2647,18 @@
   /* oracle-form inner gap tighter on phone */
   .oracle-form {
     padding: var(--space-md) 12px;
+  }
+
+  /* Inline email capture — stack on phone */
+  .inline-capture {
+    padding: 20px 16px;
+  }
+
+  .inline-capture__form {
+    flex-direction: column;
+  }
+
+  .inline-capture__btn {
+    width: 100%;
   }
 }

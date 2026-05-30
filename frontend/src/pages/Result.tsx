@@ -14,6 +14,7 @@ import { PaidReading } from "../components/PaidReading";
 import { LicenseKeyGuide } from "../components/LicenseKeyGuide";
 import { PayPalButton } from "../components/PayPalButton";
 import { ShareButtons } from "../components/ShareButtons";
+import { InlineEmailCapture } from "../components/InlineEmailCapture";
 import type { BondAnalysisRequest, BondAnalysisResponse } from "../types";
 
 type StoredReport = {
@@ -488,6 +489,10 @@ export default function ResultPage() {
           onOpenModal={() => setLicenseModalOpen(true)}
           postPayment={postPaymentFlow}
         />
+      )}
+
+      {!isUnlocked && (
+        <InlineEmailCapture score={averageScore} elementPair={elementPair} />
       )}
 
       {isUnlocked ? (
