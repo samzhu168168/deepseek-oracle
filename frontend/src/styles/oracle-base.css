@@ -554,6 +554,38 @@ a:hover { color: var(--oracle-text); }
   50% { background-position: 100% 50%; }
 }
 
+/* ── Hero Testimonial Strip ── */
+.hero-testimonial-strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  max-width: 480px;
+  margin: var(--space-lg) auto 0;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--oracle-purple-dim);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(139, 111, 232, 0.2);
+}
+
+.hero-testimonial__quote {
+  font-size: 0.9375rem;
+  color: var(--oracle-text-secondary);
+  font-style: italic;
+  text-align: center;
+  line-height: 1.55;
+}
+
+.hero-testimonial__meta {
+  font-size: 0.8125rem;
+  color: var(--oracle-text-muted);
+  text-align: center;
+}
+
+.hero-testimonial__meta strong {
+  color: var(--oracle-accent-gold);
+}
+
 /* ── oracle-symbol (decorative) ── */
 .oracle-symbol {
   font-size: 0.75rem;

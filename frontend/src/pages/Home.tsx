@@ -241,16 +241,18 @@ export default function HomePage() {
       {/* Oracle Hero Section — GEO-optimized for US 2026 pain points */}
       <section className="bond-hero oracle-hero">
         <div className="oracle-symbol-hero">◈</div>
-        <h1 className="oracle-hero-title">You're not unlucky in love.<br />You're running the wrong element.</h1>
+        <h1 className="oracle-hero-title">You've been in this exact relationship before.<br />Different person. Same pattern. There's a reason.</h1>
         <div className="hero-divider" />
         <p className="oracle-hero-subtitle">
-          2,000 years of pattern recognition — not AI-generated fluff.
+          I entered my last three relationships into BaZi. The same elemental dynamic showed up every time — including the one I was certain was different.
         </p>
         <p className="hero-explainer">
-          BaZi is a Chinese metaphysical system that maps your birth data
-          onto a Four Pillars chart. It reveals the hidden elemental dynamic
-          between two people — no astrology signs, no personality quizzes.
+          Enter two birth dates. The Oracle maps your Four Pillars chart, names your exact elemental dynamic, and reveals what 2026 means for this pairing. 2,000 years of pattern recognition. Free. Under a minute.
         </p>
+        <div className="hero-testimonial-strip">
+          <span className="hero-testimonial__quote">"Eerily precise — it named the pattern I kept repeating."</span>
+          <span className="hero-testimonial__meta">— M.L., Seattle &nbsp;·&nbsp; <strong>{patternCount.toLocaleString()}</strong> readings this month</span>
+        </div>
       </section>
 
       {/* ── Shared Result Banner ── */}
@@ -278,7 +280,7 @@ export default function HomePage() {
           <section className="bond-form__panel oracle-card">
             <div className="oracle-input-guide">
               <span className="oracle-guide-icon">◈</span>
-              <p className="oracle-guide-text">First person's birth details</p>
+              <p className="oracle-guide-text">Your birth details</p>
             </div>
             <div className="bond-form__fields">
               <div className="field">
@@ -324,7 +326,7 @@ export default function HomePage() {
           <section className="bond-form__panel oracle-card">
             <div className="oracle-input-guide">
               <span className="oracle-guide-icon">◈</span>
-              <p className="oracle-guide-text">Second person's birth details</p>
+              <p className="oracle-guide-text">Their birth details (partner, ex, or person of interest)</p>
             </div>
             <div className="bond-form__fields">
               <div className="field">
@@ -380,7 +382,7 @@ export default function HomePage() {
         ) : null}
 
         <button type="submit" className="oracle-button oracle-cta-button" disabled={loading}>
-          {loading ? "Reading your pattern..." : "Discover My Element — It's Free"}
+          {loading ? "Reading your pattern..." : "Reveal Our Compatibility Score →"}
         </button>
 
         <div className="social-proof">
@@ -465,7 +467,7 @@ export default function HomePage() {
         </p>
         <div className="bazi-vs-astro__cta">
           <a href="/bazi" className="oracle-button oracle-cta-button">
-            Try BaZi — It's Free →
+            Read My BaZi Blueprint — Free →
           </a>
         </div>
       </section>
