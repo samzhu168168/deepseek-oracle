@@ -166,6 +166,18 @@ CREATE TABLE IF NOT EXISTS scheduler_runs (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(job_name, run_key)
 );
+
+CREATE TABLE IF NOT EXISTS email_leads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  source TEXT NOT NULL DEFAULT 'unknown',
+  score INTEGER,
+  element_pair TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_email_leads_created_at
+ON email_leads(created_at DESC);
 """
 
 
@@ -184,6 +196,7 @@ def init_db(database_path: str) -> None:
         _migrate_insight_tables(conn)
         _migrate_oracle_chat_tables(conn)
         _migrate_divination_records_table(conn)
+        _migrate_email_leads_table(conn)
         conn.commit()
 
 
@@ -357,6 +370,27 @@ def _migrate_divination_records_table(conn: sqlite3.Connection) -> None:
         """
         CREATE INDEX IF NOT EXISTS idx_divination_records_user_type_created
         ON divination_records(user_id, divination_type, created_at DESC)
+        """
+    )
+
+
+def _migrate_email_leads_table(conn: sqlite3.Connection) -> None:
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS email_leads (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          email TEXT NOT NULL UNIQUE,
+          source TEXT NOT NULL DEFAULT 'unknown',
+          score INTEGER,
+          element_pair TEXT,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+    conn.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_email_leads_created_at
+        ON email_leads(created_at DESC)
         """
     )
 

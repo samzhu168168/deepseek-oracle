@@ -1,11 +1,38 @@
 from __future__ import annotations
 import hashlib
+import re
 
 from flask import Blueprint, jsonify, request
 import requests as http_requests
 
 analyze_bp = Blueprint("analyze", __name__)
 GUMROAD_PRODUCT = "bhpmxr"
+
+_VALID_ELEMENTS = {"Fire", "Water", "Wood", "Metal", "Earth"}
+# Last digit of birth year → dominant element
+_YEAR_ELEMENTS = {0: "Metal", 1: "Metal", 2: "Water", 3: "Water", 4: "Wood",
+                  5: "Wood", 6: "Fire", 7: "Fire", 8: "Earth", 9: "Earth"}
+
+
+def _derive_element_from_year(date_str: str) -> str:
+    try:
+        year = int(str(date_str).split("-")[0])
+        return _YEAR_ELEMENTS[year % 10]
+    except Exception:
+        return "Water"
+
+
+def _extract_element_pair(teaser_text: str, person_a: dict, person_b: dict) -> str:
+    """Parse 'I see X meeting Y' from Oracle teaser; fall back to year-based derivation."""
+    match = re.search(r"I see (\w+) meeting (\w+)", teaser_text, re.IGNORECASE)
+    if match:
+        el_a = match.group(1).capitalize()
+        el_b = match.group(2).capitalize()
+        if el_a in _VALID_ELEMENTS and el_b in _VALID_ELEMENTS:
+            return f"{el_a} meets {el_b}"
+    el_a = _derive_element_from_year(person_a.get("date", ""))
+    el_b = _derive_element_from_year(person_b.get("date", ""))
+    return f"{el_a} meets {el_b}"
 
 
 def verify_gumroad_key(license_key: str) -> bool:
@@ -61,7 +88,7 @@ def analyze():
             result = {
                 "teaser": {
                     "summary": report_text,
-                    "five_element_compatibility": "",
+                    "five_element_compatibility": _extract_element_pair(report_text, person_a, person_b),
                     "radar_scores": radar_scores,
                 },
                 "full_report": report_text,
@@ -74,7 +101,7 @@ def analyze():
             result = {
                 "teaser": {
                     "summary": report_text,
-                    "five_element_compatibility": "",
+                    "five_element_compatibility": _extract_element_pair(report_text, person_a, person_b),
                     "radar_scores": radar_scores,
                 },
                 "full_report": None,

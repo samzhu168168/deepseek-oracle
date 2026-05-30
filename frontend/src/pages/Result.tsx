@@ -125,14 +125,11 @@ const EmailCapture = () => {
       return;
     }
     setError(null);
-    const payload = {
-      email: normalized,
-      submitted_at: new Date().toISOString(),
-    };
     try {
       const raw = window.localStorage.getItem(EMAIL_CAPTURE_STORAGE_KEY);
       const items = raw ? (JSON.parse(raw) as Array<{ email: string }>) : [];
-      items.push(payload);
+      const entry = { email: normalized, submitted_at: new Date().toISOString() };
+      items.push(entry);
       window.localStorage.setItem(EMAIL_CAPTURE_STORAGE_KEY, JSON.stringify(items));
       const nextCount = (readForecastCount() || DEFAULT_FORECAST_COUNT) + 1;
       window.localStorage.setItem(EMAIL_CAPTURE_COUNT_KEY, String(nextCount));
@@ -142,6 +139,12 @@ const EmailCapture = () => {
     } catch {
       setSubmitted(true);
     }
+    // Fire-and-forget server capture so we actually build an email list
+    fetch('/api/capture-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: normalized, source: 'forecast_signup' }),
+    }).catch(() => {});
   };
 
   return (
@@ -350,59 +353,31 @@ export default function ResultPage() {
   const handleEmailGateSuccess = (_email: string) => {
     setEmailUnlocked(true);
     setEmailGateModalOpen(false);
-    
-    // Generate preview content (simulating API call)
-    // TODO: Replace with actual API call
-    const generatePreview = () => {
-      const previews = {
-        high: `I see ${elementPair.replace('-', ' meeting ')}.
 
-${elementPair.split('-')[0]} wants to burn fast, make decisions now, feel everything intensely. ${elementPair.split('-')[1]} wants to flow, take time, process slowly. This creates a push-pull dynamic that feels exhausting — ${elementPair.split('-')[0]} thinks ${elementPair.split('-')[1]} is avoiding, ${elementPair.split('-')[1]} thinks ${elementPair.split('-')[0]} is overwhelming.
+    // Use the AI-generated teaser as the base of the preview, then append
+    // element-specific pattern detail to deepen the hook before the paywall.
+    const teaserText = normalizedReport?.teaser?.summary || '';
+    const [el1, el2] = elementPair.split('-').map((s) => s.trim());
+    const patternDetail =
+      averageScore >= 75
+        ? `\n\n**The Repeating Pattern**\n\n${el1} and ${el2} create the most electrically charged dynamic in elemental theory. The highs are real. So is the friction.\n\nOne of you escalates. The other withdraws. Then roles reverse. This isn't dysfunction — it's the ${el1}-${el2} cycle running exactly as designed.\n\nThe full reading reveals why this cycle intensifies in 2026, and the exact window to break it permanently.`
+        : averageScore >= 55
+        ? `\n\n**The Repeating Pattern**\n\n${el1} and ${el2} complement each other in theory. In practice, one leads while the other questions. One acts while the other reflects.\n\nThat friction is productive — if you understand what it's for. The full reading maps your specific activation windows in 2026 and the 5 steps to turn this tension into growth.`
+        : `\n\n**The Repeating Pattern**\n\n${el1} and ${el2} speak different elemental languages. What feels natural to one lands wrong on the other. You've both felt it.\n\nThis isn't a flaw in the pairing — it's the nature of it. The full reading shows why this keeps happening and gives you specific protocols to bridge the gap.`;
 
-But here's what most people miss: this tension is your growth edge. ${elementPair.split('-')[0]} learns patience. ${elementPair.split('-')[1]} learns courage. The thing you love about them is the thing that drives you crazy. That's not a coincidence.
+    setPreviewData(teaserText ? `${teaserText}${patternDetail}` : patternDetail);
 
-The Midnight Fight: ${elementPair.split('-')[0]} wants to resolve things immediately. ${elementPair.split('-')[1]} needs time to process. So ${elementPair.split('-')[0]} pushes, ${elementPair.split('-')[1]} retreats, ${elementPair.split('-')[0]} pushes harder, ${elementPair.split('-')[1]} shuts down completely. This pattern repeats every 2-3 weeks.
-
-But this is just the surface. The full pattern reveals the hidden dynamics, your 2026 timeline, and 5 specific action steps to break the cycle.`,
-        medium: `I see ${elementPair.replace('-', ' meeting ')}.
-
-This is a complementary dynamic where each element brings what the other lacks. ${elementPair.split('-')[0]} provides energy and initiative. ${elementPair.split('-')[1]} provides stability and grounding.
-
-The tension shows up in decision-making. ${elementPair.split('-')[0]} wants to move fast. ${elementPair.split('-')[1]} wants to think it through. This creates friction, but it's productive friction — if you learn to work with it.
-
-The Decision Paralysis: When you're trying to plan anything — a vacation, a move, a major purchase — ${elementPair.split('-')[0]} gets impatient with ${elementPair.split('-')[1]}'s "slowness." ${elementPair.split('-')[1]} feels rushed by ${elementPair.split('-')[0]}'s "impulsiveness."
-
-But this is just the surface. The full reading reveals your specific growth protocol and 2026 activation windows.`,
-        low: `I see ${elementPair.replace('-', ' meeting ')}.
-
-This is a challenging dynamic that requires conscious work. ${elementPair.split('-')[0]} and ${elementPair.split('-')[1]} operate on different frequencies. What feels natural to one feels foreign to the other.
-
-The core tension: ${elementPair.split('-')[0]} processes externally. ${elementPair.split('-')[1]} processes internally. This creates misunderstandings that feel personal but are actually elemental.
-
-The Communication Gap: ${elementPair.split('-')[0]} needs to talk things out immediately. ${elementPair.split('-')[1]} needs time alone to process. When ${elementPair.split('-')[0]} pushes for conversation, ${elementPair.split('-')[1]} withdraws. When ${elementPair.split('-')[1]} finally opens up, ${elementPair.split('-')[0]} has already moved on.
-
-But this is just the surface. The full pattern shows you how to bridge this gap with specific protocols.`
-      };
-      
-      if (averageScore >= 75) return previews.high;
-      if (averageScore >= 55) return previews.medium;
-      return previews.low;
-    };
-    
-    setPreviewData(generatePreview());
-    
-    // Delay paywall display (give user time to read preview)
     setTimeout(() => {
       setPaywallModalOpen(true);
-    }, 8000); // Show after 8 seconds to give user more time to read preview
+    }, 15000);
   };
 
-  // Auto-show Email Gate after 3 seconds (if not unlocked yet)
+  // Auto-show Email Gate after 6 seconds (give user time to read Teaser)
   useEffect(() => {
     if (!emailUnlocked && normalizedReport) {
       const timer = setTimeout(() => {
         setEmailGateModalOpen(true);
-      }, 3000); // Changed to 3 seconds to give user time to read Teaser
+      }, 6000);
       return () => clearTimeout(timer);
     }
   }, [emailUnlocked, normalizedReport]);
@@ -526,7 +501,7 @@ But this is just the surface. The full pattern shows you how to bridge this gap 
         </section>
       ) : (
         <PaidReading
-          onUnlock={(_tier) => {
+          onUnlock={() => {
             setPaymentModalOpen(true);
           }}
         />
