@@ -105,20 +105,30 @@ export function PayPalButton({
         },
         onApprove: async (data: { orderID: string }) => {
           try {
-            const resp = await fetch(`${apiBase}/api/paypal/capture-order`, {
+            // Step 1: Capture payment only (~2s, well within Vercel limits)
+            const captureResp = await fetch(`${apiBase}/api/paypal/capture-order`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ order_id: data.orderID }),
+            });
+            const captureResult = await captureResp.json();
+            if (!captureResult.success) throw new Error(captureResult.error || "Payment capture failed");
+
+            // Step 2: Generate report with purchase proof (~30-45s, separate serverless call)
+            const reportResp = await fetch(`${apiBase}/api/paypal/generate-report`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                order_id: data.orderID,
+                purchase_id: captureResult.purchase_id,
                 person1,
                 person2,
                 score,
                 element_pair: elementPair,
               }),
             });
-            const result = await resp.json();
-            if (!result.success) throw new Error(result.error || "Payment verification failed");
-            if (!cancelled) onSuccess(result.report);
+            const reportResult = await reportResp.json();
+            if (!reportResult.success) throw new Error(reportResult.error || "Report generation failed");
+            if (!cancelled) onSuccess(reportResult.report);
           } catch (err: any) {
             if (!cancelled) {
               const msg = err.message || "Payment failed. Please try again.";

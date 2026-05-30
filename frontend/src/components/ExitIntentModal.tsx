@@ -79,6 +79,13 @@ export function ExitIntentModal({ mountDelay = 8000 }: ExitIntentModalProps) {
       localStorage.setItem("bond:email_forecast_count", String(count + 1));
     } catch { /* ignore */ }
 
+    // Persist to server so we actually build an email list
+    fetch('/api/capture-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: normalized, source: 'exit_intent' }),
+    }).catch(() => {});
+
     setSubmitted(true);
   };
 

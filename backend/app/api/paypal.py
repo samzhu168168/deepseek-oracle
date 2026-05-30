@@ -1,4 +1,9 @@
-"""PayPal payment integration — create & capture orders, generate full reports."""
+"""PayPal payment integration — create & capture orders, generate full reports.
+
+Two-step flow to avoid Vercel serverless timeout:
+  1. POST /api/paypal/capture-order  — capture PayPal payment only (~2s), returns purchase_id
+  2. POST /api/paypal/generate-report — verify purchase + LLM generation (~30-45s)
+"""
 
 from __future__ import annotations
 import base64
@@ -11,7 +16,7 @@ import requests
 
 paypal_bp = Blueprint("paypal", __name__)
 
-# In-memory report cache (same pattern as license.py)
+# In-memory report cache (idempotency within a single serverless instance)
 _report_cache: dict[str, dict] = {}
 
 
@@ -83,7 +88,7 @@ def create_order():
         return jsonify({"success": False, "error": f"PayPal API error: {str(e)}"}), 502
 
 
-# ── Route 2: Capture Order + Generate Report ─────────────
+# ── Route 2: Capture Order (payment only, no LLM) ───────
 
 
 @paypal_bp.route("/api/paypal/capture-order", methods=["POST", "OPTIONS"])
@@ -93,10 +98,6 @@ def capture_order():
 
     data = request.get_json(silent=True) or {}
     order_id = (data.get("order_id") or "").strip()
-    person1 = data.get("person1", {})
-    person2 = data.get("person2", {})
-    score = data.get("score", 75)
-    element_pair = data.get("element_pair", "Unknown")
 
     if not order_id:
         return jsonify({"success": False, "error": "order_id is required."}), 400
@@ -105,7 +106,6 @@ def capture_order():
         headers = _paypal_headers(current_app)
         base = _paypal_base(current_app)
 
-        # Step 1: Capture the PayPal order
         capture_resp = requests.post(
             f"{base}/v2/checkout/orders/{order_id}/capture",
             headers=headers,
@@ -119,7 +119,6 @@ def capture_order():
                 "error": capture_result.get("message", "Payment capture failed"),
             }), 502
 
-        # Verify payment completed
         status = capture_result.get("status", "")
         if status != "COMPLETED":
             return jsonify({
@@ -127,15 +126,54 @@ def capture_order():
                 "error": f"Payment not completed (status: {status})",
             }), 400
 
-        # Extract payer info for reference
-        payer = capture_result.get("payer", {})
-        purchase_id = capture_result.get("id", order_id)
+        return jsonify({"success": True, "purchase_id": order_id})
 
-        # Step 2: Generate report (same logic as license.py)
-        cache_key = hashlib.sha256(order_id.encode()).hexdigest()
+    except ValueError as e:
+        return jsonify({"success": False, "error": str(e)}), 503
+    except requests.RequestException as e:
+        return jsonify({"success": False, "error": f"PayPal API error: {str(e)}"}), 502
+
+
+# ── Route 3: Generate Report (verify purchase + LLM) ────
+
+
+@paypal_bp.route("/api/paypal/generate-report", methods=["POST", "OPTIONS"])
+def generate_report():
+    if request.method == "OPTIONS":
+        return "", 204
+
+    data = request.get_json(silent=True) or {}
+    purchase_id = (data.get("purchase_id") or "").strip()
+    person1 = data.get("person1", {})
+    person2 = data.get("person2", {})
+    score = data.get("score", 75)
+    element_pair = data.get("element_pair", "Unknown")
+
+    if not purchase_id:
+        return jsonify({"success": False, "error": "purchase_id is required."}), 400
+
+    try:
+        # Verify payment with PayPal (stateless proof — works across serverless instances)
+        headers = _paypal_headers(current_app)
+        base = _paypal_base(current_app)
+        verify_resp = requests.get(
+            f"{base}/v2/checkout/orders/{purchase_id}",
+            headers=headers,
+            timeout=10,
+        )
+        if verify_resp.status_code != 200:
+            return jsonify({"success": False, "error": "Could not verify payment."}), 403
+
+        order_data = verify_resp.json()
+        if order_data.get("status") != "COMPLETED":
+            return jsonify({"success": False, "error": "Payment not verified."}), 403
+
+        # Check idempotency cache
+        cache_key = hashlib.sha256(purchase_id.encode()).hexdigest()
         if cache_key in _report_cache:
             return jsonify({"success": True, "report": _report_cache[cache_key], "purchase_id": purchase_id})
 
+        # Generate report
         prompt = _build_report_prompt(person1, person2, score, element_pair, datetime.now().year)
 
         from app.llm_providers import create_provider
@@ -143,7 +181,7 @@ def capture_order():
         provider_name = str(current_app.config.get("LLM_PROVIDER", "fallback"))
         model = str(current_app.config.get("LLM_MODEL", "claude-sonnet-4-6"))
         provider = create_provider(provider_name, model, app_config=current_app.config)
-        result = provider.generate(prompt, timeout_s=60)
+        result = provider.generate(prompt, timeout_s=45)
         raw_text = (result.content or "").strip()
 
         # Parse AI JSON
@@ -178,7 +216,7 @@ def capture_order():
         return jsonify({"success": False, "error": f"PayPal API error: {str(e)}"}), 502
 
 
-# ── Report prompt (shared with license.py logic) ─────────
+# ── Report prompt ────────────────────────────────────────
 
 
 def _build_report_prompt(person1: dict, person2: dict, score: int, element_pair: str, year: int) -> str:
