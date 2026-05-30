@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"/><title>Pattern Breaker Workbook — elemental.bond</title><style>
+@page {
+  size: A4;
+  margin: 22mm 17mm 24mm 17mm;
+  background: #0A1628;
+  @top-center {
+    content: "elemental.bond";
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 7.5pt;
+    color: #D4A853;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  @bottom-left {
+    content: "elemental.bond  —  Pattern Reading";
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 7pt;
+    color: #4a5a6a;
+  }
+  @bottom-right {
+    content: counter(page);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 7pt;
+    color: #D4A853;
+    font-weight: bold;
+  }
+}
+@page cover-page {
+  margin: 0;
+  background: #000000;
+  @top-center  { content: none; }
+  @bottom-left { content: none; }
+  @bottom-right{ content: none; }
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: #0A1628;
+  color: #dce6f0;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.78;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+/* ── Cover ── */
+.cover-page {
+  page: cover-page;
+  page-break-after: always;
+  background: #000000;
+  height: 297mm;
+  width: 210mm;
+  padding: 0;
+  display: block;
+  text-align: center;
+}
+.cover-inner {
+  width: 100%;
+  height: 100%;
+  padding: 40mm 28mm 32mm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.cover-badge {
+  font-size: 8pt;
+  letter-spacing: 6px;
+  color: #D4A853;
+  text-transform: uppercase;
+  margin-bottom: 18mm;
+  font-weight: 600;
+}
+.cover-symbol {
+  font-size: 32pt;
+  color: #D4A853;
+  margin-bottom: 6mm;
+  line-height: 1;
+}
+.cover-h1 {
+  font-size: 52pt;
+  font-weight: 900;
+  color: #D4A853;
+  letter-spacing: 7px;
+  text-transform: uppercase;
+  line-height: 1.0;
+  margin: 0 0 5mm;
+  border: none;
+  padding: 0;
+}
+.cover-rule {
+  width: 70px;
+  height: 2px;
+  background: #D4A853;
+  margin: 7mm auto;
+}
+.cover-subtitle {
+  font-size: 13pt;
+  color: #b8c8d8;
+  font-style: italic;
+  margin: 0 0 4mm;
+  line-height: 1.4;
+}
+.cover-author {
+  font-size: 10pt;
+  color: #D4A853;
+  letter-spacing: 3px;
+  margin: 0;
+}
+.cover-brand {
+  font-size: 9pt;
+  color: #3a4a5a;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin-top: 24mm;
+}
+
+/* ── Headings ── */
+h1 {
+  color: #D4A853;
+  font-size: 21pt;
+  font-weight: 900;
+  margin: 10mm 0 3mm;
+  padding-bottom: 2.5mm;
+  border-bottom: 2px solid #D4A853;
+  letter-spacing: 0.5px;
+  page-break-after: avoid;
+}
+h1.chapter-start {
+  page-break-before: always;
+}
+h2 {
+  color: #D4A853;
+  font-size: 14pt;
+  font-weight: 700;
+  margin: 7mm 0 2.5mm;
+  border-bottom: 1px solid #1a2d4a;
+  padding-bottom: 2mm;
+  page-break-after: avoid;
+}
+h3 {
+  color: #c8a438;
+  font-size: 12pt;
+  font-weight: 700;
+  margin: 5mm 0 2mm;
+  page-break-after: avoid;
+}
+h4 {
+  color: #a0b0c0;
+  font-size: 10.5pt;
+  font-weight: 700;
+  margin: 3.5mm 0 1.5mm;
+}
+
+/* ── Paragraphs ── */
+p { margin: 1.5mm 0 3.5mm; color: #dce6f0; }
+p.page-indicator {
+  font-size: 8.5pt;
+  color: #4a5a6a;
+  font-style: italic;
+  margin: 0 0 3mm;
+}
+p.oracle-quote {
+  font-style: italic;
+  color: #a8b8c8;
+  font-size: 11pt;
+  border-left: 3px solid #D4A853;
+  padding: 3mm 6mm;
+  background: #0d1e38;
+  margin: 4mm 0;
+}
+
+strong { color: #e0cc90; font-weight: 700; }
+em     { color: #a8b8c8; font-style: italic; }
+code   {
+  background: #0d1e38;
+  color: #D4A853;
+  padding: 1px 5px;
+  font-size: 9.5pt;
+  border-radius: 2px;
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+/* ── HR ── */
+hr {
+  border: none;
+  border-top: 1px solid #1a2d4a;
+  margin: 4mm 0;
+}
+
+/* ── Tables ── */
+.table-wrap { margin: 4mm 0; width: 100%; overflow: hidden; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9pt;
+  page-break-inside: avoid;
+}
+th {
+  background: #1a2d4a;
+  color: #D4A853;
+  padding: 2.5mm 3.5mm;
+  text-align: left;
+  font-weight: 700;
+  border: 1px solid #243d5a;
+  font-size: 8.5pt;
+}
+td {
+  padding: 2mm 3.5mm;
+  border: 1px solid #162840;
+  color: #c0ccd8;
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: #0b1929; }
+tr:nth-child(odd)  td { background: #0A1628; }
+
+/* ── Lists ── */
+ul, ol { margin: 1.5mm 0 3mm 7mm; padding: 0; }
+li { margin: 1.5mm 0; color: #dce6f0; line-height: 1.65; }
+li strong { color: #D4A853; }
+
+/* ── Blockquotes ── */
+blockquote {
+  background: #0d1e38;
+  border-left: 3px solid #D4A853;
+  padding: 3.5mm 6mm;
+  margin: 4mm 0;
+  border-radius: 0 3px 3px 0;
+}
+blockquote p { margin: 0; font-style: italic; color: #a8b8c8; }
+
+/* ── Write-in lines ── */
+.write-in {
+  background: #0d1e38;
+  border: 1px solid #243d5a;
+  border-radius: 3px;
+  height: 11mm;
+  margin: 1.5mm 0;
+}
+
+/* ── TOC ── */
+.toc-section { page-break-after: always; }
+</style></head>
+<body>
+<div class="cover-page">
+  <div class="cover-inner">
+    <div class="cover-badge">The Oracle Series</div>
+    <div class="cover-symbol">◈</div>
+    <div class="cover-h1">PATTERN BREAKER</div>
+    <div class="cover-rule"></div>
+    <p class="cover-subtitle">A BaZi Elemental Workbook for Breaking Your Relationship Loops</p>
+    <p class="cover-author">The Oracle | elemental.bond</p>
+    <div class="cover-brand">elemental.bond</div>
+  </div>
+</div>
+<p class="oracle-quote">"The pattern isn't happening to you. It's happening through you. This workbook teaches you to see it — and finally, to choose differently."</p>
+<hr/>
+<p><strong>How to Use This Workbook</strong></p>
+<p>This is not a self-help book. It's a diagnostic tool.</p>
+<p>Work through it in order the first time. Then return to individual chapters whenever you feel a familiar pattern activating — a new person who feels like your ex, a fight you've had before, a pull you can't explain.</p>
+<p>You'll need:</p>
+<ul>
+<li>A pen (not a pencil — commit to your answers)</li>
+<li>Your birth date (day, month, year)</li>
+<li>30–45 minutes of uninterrupted time</li>
+</ul>
+<p>The exercises in this workbook are designed to surface patterns you already know but haven't yet named. BaZi doesn't create the pattern — it reveals what's already operating beneath your awareness.</p>
+<p><strong>A note on BaZi:</strong> BaZi (八字) is a 3,000-year-old Chinese system of elemental pattern recognition. Your birth date generates a unique elemental profile — your Day Master — which describes how you process energy in relationships. This workbook focuses specifically on love and partnership patterns.</p>
+<hr/>
+<div class="toc-section"><h1>TABLE OF CONTENTS</h1>
+</div>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Chapter</th><th>Title</th><th>Page</th></tr>
+</thead><tbody>
+<tr><td>Introduction</td><td>The Pattern Behind the Pattern</td><td>3</td></tr>
+<tr><td>Chapter 1</td><td>The 5 Elemental Archetypes in Love</td><td>4</td></tr>
+<tr><td>Chapter 2</td><td>Your Pattern Diagnosis</td><td>12</td></tr>
+<tr><td>Chapter 3</td><td>The 3 Loops You Keep Repeating</td><td>18</td></tr>
+<tr><td>Chapter 4</td><td>Breaking the Cycle</td><td>24</td></tr>
+<tr><td>Chapter 5</td><td>Your New Elemental Blueprint</td><td>28</td></tr>
+<tr><td>Appendix</td><td>Element Interaction Quick Reference</td><td>32</td></tr>
+</tbody>
+</table></div>
+<hr/>
+<h1 class="chapter-start">INTRODUCTION: The Pattern Behind the Pattern</h1>
+<p class="page-indicator"><em>Page 3</em></p>
+<p>You've probably done the work.</p>
+<p>Therapy. Journaling. Reading every relationship book on the shelf. You understand your attachment style. You know your childhood wounds. You can articulate, in precise language, exactly why you choose unavailable people.</p>
+<p>And then you choose them again anyway.</p>
+<p>This isn't a failure of understanding. It's a failure of translation.</p>
+<p>Understanding a pattern intellectually and actually breaking it are two different skills. Most self-help gives you the first. This workbook gives you the second — by going deeper than psychology, into the elemental architecture that shapes how you give, receive, and relate to love.</p>
+<p><strong>The Oracle's premise is simple:</strong></p>
+<p>Every person is born with a dominant elemental energy — Wood, Fire, Earth, Metal, or Water. This element shapes not just your personality, but your magnetic field. The relationships you enter, the roles you play, the loops you repeat — all of it is downstream of this elemental configuration.</p>
+<p>Once you see the element, you see the pattern. Once you see the pattern, you have a choice.</p>
+<p><strong>That's what this workbook is for.</strong></p>
+<hr/>
+<h1 class="chapter-start">CHAPTER 1: The 5 Elemental Archetypes in Love</h1>
+<p class="page-indicator"><em>Pages 4–11</em></p>
+<hr/>
+<h2>What Is a Day Master?</h2>
+<p>In BaZi, your Day Master is the elemental identity of your inner self — the "you" that shows up in intimate relationships. It's determined by the heavenly stem of the day you were born.</p>
+<p>There are five Day Master elements: Wood, Fire, Earth, Metal, and Water. Each has a Yin and Yang polarity (making ten total variations), but for relationship patterns, the element itself is the primary lens.</p>
+<p>Your Day Master is not your sun sign. It is not your personality type. It is your elemental <em>frequency</em> — the energy you broadcast and the energy you magnetize.</p>
+<p><strong>To find your Day Master:</strong> Visit elemental.bond and enter your birth date. Your free reading will identify your Day Master element and its core love pattern. Use that information alongside this workbook.</p>
+<hr/>
+<h2>The Wood Archetype in Love</h2>
+<p class="oracle-quote">"I see who you could become. I'm here to help you grow."</p>
+<p><strong>Core energy:</strong> Expansion, vision, potential, growth</p>
+<p><strong>How Wood loves:</strong> Wood Day Masters are the great nurturers of the elemental system — not in the Earth sense of feeding and caretaking, but in the sense of <em>cultivation</em>. Wood people see potential where others don't. They are patient, forward-looking, and deeply invested in the person their partner is becoming.</p>
+<p>This makes them extraordinary partners — until it doesn't.</p>
+<p><strong>Wood's shadow:</strong> Wood doesn't fall in love with who you are. Wood falls in love with who you <em>could be</em>. This means Wood people often stay in relationships long past their expiration date, tending and watering a garden that was never going to bloom.</p>
+<p><strong>What Wood needs:</strong> A partner who is already growing — not one who needs Wood's energy to move at all. Wood thrives with Water (which nourishes Wood's roots) and Fire (which uses Wood's energy purposefully).</p>
+<p><strong>Wood's red flag to self:</strong> <em>"I know they're difficult right now, but I can see their potential so clearly."</em></p>
+<p><strong>Wood's wound:</strong> Being abandoned after pouring everything in. Giving to someone who grows — then outgrows the relationship.</p>
+<hr/>
+<p><strong>Wood: Elemental Love Summary</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th></th><th>Wood in Love</th></tr>
+</thead><tbody>
+<tr><td><strong>Gives</strong></td><td>Vision, encouragement, patience, structure for growth</td></tr>
+<tr><td><strong>Needs</strong></td><td>To be loved for who they are, not just valued for what they provide</td></tr>
+<tr><td><strong>Attracted to</strong></td><td>Potential; people with big dreams and rough edges</td></tr>
+<tr><td><strong>Repelled by</strong></td><td>Stagnation, lack of ambition, people who don't want to grow</td></tr>
+<tr><td><strong>Shadow</strong></td><td>Loving the idea of someone more than the person</td></tr>
+<tr><td><strong>Healing</strong></td><td>Learning to love presence, not potential</td></tr>
+</tbody>
+</table></div>
+<hr/>
+<h2>The Fire Archetype in Love</h2>
+<p class="oracle-quote">"When I'm with you, I'm fully with you. All of me."</p>
+<p><strong>Core energy:</strong> Passion, radiance, presence, intensity</p>
+<p><strong>How Fire loves:</strong> Fire is the most emotionally present element. Fire Day Masters love at full volume — their attention is total, their joy is contagious, their grief is visible. When a Fire person is in love, you know it. There is no middle temperature.</p>
+<p>This makes early Fire relationships extraordinary. The chemistry is immediate and overwhelming. Fire brings <em>aliveness</em> to everything they touch.</p>
+<p><strong>Fire's shadow:</strong> Fire needs fuel. And when the novelty of a relationship wears into something ordinary, Fire dims. They begin scanning for new kindling — not because they're shallow, but because their element requires constant input to sustain its output.</p>
+<p>Fire also burns at intensity levels that partners with lower elemental "temperature" can't sustain. Earth and Metal partners often label Fire "too much," "too dramatic," "needy" — when in fact they're simply mismatched in elemental capacity.</p>
+<p><strong>What Fire needs:</strong> Wood energy, which feeds Fire steadily without being consumed. A partner who brings consistent warmth, not just reactive heat.</p>
+<p><strong>Fire's red flag to self:</strong> <em>"The chemistry we have is unlike anything I've felt before — it must mean something."</em></p>
+<p><strong>Fire's wound:</strong> Being told they're too much. Finding themselves with partners who praise their energy but punish its expression.</p>
+<hr/>
+<p><strong>Fire: Elemental Love Summary</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th></th><th>Fire in Love</th></tr>
+</thead><tbody>
+<tr><td><strong>Gives</strong></td><td>Passion, celebration, full presence, aliveness</td></tr>
+<tr><td><strong>Needs</strong></td><td>Consistent fuel — a partner who feeds rather than dampens</td></tr>
+<tr><td><strong>Attracted to</strong></td><td>Mystery, challenge, intensity, electric chemistry</td></tr>
+<tr><td><strong>Repelled by</strong></td><td>Flatness, emotional unavailability, partners who can't match energy</td></tr>
+<tr><td><strong>Shadow</strong></td><td>Novelty-seeking; the relationship is always most alive in the beginning</td></tr>
+<tr><td><strong>Healing</strong></td><td>Learning that consistent warmth is deeper than explosive heat</td></tr>
+</tbody>
+</table></div>
+<hr/>
+<h2>The Earth Archetype in Love</h2>
+<p class="oracle-quote">"I'm here. Whatever you need. I'm not going anywhere."</p>
+<p><strong>Core energy:</strong> Nourishment, stability, loyalty, centering</p>
+<p><strong>How Earth loves:</strong> Earth Day Masters are the backbone of any relationship they enter. They remember. They show up. They create safety — the kind of deep, structural safety that allows other people to take risks and feel held.</p>
+<p>Earth love is unconditional in a way that no other element achieves. Earth people don't love contingently.</p>
+<p><strong>Earth's shadow:</strong> Earth confuses love with service. They believe, somewhere beneath awareness, that their value in a relationship is proportional to how much they give. This belief is usually invisible — even to them. It reveals itself in the way Earth makes themselves indispensable rather than simply being <em>present</em>.</p>
+<p>Earth attracts Wood energy, which grows using Earth's resources — and when Wood has grown tall enough, it no longer needs the Earth it grew from. This is Earth's most painful relationship pattern: investing deeply in someone who uses their stability to grow, then grows away.</p>
+<p><strong>What Earth needs:</strong> To be <em>chosen</em>, not needed. A Metal partner — who brings structure and refinement without consumption — or another Earth, who matches the depth of constancy.</p>
+<p><strong>Earth's red flag to self:</strong> <em>"I just want to make sure they're okay. I can handle my own needs later."</em></p>
+<p><strong>Earth's wound:</strong> Giving until empty and still feeling like it wasn't enough. Discovering that being indispensable and being loved are not the same thing.</p>
+<hr/>
+<p><strong>Earth: Elemental Love Summary</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th></th><th>Earth in Love</th></tr>
+</thead><tbody>
+<tr><td><strong>Gives</strong></td><td>Safety, nourishment, constancy, unconditional presence</td></tr>
+<tr><td><strong>Needs</strong></td><td>To be chosen freely, not needed out of dependency</td></tr>
+<tr><td><strong>Attracted to</strong></td><td>People who need help, who are struggling, who need to grow</td></tr>
+<tr><td><strong>Repelled by</strong></td><td>Instability, unpredictability, cruelty</td></tr>
+<tr><td><strong>Shadow</strong></td><td>Earning love through usefulness; inability to receive</td></tr>
+<tr><td><strong>Healing</strong></td><td>Setting boundaries from self-worth, not self-protection</td></tr>
+</tbody>
+</table></div>
+<hr/>
+<h2>The Metal Archetype in Love</h2>
+<p class="oracle-quote">"Once I decide, I'm all in. You will never find a more loyal person."</p>
+<p><strong>Core energy:</strong> Precision, loyalty, structure, refinement</p>
+<p><strong>How Metal loves:</strong> Metal Day Masters are the most quietly devoted lovers in the elemental system. Once Metal commits — truly commits — they are immovable. They show up in ways that are invisible to partners who are looking for verbal expression: adjusting their schedule, remembering details, building reliability into the relationship like infrastructure.</p>
+<p>Metal love is not performative. It does not announce itself. It simply <em>is</em>.</p>
+<p><strong>Metal's shadow:</strong> Metal's silence is often misread. Partners who need verbal reassurance — Fire, Wood, Water — often feel emotionally starved with Metal, even while Metal is giving everything they have. And Metal, genuinely unable to understand why their total loyalty isn't being received as love, withdraws further into action and away from expression.</p>
+<p>Metal is also vulnerable to Fire energy — which is its most powerful destabilizer. Fire-Metal relationships are electric: Fire's charisma intoxicates Metal, while Fire finds Metal's structure both attractive and stifling. Fire melts Metal. In relationships, this looks like Metal slowly losing their shape — their opinions, their boundaries, their sense of self — in service of keeping the fire burning.</p>
+<p><strong>What Metal needs:</strong> Earth energy (which produces and supports Metal) or another Metal (shared standards, shared devotion). A partner who recognizes loyalty as its own love language.</p>
+<p><strong>Metal's red flag to self:</strong> <em>"I'm staying because I said I would. Commitment means something."</em></p>
+<p><strong>Metal's wound:</strong> Being present and loyal and still being told they're emotionally unavailable.</p>
+<hr/>
+<p><strong>Metal: Elemental Love Summary</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th></th><th>Metal in Love</th></tr>
+</thead><tbody>
+<tr><td><strong>Gives</strong></td><td>Loyalty, reliability, structural support, quiet constancy</td></tr>
+<tr><td><strong>Needs</strong></td><td>A partner who recognizes devotion in action, not just words</td></tr>
+<tr><td><strong>Attracted to</strong></td><td>Confidence, charisma, people who know what they want</td></tr>
+<tr><td><strong>Repelled by</strong></td><td>Chaos, inconsistency, emotional volatility</td></tr>
+<tr><td><strong>Shadow</strong></td><td>Staying past the relationship's expiration date; confusing loyalty with love</td></tr>
+<tr><td><strong>Healing</strong></td><td>Learning to express, not just demonstrate</td></tr>
+</tbody>
+</table></div>
+<hr/>
+<h2>The Water Archetype in Love</h2>
+<p class="oracle-quote">"I already know you. I've felt everything you haven't said yet."</p>
+<p><strong>Core energy:</strong> Depth, intuition, wisdom, flow</p>
+<p><strong>How Water loves:</strong> Water Day Masters love with their entire nervous system. They are the most emotionally perceptive element — they know things about their partners that their partners haven't said, sometimes haven't even consciously acknowledged. Being loved by Water feels like being fully <em>known</em>.</p>
+<p>This is rare. And it's deeply attractive.</p>
+<p><strong>Water's shadow:</strong> Water is formless. Without structure, Water takes the shape of whatever container it's in — and in relationships, that container is the partner. Water people are at risk of losing themselves so completely in a relationship that they forget who they are when they're alone.</p>
+<p>Water also floods. What begins as profound emotional presence can become overwhelming — the partner feeling like they're drowning in Water's depth, their every move tracked and felt and responded to. Water's love can tip from intimacy into suffocation.</p>
+<p><strong>What Water needs:</strong> Earth energy — which provides banks, direction, and structure for Water's flow. Without Earth, Water seeps into every space and eventually evaporates.</p>
+<p><strong>Water's red flag to self:</strong> <em>"I feel everything they feel. Sometimes I can't tell where they end and I begin."</em></p>
+<p><strong>Water's wound:</strong> Being told their love is too much. Losing themselves in relationships so completely that, after a breakup, they don't know who they are anymore.</p>
+<hr/>
+<p><strong>Water: Elemental Love Summary</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th></th><th>Water in Love</th></tr>
+</thead><tbody>
+<tr><td><strong>Gives</strong></td><td>Emotional intelligence, deep knowing, intuitive attunement</td></tr>
+<tr><td><strong>Needs</strong></td><td>Structure and boundaries to contain their depth safely</td></tr>
+<tr><td><strong>Attracted to</strong></td><td>Emotional unavailability, mystery, the person they can't fully read</td></tr>
+<tr><td><strong>Repelled by</strong></td><td>Superficiality, dishonesty, emotional shallowness</td></tr>
+<tr><td><strong>Shadow</strong></td><td>Loss of self; their partner's emotional reality overrides their own</td></tr>
+<tr><td><strong>Healing</strong></td><td>Developing a stable inner identity that doesn't dissolve in intimacy</td></tr>
+</tbody>
+</table></div>
+<hr/>
+<h2>The Element Interaction Map</h2>
+<p>The Five Elements interact in two cycles — the <em>Generating Cycle</em> (where one element feeds the next) and the <em>Controlling Cycle</em> (where one element checks another).</p>
+<p><strong>Generating Cycle (Nourishing):</strong> Wood → Fire → Earth → Metal → Water → Wood</p>
+<p><em>In relationships: Your element is naturally supported by the element that precedes yours.</em></p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Element</th><th>Nourished By</th><th>Supports</th></tr>
+</thead><tbody>
+<tr><td>Wood</td><td>Water</td><td>Fire</td></tr>
+<tr><td>Fire</td><td>Wood</td><td>Earth</td></tr>
+<tr><td>Earth</td><td>Fire</td><td>Metal</td></tr>
+<tr><td>Metal</td><td>Earth</td><td>Water</td></tr>
+<tr><td>Water</td><td>Metal</td><td>Wood</td></tr>
+</tbody>
+</table></div>
+<p><strong>Controlling Cycle (Challenging):</strong> Wood controls Earth → Earth controls Water → Water controls Fire → Fire controls Metal → Metal controls Wood</p>
+<p><em>In relationships: Controlling cycle pairings create high tension — often high attraction and high conflict simultaneously.</em></p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Element</th><th>Controls</th><th>Is Controlled By</th></tr>
+</thead><tbody>
+<tr><td>Wood</td><td>Earth</td><td>Metal</td></tr>
+<tr><td>Earth</td><td>Water</td><td>Wood</td></tr>
+<tr><td>Water</td><td>Fire</td><td>Earth</td></tr>
+<tr><td>Fire</td><td>Metal</td><td>Water</td></tr>
+<tr><td>Metal</td><td>Wood</td><td>Fire</td></tr>
+</tbody>
+</table></div>
+<p><strong>Practical guide:</strong></p>
+<ul>
+<li>Your most natural partnership energy comes from your <strong>Nourishing</strong> pair</li>
+<li>Your most growth-producing (and challenging) energy comes from your <strong>Controlling</strong> pair</li>
+<li>Same-element relationships depend heavily on strength — two strong Fires can be extraordinary or combustive</li>
+</ul>
+<hr/>
+<h1 class="chapter-start">CHAPTER 2: Your Pattern Diagnosis</h1>
+<p class="page-indicator"><em>Pages 12–17</em></p>
+<hr/>
+<h2>Understanding Your Day Master — Before the Quiz</h2>
+<p>Before diving into the self-assessment, get your Day Master from elemental.bond (free, 2 minutes). Write it here:</p>
+<p><strong>My Day Master Element:</strong> ___________________________</p>
+<p><strong>My Day Master Polarity (Yin/Yang):</strong> ___________________________</p>
+<p><strong>Date confirmed:</strong> ___________________________</p>
+<p>Even without the calculation, the quiz below will reveal your <em>behavioral</em> element — the one you're currently operating from. For many people, their behavioral pattern matches their Day Master. For others, life circumstances have pushed them into an element that isn't native. Both are useful data.</p>
+<hr/>
+<h2>The 20-Question Pattern Quiz</h2>
+<p><em>Answer instinctively. Circle the answer that feels most true — not the one you wish were true.</em></p>
+<p><strong>Instructions:</strong> For each question, circle <strong>A, B, C, D, or E.</strong> Don't overthink. Your first answer is usually your pattern speaking.</p>
+<hr/>
+<p><strong>Section I: How You Enter Relationships</strong></p>
+<p><strong>1. When you meet someone you're interested in, your first impulse is to:</strong></p>
+<ul>
+<li>A) Imagine the life you could build together</li>
+<li>B) Feel the intensity of the connection immediately and lean in</li>
+<li>C) Make sure they're comfortable and taken care of</li>
+<li>D) Observe them carefully before deciding anything</li>
+<li>E) Try to understand them deeply — what they're really feeling beneath the surface</li>
+</ul>
+<p><strong>2. The early stage of a relationship feels most alive when:</strong></p>
+<ul>
+<li>A) You're planning something together for the future</li>
+<li>B) The chemistry is electric and unpredictable</li>
+<li>C) They're leaning on you and you're showing up for them</li>
+<li>D) Everything has a clear structure — defined, understood, committed</li>
+<li>E) You feel like they <em>really</em> see you and you <em>really</em> see them</li>
+</ul>
+<p><strong>3. You know you're falling for someone when:</strong></p>
+<ul>
+<li>A) You start thinking about how they fit into your future plans</li>
+<li>B) You can't stop thinking about them — the feeling is all-consuming</li>
+<li>C) You start doing things for them without being asked</li>
+<li>D) You feel certain they're reliable and worthy of your trust</li>
+<li>E) You feel like you can sense their inner world without them explaining it</li>
+</ul>
+<p><strong>4. In the first few months, what do you most want from the other person?</strong></p>
+<ul>
+<li>A) Shared vision and ambition</li>
+<li>B) Presence and passion — all of them, all the time</li>
+<li>C) To be needed and important to them</li>
+<li>D) Clarity, commitment, and consistency</li>
+<li>E) Depth — real conversations, real vulnerability</li>
+</ul>
+<hr/>
+<p><strong>Section II: How You Behave in Relationships</strong></p>
+<p><strong>5. During conflict, your default is to:</strong></p>
+<ul>
+<li>A) Focus on what needs to change for both of you to grow</li>
+<li>B) Express everything you're feeling, fully and immediately</li>
+<li>C) Make the conflict stop, even if it means conceding more than you should</li>
+<li>D) Go quiet and process before speaking</li>
+<li>E) Absorb what they're saying emotionally before responding</li>
+</ul>
+<p><strong>6. In a relationship, you are most likely to:</strong></p>
+<ul>
+<li>A) Push your partner toward their goals and potential</li>
+<li>B) Bring energy, fun, and spontaneity to everything</li>
+<li>C) Anticipate their needs before they voice them</li>
+<li>D) Create and maintain the structure that keeps things stable</li>
+<li>E) Provide a level of emotional understanding they've never experienced</li>
+</ul>
+<p><strong>7. When your partner is struggling, you:</strong></p>
+<ul>
+<li>A) Help them problem-solve and find a path forward</li>
+<li>B) Show up intensely — fully present with whatever they need</li>
+<li>C) Set aside your own needs entirely to support them</li>
+<li>D) Give them space, then show up with practical help</li>
+<li>E) Feel their struggle as if it's your own and sit with them in it</li>
+</ul>
+<p><strong>8. The relationship problem you most frequently have is:</strong></p>
+<ul>
+<li>A) Loving the idea of your partner more than the actual person</li>
+<li>B) Burning so bright early on that it's impossible to sustain</li>
+<li>C) Giving so much that you lose yourself and eventually resent it</li>
+<li>D) Being accused of being emotionally unavailable despite feeling deeply</li>
+<li>E) Losing your identity in your partner's world</li>
+</ul>
+<hr/>
+<p><strong>Section III: What You Attract</strong></p>
+<p><strong>9. Your exes would most commonly describe you as:</strong></p>
+<ul>
+<li>A) Supportive, encouraging, patient — sometimes to a fault</li>
+<li>B) Intense, passionate, exciting — and overwhelming</li>
+<li>C) Giving, caring, selfless — maybe a little too much</li>
+<li>D) Loyal, reliable, private — hard to read emotionally</li>
+<li>E) Perceptive, deep, understanding — but sometimes suffocating</li>
+</ul>
+<p><strong>10. The person you most commonly attract:</strong></p>
+<ul>
+<li>A) Has big dreams but needs someone to believe in them</li>
+<li>B) Is mysterious, a little unavailable, emotionally unpredictable</li>
+<li>C) Is going through something — a difficult period, a challenge, a wound</li>
+<li>D) Is charismatic and certain, knows what they want</li>
+<li>E) Is guarded, hard to fully know, fascinating</li>
+</ul>
+<p><strong>11. The relationship you find hardest to leave is one where:</strong></p>
+<ul>
+<li>A) They have so much potential and you've invested so much in it</li>
+<li>B) The chemistry is unlike anything you've felt — even though it's unstable</li>
+<li>C) They need you, and leaving would mean abandoning them</li>
+<li>D) You committed, and commitment is not something you take back easily</li>
+<li>E) You're so intertwined that you don't know where they end and you begin</li>
+</ul>
+<p><strong>12. After a breakup, what you most grieve is:</strong></p>
+<ul>
+<li>A) The future you had planned that won't happen</li>
+<li>B) The feeling — the aliveness that relationship brought you</li>
+<li>C) The role you played — you don't know who you are without it</li>
+<li>D) The disruption — rebuilding the order and stability takes time</li>
+<li>E) The depth of knowing — you've never felt so understood again</li>
+</ul>
+<hr/>
+<p><strong>Section IV: The Pattern</strong></p>
+<p><strong>13. Your most repeating relationship dynamic is:</strong></p>
+<ul>
+<li>A) You see someone's potential and invest — they grow and leave</li>
+<li>B) Incredible intensity early, then either collapse or plateau into something dull</li>
+<li>C) You give everything — they take it and either stay dependent or leave</li>
+<li>D) You show up completely, quietly — they say they need more from you emotionally</li>
+<li>E) You merge completely — the relationship becomes your whole world</li>
+</ul>
+<p><strong>14. What do you most fear in relationships?</strong></p>
+<ul>
+<li>A) Being abandoned after you've poured everything in</li>
+<li>B) The feeling going flat — becoming ordinary</li>
+<li>C) Being unwanted if you stop being useful</li>
+<li>D) Losing your structure, your sense of self</li>
+<li>E) Being alone inside a relationship — present but not truly known</li>
+</ul>
+<p><strong>15. What do you wish your partners understood about you?</strong></p>
+<ul>
+<li>A) That I love you for who you could be — not because I don't accept you now</li>
+<li>B) That my intensity isn't too much — it's just how I love</li>
+<li>C) That I want to be needed — but I also need to matter as a person, not a service</li>
+<li>D) That my loyalty and presence ARE my love, even when I can't say the words</li>
+<li>E) That the depth of what I feel isn't pressure — it's love</li>
+</ul>
+<hr/>
+<p><strong>Section V: The Path Forward</strong></p>
+<p><strong>16. What would it look like for you to love from a place of wholeness?</strong></p>
+<ul>
+<li>A) Loving someone for who they are today, not who they might become</li>
+<li>B) Being present in a relationship that has depth, not just heat</li>
+<li>C) Being chosen freely, not needed desperately</li>
+<li>D) Expressing what I feel, not just demonstrating it through action</li>
+<li>E) Staying connected to myself while being close to someone else</li>
+</ul>
+<p><strong>17. What does "safe" mean to you in a relationship?</strong></p>
+<ul>
+<li>A) That we're building something real together — a direction, a future</li>
+<li>B) That the passion is sustainable, not dependent on intensity</li>
+<li>C) That my presence is wanted, not just my usefulness</li>
+<li>D) That commitments are honored and expectations are clear</li>
+<li>E) That I'm truly known — not just surface-level loved</li>
+</ul>
+<p><strong>18. What would your ideal partner bring to you?</strong></p>
+<ul>
+<li>A) Their own growth, their own direction — so I'm choosing them, not projects</li>
+<li>B) Consistent warmth — fuel for my fire without the drama</li>
+<li>C) Their own wholeness — so they choose me, not need me</li>
+<li>D) The ability to see my devotion for what it is</li>
+<li>E) Groundedness — something solid I can flow around</li>
+</ul>
+<p><strong>19. What pattern are you most committed to breaking?</strong></p>
+<ul>
+<li>A) Loving potential more than presence</li>
+<li>B) Confusing chemistry with compatibility</li>
+<li>C) Earning love through giving</li>
+<li>D) Staying in things past their time out of loyalty</li>
+<li>E) Losing myself in whoever I love</li>
+</ul>
+<p><strong>20. What would you write on a note to your past self before entering your last significant relationship?</strong></p>
+<p><em>Write your answer below — this is the most important question in this workbook.</em></p>
+<div class="write-in"></div>
+<div class="write-in"></div>
+<div class="write-in"></div>
+<hr/>
+<h2>Scoring Your Quiz</h2>
+<p><strong>Count your circled letters:</strong></p>
+<p>A: _____ B: _____ C: _____ D: _____ E: _____</p>
+<p><strong>Your primary element (highest score):</strong> _________________________</p>
+<p><strong>Your secondary element (second highest):</strong> _________________________</p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Dominant Letter</th><th>Elemental Pattern</th></tr>
+</thead><tbody>
+<tr><td>Mostly A</td><td><strong>Wood Pattern</strong> — You love through investment in potential</td></tr>
+<tr><td>Mostly B</td><td><strong>Fire Pattern</strong> — You love through intensity and presence</td></tr>
+<tr><td>Mostly C</td><td><strong>Earth Pattern</strong> — You love through service and nourishment</td></tr>
+<tr><td>Mostly D</td><td><strong>Metal Pattern</strong> — You love through loyalty and consistency</td></tr>
+<tr><td>Mostly E</td><td><strong>Water Pattern</strong> — You love through depth and attunement</td></tr>
+</tbody>
+</table></div>
+<hr/>
+<h2>Your Pattern Signature</h2>
+<p>My Primary Pattern: <strong>_________________________ (Element)</strong></p>
+<p>My Secondary Influence: <strong>_________________________ (Element)</strong></p>
+<p>My Core Love Language (from quiz): _________________________</p>
+<p>My Most Repeated Dynamic: _________________________</p>
+<p><em>(From question 13)</em></p>
+<p>My Deepest Fear in Relationships: _________________________</p>
+<p><em>(From question 14)</em></p>
+<p>What I Wish Partners Understood: _________________________</p>
+<p><em>(From question 15)</em></p>
+<hr/>
+<h2>The Root Wound by Element</h2>
+<p>Understanding the wound beneath the pattern is the bridge between seeing it and changing it.</p>
+<p><strong>Wood's Root Wound:</strong> <em>I am only lovable if I am useful to your growth.</em> Beneath Wood's investment in potential is a belief that their love only has value if it produces something. Pure love — love that doesn't build anything — feels uncomfortable and therefore unsafe.</p>
+<p><strong>Fire's Root Wound:</strong> <em>I am only lovable when I am exciting.</em> Beneath Fire's intensity is a fear that without the heat, there is nothing to love. Ordinary is abandonment. If the feeling fades, they will be left.</p>
+<p><strong>Earth's Root Wound:</strong> <em>I am only lovable if I am needed.</em> Earth's selflessness is not purely generous — it is the safest way to guarantee presence. If they stop giving, will they be wanted? This question never fully leaves Earth's awareness.</p>
+<p><strong>Metal's Root Wound:</strong> <em>I am only lovable if I am reliable.</em> Metal's loyalty is partly love and partly a bet that the safest way to be kept is to be unfailingly consistent. Expressing vulnerability feels like creating a liability.</p>
+<p><strong>Water's Root Wound:</strong> <em>I am only lovable if I am fully felt.</em> Water equates being known with being loved. If a partner can't feel their depth, doesn't see what they're feeling — Water begins to disappear. Not worth knowing means not worth staying for.</p>
+<p><strong>My Root Wound (in my own words):</strong></p>
+<div class="write-in"></div>
+<div class="write-in"></div>
+<hr/>
+<h1 class="chapter-start">CHAPTER 3: The 3 Loops You Keep Repeating</h1>
+<p class="page-indicator"><em>Pages 18–23</em></p>
+<hr/>
+<h2>Why Patterns Are Loops</h2>
+<p>A loop is different from a pattern. A pattern you can see from the outside. A loop, you're inside of — and because you're inside, it feels like the world is moving, not you.</p>
+<p>The three loops described in this chapter are not personality flaws. They are elemental behaviors running on autopilot — behaviors that once served a purpose (usually protection or connection) but have now become the mechanism of your suffering.</p>
+<p>Naming a loop is the first step to stepping outside of it.</p>
+<hr/>
+<h2>Loop 1: The Attraction Loop</h2>
+<p class="oracle-quote">"I'm drawn to them. I don't know why. I just am."</p>
+<p><strong>What it is:</strong> The Attraction Loop is the experience of finding yourself drawn, repeatedly, to the same type of person — even when you logically know they're not what you need.</p>
+<p>This isn't chemistry. This isn't bad luck. This is elemental magnetism.</p>
+<p>In BaZi's controlling cycle, certain elements create immediate, powerful attraction — often because they carry the quality your element most needs to <em>balance</em> itself. The pull is real. It is also predictable.</p>
+<p><strong>How the loop works:</strong></p>
+<p>Your element is in a state of imbalance (too strong or too weak). The element you're attracted to <em>feels</em> like the solution. Early in the relationship, it is — their energy genuinely calibrates yours, and this feels like compatibility. But the controlling dynamic escalates as the relationship deepens. What balanced you begins to control you.</p>
+<p><strong>The Attraction Loop by element:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Your Element</th><th>Who You're Pulled To</th><th>Why It Feels Right</th><th>Why It Eventually Hurts</th></tr>
+</thead><tbody>
+<tr><td>Wood</td><td>Metal — structured, decisive, certain</td><td>Metal's certainty grounds Wood's expansiveness</td><td>Metal cuts Wood; over time, Metal shapes Wood into something smaller</td></tr>
+<tr><td>Fire</td><td>Water — mysterious, deep, calming</td><td>Water's coolness feels like depth to Fire</td><td>Water extinguishes Fire; Fire loses its heat and its aliveness</td></tr>
+<tr><td>Earth</td><td>Wood — exciting, dynamic, ambitious</td><td>Wood's growth feels like something Earth helped create</td><td>Wood exploits Earth's stability, then outgrows the container</td></tr>
+<tr><td>Metal</td><td>Fire — charismatic, warm, certain</td><td>Fire's intensity brings Metal's hidden depths to surface</td><td>Fire melts Metal; Metal loses its shape and its sense of self</td></tr>
+<tr><td>Water</td><td>Earth — stable, grounded, consistent</td><td>Earth's structure gives Water's flow a direction</td><td>Earth can dam Water; Water feels contained and eventually frozen</td></tr>
+</tbody>
+</table></div>
+<p><strong>Reflection: Your Attraction Loop</strong></p>
+<p>Think about your last three significant partners. Write their dominant energetic quality in one word each:</p>
+<p>Partner 1: _________________________</p>
+<p>Partner 2: _________________________</p>
+<p>Partner 3: _________________________</p>
+<p>Do you see a pattern? What element do these qualities suggest?</p>
+<p>The element I keep attracting: _________________________</p>
+<p>How this element makes me feel at first: _________________________</p>
+<p>How this dynamic eventually plays out: _________________________</p>
+<hr/>
+<h2>Loop 2: The Depletion Loop</h2>
+<p class="oracle-quote">"I give everything. I don't understand why I still feel empty."</p>
+<p><strong>What it is:</strong> The Depletion Loop is the experience of pouring tremendous energy into a relationship and feeling, persistently, that it's not enough — or that you're running dry — or both.</p>
+<p>Every element has a <em>mode of giving</em> — the way its energy naturally flows outward toward a partner. The Depletion Loop happens when your giving is not being received in the currency your element needs to receive back.</p>
+<p><strong>The Depletion Loop by element:</strong></p>
+<p><strong>Wood gives:</strong> Vision, encouragement, investment in growth <em>Depleted when:</em> Their partner takes the growth and goes. No one waters Wood back.</p>
+<p><strong>Fire gives:</strong> Passion, presence, intensity, celebration <em>Depleted when:</em> Their partner can't sustain the temperature. Fire dims to keep from burning them. But a dimmed Fire isn't Fire.</p>
+<p><strong>Earth gives:</strong> Nourishment, stability, practical care <em>Depleted when:</em> Their partner takes the care as given and never asks "what do you need?" Earth forgets they have needs too.</p>
+<p><strong>Metal gives:</strong> Loyalty, reliability, structural commitment <em>Depleted when:</em> Their partner needs emotional verbosity that Metal cannot produce. Metal gives more and more action while the partner says they feel nothing.</p>
+<p><strong>Water gives:</strong> Emotional attunement, deep knowing, presence <em>Depleted when:</em> Their partner is not capable of the depth Water offers. Water keeps giving; the partner keeps skimming the surface.</p>
+<p><strong>The Depletion Inventory:</strong></p>
+<p>When I give in relationships, I primarily give: _________________________</p>
+<p>What I give that is rarely received or recognized: _________________________</p>
+<p>What I need to receive that I almost never ask for: _________________________</p>
+<p>The moment I typically feel most depleted is when: _________________________</p>
+<hr/>
+<h2>Loop 3: The Return Loop</h2>
+<p class="oracle-quote">"It's over. I know it's over. So why am I still thinking about them?"</p>
+<p><strong>What it is:</strong> The Return Loop is the inability to fully leave — or fully move on from — a significant relationship. It manifests as cycling back (on-again, off-again), prolonged obsessive thinking after a breakup, or repeatedly choosing partners with the same elemental profile.</p>
+<p>The Return Loop is not about love. It is about <em>unintegrated elemental tension.</em></p>
+<p><strong>Why the Return Loop happens:</strong></p>
+<p>When two elements interact intensely, they alter each other's energy. This alteration doesn't stop when the relationship ends — it continues until the element has <em>integrated</em> what it received from the encounter.</p>
+<p>Wood that was cut by Metal doesn't stop feeling the cuts after Metal leaves. Fire that was extinguished by Water still feels the loss of its heat. The element is trying to complete the process — and the urge to return to the person is the element's instinctive (and misguided) attempt to finish what was started.</p>
+<p><strong>The real question isn't "do I love them?" The real question is: "What unintegrated quality did they carry that my element is still processing?"</strong></p>
+<p><strong>The Return Loop Diagnosis:</strong></p>
+<p>The person I have had the hardest time fully moving on from: _________________________</p>
+<p>Their dominant energy quality (in one word): _________________________</p>
+<p>What they gave my element that it hadn't experienced before: _________________________</p>
+<p>What their energy took from mine that I haven't fully recovered: _________________________</p>
+<p>What elemental quality, if I developed it <em>in myself</em>, would close this loop: _________________________</p>
+<p><em>(This last question is the most important one in this section.)</em></p>
+<hr/>
+<h1 class="chapter-start">CHAPTER 4: Breaking the Cycle</h1>
+<p class="page-indicator"><em>Pages 24–27</em></p>
+<hr/>
+<h2>From Pattern Recognition to Pattern Change</h2>
+<p>You've named the pattern. You've identified the loops. You've located the root wound.</p>
+<p>Now comes the part that is harder to write about in a workbook, because it requires something no book can give you: <em>time in the discomfort of choosing differently.</em></p>
+<p>The exercises in this chapter are designed to be completed slowly — not in one sitting. Return to them when you're activated (attracted to a familiar type, feeling the pull of a Return Loop, finding yourself in the Depletion Loop again).</p>
+<p>They are not tools for insight. They are tools for <em>interruption.</em></p>
+<hr/>
+<h2>Exercise 1: The Relationship Timeline Map</h2>
+<p><strong>Purpose:</strong> To see the elemental pattern across time — not just in your current or most recent experience.</p>
+<p><strong>Instructions:</strong> List your significant relationships (romantic or otherwise deeply formative) in order. For each, identify:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>#</th><th>Person (initials)</th><th>Duration</th><th>Their dominant energy</th><th>Your role</th><th>How it ended</th><th>What it cost you</th></tr>
+</thead><tbody>
+<tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table></div>
+<p><strong>Now look at the columns:</strong></p>
+<p>The pattern in "Their dominant energy": _________________________</p>
+<p>The pattern in "Your role": _________________________</p>
+<p>The pattern in "What it cost you": _________________________</p>
+<p><strong>What this map shows me:</strong></p>
+<div class="write-in"></div>
+<div class="write-in"></div>
+<hr/>
+<h2>Exercise 2: The Elemental Needs Audit</h2>
+<p><strong>Purpose:</strong> To identify what your element actually requires — not what you've been settling for.</p>
+<p><strong>Part A: What your element needs (from Chapter 1)</strong> Write the 3 core needs of your Day Master element from Chapter 1:</p>
+<p>1. _________________________ 2. _________________________ 3. _________________________</p>
+<p><strong>Part B: What you've been receiving</strong> In your last significant relationship, honestly assess how well each need was met:</p>
+<p>Need 1 — Met / Partially Met / Not Met at all Need 2 — Met / Partially Met / Not Met at all Need 3 — Met / Partially Met / Not Met at all</p>
+<p><strong>Part C: What you've been asking for</strong> In that same relationship, what did you actually ask for (verbally, clearly)?</p>
+<div class="write-in"></div>
+<p><strong>The gap between what you need and what you ask for:</strong> This is the depletion engine. Your element is starving for something you're not requesting. Name the gap:</p>
+<div class="write-in"></div>
+<hr/>
+<h2>Exercise 3: The Red Flag Decoder</h2>
+<p><strong>Purpose:</strong> To identify the warning signs you're currently ignoring — and understand <em>why</em> you're drawn to them rather than repelled.</p>
+<p>Every element has a set of "red flags" that look, in the early stages of attraction, like green flags. This is because the elemental pull <em>is</em> real — the energy you're drawn to genuinely does something for your element. The problem is sustainability.</p>
+<p><strong>Red Flags That Look Like Green Flags — by Element:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>If you are Wood...</th><th>Feels like</th><th>Is actually</th></tr>
+</thead><tbody>
+<tr><td>They challenge your ideas</td><td>Intellectual stimulation</td><td>Control</td></tr>
+<tr><td>They're decisive and certain</td><td>Stability you don't have</td><td>Inability to accommodate your growth</td></tr>
+<tr><td>They know exactly what they want</td><td>Clarity</td><td>Rigidity</td></tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>If you are Fire...</th><th>Feels like</th><th>Is actually</th></tr>
+</thead><tbody>
+<tr><td>They're mysterious and hard to read</td><td>Depth</td><td>Emotional unavailability</td></tr>
+<tr><td>The chemistry is immediate and overwhelming</td><td>Compatibility</td><td>Elemental intensity that's unsustainable</td></tr>
+<tr><td>They're unpredictable</td><td>Excitement</td><td>Instability</td></tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>If you are Earth...</th><th>Feels like</th><th>Is actually</th></tr>
+</thead><tbody>
+<tr><td>They need help</td><td>You can be important to them</td><td>They will drain you</td></tr>
+<tr><td>They're struggling and you can fix it</td><td>Purpose</td><td>Dependency</td></tr>
+<tr><td>They lean on you immediately</td><td>Trust</td><td>An unwillingness to carry their own weight</td></tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>If you are Metal...</th><th>Feels like</th><th>Is actually</th></tr>
+</thead><tbody>
+<tr><td>They're charismatic and certain</td><td>Confidence you're drawn to</td><td>Fire energy that will melt your sense of self</td></tr>
+<tr><td>They challenge your structure</td><td>Growth</td><td>Destabilization</td></tr>
+<tr><td>You can't fully predict them</td><td>Mystery</td><td>Inconsistency</td></tr>
+</tbody>
+</table></div>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>If you are Water...</th><th>Feels like</th><th>Is actually</th></tr>
+</thead><tbody>
+<tr><td>They're guarded and hard to reach</td><td>Depth worth discovering</td><td>Emotional unavailability that will never satisfy</td></tr>
+<tr><td>They need you to understand them</td><td>Being chosen for your gifts</td><td>Dependency on your attunement</td></tr>
+<tr><td>You can feel their inner world</td><td>Profound connection</td><td>Merger risk — you'll absorb their reality</td></tr>
+</tbody>
+</table></div>
+<p><strong>My top 3 "red flags that look like green flags":</strong></p>
+<p>1. _________________________ 2. _________________________ 3. _________________________</p>
+<p><strong>When I notice these in a new person, my response will be:</strong></p>
+<div class="write-in"></div>
+<hr/>
+<h2>Exercise 4: The New Decision Framework</h2>
+<p><strong>Purpose:</strong> To create a concrete, elemental-based decision tool for future relationship choices.</p>
+<p>Before entering a new significant relationship, answer these questions:</p>
+<p><strong>1. What element does this person primarily carry?</strong> (Based on their energy, behavior, how they affect you)</p>
+<div class="write-in"></div>
+<p><strong>2. Is this element in my Generating cycle (nourishing) or Controlling cycle (challenging)?</strong></p>
+<div class="write-in"></div>
+<p><strong>3. What does this elemental interaction typically produce over time?</strong> (See Chapter 1 Interaction Map)</p>
+<div class="write-in"></div>
+<p><strong>4. What does my element need from this interaction that it's unlikely to get?</strong></p>
+<div class="write-in"></div>
+<p><strong>5. Am I attracted to who they are — or to what they represent for my element?</strong></p>
+<div class="write-in"></div>
+<p><strong>6. How do I feel in my body when I'm with them?</strong> (Expanded or contracted; energized or depleted)</p>
+<div class="write-in"></div>
+<p><strong>7. Does this person have their own elemental stability — or do they need mine?</strong></p>
+<div class="write-in"></div>
+<p><strong>If 3 or more answers raise concerns: pause.</strong> Not forever. Just long enough to see what you're actually choosing — and why.</p>
+<hr/>
+<h1 class="chapter-start">CHAPTER 5: Your New Elemental Blueprint</h1>
+<p class="page-indicator"><em>Pages 28–31</em></p>
+<hr/>
+<h2>You Are Not Your Pattern</h2>
+<p>Here is the thing The Oracle needs you to understand before you close this workbook:</p>
+<p>The pattern is not you. It is a configuration of energy that emerged from your birth date, your early experiences, and your history of relationships — each one reinforcing certain elemental behaviors while atrophying others.</p>
+<p>You were not born to repeat the loop. You were born with a specific elemental nature that, at its healthiest, is extraordinary.</p>
+<p><strong>Wood at its healthiest</strong> doesn't love potential — it <em>becomes</em> the vision. It grows toward its own light, and the right partner grows alongside it without needing to be watered.</p>
+<p><strong>Fire at its healthiest</strong> burns with sustainable heat. It chooses relationships that feed it, rather than relationships it must constantly ignite. It is bright without being consuming.</p>
+<p><strong>Earth at its healthiest</strong> nourishes from abundance, not from scarcity. It gives because it wants to — not because it fears what happens if it doesn't.</p>
+<p><strong>Metal at its healthiest</strong> expresses as well as demonstrates. Its loyalty becomes the foundation of a relationship rather than the entire architecture of it.</p>
+<p><strong>Water at its healthiest</strong> flows with purpose. It maintains its own form while in close proximity to other energies. It knows where it ends and where the other person begins.</p>
+<p>This version of you is not hypothetical. It is your element, operating without the weight of the loop.</p>
+<hr/>
+<h2>Your Elemental Strengths Declaration</h2>
+<p>Write the three qualities your element brings to relationships at its best. (Return to Chapter 1 if needed.)</p>
+<p><strong>At my best, I bring:</strong></p>
+<p>1. _________________________</p>
+<p>2. _________________________</p>
+<p>3. _________________________</p>
+<p><strong>The person who receives these gifts is lucky. Write that here:</strong></p>
+<p>"The person I partner with is lucky because I bring _________________________, _________________________, and _________________________."</p>
+<hr/>
+<h2>Your Nourishment Map</h2>
+<p>Your element is nourished by a specific other element (see Generating Cycle, Chapter 1). This is not a prescriptive list of who to date — it is a map of the <em>energetic qualities</em> to look for.</p>
+<p><strong>My element:</strong> _________________________</p>
+<p><strong>Nourished by:</strong> _________________________</p>
+<p><strong>What that energy looks like in a person:</strong></p>
+<ul>
+<li>They make me feel _________________________ rather than _________________________</li>
+<li>They bring _________________________ into my world rather than taking _________________________</li>
+<li>When I'm with them, my element feels _________________________ rather than _________________________</li>
+</ul>
+<p><strong>Qualities to look for (translate from elemental to behavioral):</strong></p>
+<div class="write-in"></div>
+<div class="write-in"></div>
+<hr/>
+<h2>Your 2026 Action Plan</h2>
+<p>The Fire Snake year creates specific energetic conditions for each element. Your action for 2026:</p>
+<p><strong>If you are Wood:</strong> Your work this year is <em>discernment</em>. The Snake's Earth energy tests your roots. Let go of relationships that aren't actually feeding you. Say no to potential and yes to presence.</p>
+<p><em>My 2026 commitment:</em> _______________________________________________</p>
+<p><strong>If you are Fire:</strong> 2026 is your power year. The Snake amplifies Fire's radiance. Your work is <em>sustainability</em> — build relationships that can hold your heat, rather than burning through kindling. Choose Wood energy.</p>
+<p><em>My 2026 commitment:</em> _______________________________________________</p>
+<p><strong>If you are Earth:</strong> The Snake year boosts your magnetism. Your work is <em>receptivity</em> — let yourself be chosen without making yourself indispensable first. Practice being, not doing.</p>
+<p><em>My 2026 commitment:</em> _______________________________________________</p>
+<p><strong>If you are Metal:</strong> 2026 activates your relationship palace. Your work is <em>visibility</em> — stop hiding your depth. Let people see the loyalty before they have to earn it. Your person is looking.</p>
+<p><em>My 2026 commitment:</em> _______________________________________________</p>
+<p><strong>If you are Water:</strong> The Fire Snake year is your crucible. Your work is <em>clarity</em> — trust the relationships that feel real and release the ones that only feel familiar. Your gut is never more accurate than in 2026.</p>
+<p><em>My 2026 commitment:</em> _______________________________________________</p>
+<hr/>
+<h2>The Oracle's Final Word</h2>
+<p>You came to this workbook because something in the patterns of your love life brought you here. That instinct — the one that said <em>something is running underneath this that I can't see yet</em> — was correct.</p>
+<p>The pattern is real. The loops are real. The root wound is real.</p>
+<p>And now they have names.</p>
+<p>Naming a thing does not immediately change it. But it changes your relationship to it — and that shift, small as it feels, is the beginning of a different kind of choosing.</p>
+<p>The Oracle does not promise you a perfect match or a pain-free future. The Oracle promises you this:</p>
+<p><em>Once you can see the pattern, you are no longer inside it. You're watching it. And from outside, you get to choose.</em></p>
+<p>That choice — made consciously, from the most balanced version of your element — is what this workbook was always about.</p>
+<p>Go make it.</p>
+<hr/>
+<p><em>— The Oracle</em> <em>elemental.bond</em></p>
+<hr/>
+<h1 class="chapter-start">APPENDIX: Element Interaction Quick Reference</h1>
+<p class="page-indicator"><em>Page 32</em></p>
+<hr/>
+<h2>Compatibility at a Glance</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Your Element</th><th>Most Natural Partnership</th><th>Most Challenging (but Growth-Producing)</th><th>Avoid Long-Term</th></tr>
+</thead><tbody>
+<tr><td>Wood</td><td>Water (nourishes), Fire (uses your gifts)</td><td>Metal (controls you), Earth (drains you)</td><td>Extended Metal dominance</td></tr>
+<tr><td>Fire</td><td>Wood (feeds you), Earth (receives you)</td><td>Water (extinguishes), Metal (hardens)</td><td>Water-Fire without awareness</td></tr>
+<tr><td>Earth</td><td>Fire (produces you), Metal (refines you)</td><td>Wood (exploits), Water (tests limits)</td><td>Unaware Wood dynamics</td></tr>
+<tr><td>Metal</td><td>Earth (supports), Water (directs your gifts)</td><td>Fire (melts you), Wood (resists)</td><td>Fire without containment</td></tr>
+<tr><td>Water</td><td>Metal (generates), Wood (receives you)</td><td>Earth (dams), Fire (evaporates)</td><td>Formless Fire-Water cycling</td></tr>
+</tbody>
+</table></div>
+<hr/>
+<h2>Red Flag Summary by Element</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Element</th><th>Top Red Flag</th><th>Why It's Disguised</th></tr>
+</thead><tbody>
+<tr><td>Wood</td><td>"I can see their potential"</td><td>Feels like love; is actually a project</td></tr>
+<tr><td>Fire</td><td>"The chemistry is unlike anything"</td><td>Feels like compatibility; is actually elemental intensity</td></tr>
+<tr><td>Earth</td><td>"They need me"</td><td>Feels like love; is actually dependency</td></tr>
+<tr><td>Metal</td><td>"I committed, so I'm staying"</td><td>Feels like integrity; is actually loyalty past the expiration</td></tr>
+<tr><td>Water</td><td>"I understand them better than anyone"</td><td>Feels like connection; is actually merger risk</td></tr>
+</tbody>
+</table></div>
+<hr/>
+<h2>Post-Breakup Recovery Guide</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr><th>Element</th><th>What You Need</th><th>What Won't Help</th></tr>
+</thead><tbody>
+<tr><td>Wood</td><td>A project; forward motion</td><td>Isolation or stagnation</td></tr>
+<tr><td>Fire</td><td>Social connection; new fuel</td><td>Quiet solitary processing</td></tr>
+<tr><td>Earth</td><td>Structure; routine; self-nourishment</td><td>Jumping immediately into caretaking someone new</td></tr>
+<tr><td>Metal</td><td>Clarity; journaling; understanding</td><td>Pretending it doesn't hurt</td></tr>
+<tr><td>Water</td><td>Solitude; time; grieving fully</td><td>Immediately dating again</td></tr>
+</tbody>
+</table></div>
+<hr/>
+<p><em>Pattern Breaker Workbook — First Edition</em> <em>© The Oracle / elemental.bond</em> <em>For personal use only. Not for redistribution.</em></p>
+<p><em>Go deeper at elemental.bond — free BaZi reading included with purchase.</em></p>
+</body>
+</html>

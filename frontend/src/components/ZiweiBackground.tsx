@@ -128,13 +128,16 @@ const blendConstellation = (from: Point[], to: Point[], progress: number) =>
 
 interface ZiweiBackgroundProps {
   activeIndex: number;
+  animate?: boolean;
 }
 
 
-export function ZiweiBackground({ activeIndex }: ZiweiBackgroundProps) {
+export function ZiweiBackground({ activeIndex, animate = true }: ZiweiBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const activeIndexRef = useRef(((activeIndex % CONSTELLATIONS.length) + CONSTELLATIONS.length) % CONSTELLATIONS.length);
   const renderStaticRef = useRef<(() => void) | null>(null);
+  const animateRef = useRef(animate);
+  animateRef.current = animate;
 
   useEffect(() => {
     activeIndexRef.current = ((activeIndex % CONSTELLATIONS.length) + CONSTELLATIONS.length) % CONSTELLATIONS.length;
@@ -399,9 +402,9 @@ export function ZiweiBackground({ activeIndex }: ZiweiBackgroundProps) {
       renderFrame(performance.now(), true);
     };
 
-    const animate = (time: number) => {
+    const animateLoop = (time: number) => {
       renderFrame(time);
-      rafId = window.requestAnimationFrame(animate);
+      rafId = window.requestAnimationFrame(animateLoop);
     };
 
     const stopAnimation = () => {
@@ -417,7 +420,7 @@ export function ZiweiBackground({ activeIndex }: ZiweiBackgroundProps) {
         return;
       }
       previousTime = performance.now();
-      rafId = window.requestAnimationFrame(animate);
+      rafId = window.requestAnimationFrame(animateLoop);
     };
 
     const resize = () => {
@@ -441,7 +444,9 @@ export function ZiweiBackground({ activeIndex }: ZiweiBackgroundProps) {
         stopAnimation();
         return;
       }
-      startAnimation();
+      if (animateRef.current) {
+        startAnimation();
+      }
     };
 
     const onMotionPreferenceChange = (event: MediaQueryListEvent) => {
@@ -455,7 +460,9 @@ export function ZiweiBackground({ activeIndex }: ZiweiBackgroundProps) {
     };
 
     resize();
-    if (reduceMotion) {
+    if (!animateRef.current) {
+      renderFrame(performance.now(), true);
+    } else if (reduceMotion) {
       renderFrame(performance.now(), true);
     } else {
       startAnimation();

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
 import { InkButton } from "../components/InkButton";
+import { Breadcrumbs } from "../components/Breadcrumbs";
 import { ELEMENTS, ELEMENT_LABELS, ELEMENT_CHINESE, getElementPairContent, formatElement, getRelationship } from "../constants/elements";
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
@@ -66,6 +67,12 @@ export default function ElementCompatibilityPage() {
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       </Helmet>
 
+      <Breadcrumbs items={[
+        { label: "Home", path: "/" },
+        { label: "Elements", path: "/elements/wood" },
+        { label: `${label1} & ${label2}` },
+      ]} />
+
       {/* Relationship badge */}
       <section className="landing-hero">
         <span className="landing-hero__badge">{rel === "same" ? "Same Element " : rel === "generates" || rel === "generated_by" ? "Generative Cycle " : "Controlling Cycle "}Pair</span>
@@ -123,6 +130,16 @@ export default function ElementCompatibilityPage() {
           <InkButton type="button" full onClick={() => navigate("/")}>
             Reveal Your Elemental Pattern
           </InkButton>
+        </div>
+
+        {/* Cross-link to element personality pages */}
+        <div style={{ marginTop: "32px", display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+          <a href={`/elements/${e1}`} className="oracle-button oracle-button--secondary" style={{ fontSize: "13px", padding: "8px 20px", textDecoration: "none" }}>
+            Explore {label1} Personality →
+          </a>
+          <a href={`/elements/${e2}`} className="oracle-button oracle-button--secondary" style={{ fontSize: "13px", padding: "8px 20px", textDecoration: "none" }}>
+            Explore {label2} Personality →
+          </a>
         </div>
       </section>
     </div>

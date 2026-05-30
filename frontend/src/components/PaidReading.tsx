@@ -27,7 +27,7 @@ const LockedSection: React.FC<LockedSectionProps> = ({ icon, title, description 
 };
 
 interface PaidReadingProps {
-  onUnlock: (tier: 'basic' | 'premium') => void;
+  onUnlock: () => void;
   className?: string;
 }
 
@@ -46,22 +46,22 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
       </div>
 
       <div className="locked-sections">
-        <LockedSection 
+        <LockedSection
           icon="🔮"
           title="The Hidden Dynamics"
           description="The patterns you can't see. The dynamics you keep repeating. The truth about what's really happening."
         />
-        <LockedSection 
+        <LockedSection
           icon="📅"
           title="Your 2026 Timeline"
           description="Month-by-month guidance. When to push forward. When to pull back. When to make your move."
         />
-        <LockedSection 
+        <LockedSection
           icon="⚡"
           title="The Action Protocol"
           description="5 specific steps to break the pattern. Not generic advice. Actual protocols you can implement today."
         />
-        <LockedSection 
+        <LockedSection
           icon="✨"
           title="Your Unique Edge"
           description="The hidden strength in your dynamic. What makes this pairing powerful. How to leverage it."
@@ -69,7 +69,7 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
       </div>
 
       <div className="unlock-options">
-        <div className="unlock-card">
+        <div className="unlock-card unlock-card-premium">
           <div className="unlock-card-header">
             <span className="unlock-card-icon">📖</span>
             <h3 className="unlock-card-title">Complete Reading</h3>
@@ -82,36 +82,13 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
             <li>✓ Full pattern analysis</li>
             <li>✓ 2026 timeline guidance</li>
             <li>✓ Specific action steps</li>
-          </ul>
-          <button
-            className="unlock-btn unlock-btn-basic"
-            onClick={() => onUnlock('basic')}
-          >
-            Unlock Full Reading
-          </button>
-        </div>
-
-        <div className="unlock-card unlock-card-premium">
-          <div className="unlock-card-badge">Most Popular</div>
-          <div className="unlock-card-header">
-            <span className="unlock-card-icon">📜</span>
-            <h3 className="unlock-card-title">PDF Report</h3>
-          </div>
-          <div className="unlock-card-price">
-            <span className="price-currency">$</span>
-            <span className="price-amount">27</span>
-          </div>
-          <ul className="unlock-card-features">
-            <li>✓ Everything in Complete Reading</li>
-            <li>✓ Beautiful PDF report</li>
-            <li>✓ Detailed charts & visuals</li>
-            <li>✓ Save & share forever</li>
+            <li>✓ Instant access with license key</li>
           </ul>
           <button
             className="unlock-btn unlock-btn-premium"
-            onClick={() => onUnlock('premium')}
+            onClick={onUnlock}
           >
-            Get PDF Report
+            Unlock Full Reading
           </button>
         </div>
       </div>

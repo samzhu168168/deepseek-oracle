@@ -37,6 +37,7 @@ const ARTICLES_DIR = path.resolve(ROOT, "..", "backend", "app", "data", "article
 const WAIT_FOR = [
   { prefix: "/articles/", selector: ".article-content" },
   { prefix: "/compatibility/elements/", selector: ".landing-hero" },
+  { prefix: "/elements/", selector: ".element-personality-hero" },
   { prefix: "/articles", selector: ".article-grid" },
   { prefix: "/", selector: ".bond-hero" },
 ];
@@ -156,10 +157,37 @@ async function prerender() {
   let browser;
   try {
     const puppeteer = await import("puppeteer");
-    browser = await puppeteer.default.launch({
+
+    // Try known Chromium paths (Vercel, local, etc.)
+    const possiblePaths = [
+      process.env.CHROME_PATH,
+      process.env.CHROMIUM_PATH,
+      "/usr/bin/chromium",
+      "/usr/bin/chromium-browser",
+      "/usr/bin/google-chrome",
+      "/usr/bin/google-chrome-stable",
+    ].filter(Boolean);
+
+    const launchOpts = {
       headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
-    });
+      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+    };
+
+    // Try each path, or Puppeteer's bundled browser
+    for (const execPath of possiblePaths) {
+      try {
+        browser = await puppeteer.default.launch({ ...launchOpts, executablePath: execPath });
+        console.log(`[prerender] Launched Chromium at: ${execPath}`);
+        break;
+      } catch {
+        // Try next path
+      }
+    }
+
+    if (!browser) {
+      browser = await puppeteer.default.launch(launchOpts);
+      console.log("[prerender] Launched Puppeteer with bundled Chromium");
+    }
   } catch (e) {
     console.warn(`[prerender] Puppeteer not available (${e.message})`);
     console.warn("[prerender] Skipping prerender — SPA fallback will serve pages.");

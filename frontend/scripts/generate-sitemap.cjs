@@ -32,6 +32,7 @@ const STATIC_URLS = [
   { loc: "/result", priority: "0.8" },
   { loc: "/bazi", priority: "0.9" },
   { loc: "/articles", priority: "0.9" },
+  { loc: "/about", priority: "0.7" },
 ];
 
 function main() {
@@ -72,6 +73,33 @@ function main() {
     }
   }
 
+  // Element personality pages: 5
+  for (const e of ELEMENTS) {
+    urls.push({
+      loc: `${SITE_URL}/elements/${e}`,
+      lastmod: "2026-05-19",
+      changefreq: "monthly",
+      priority: "0.8",
+    });
+  }
+
+  // Monthly horoscope pages: 5 elements × 12 months = 60
+  const MONTHS = [
+    "2026-june", "2026-july", "2026-august", "2026-september",
+    "2026-october", "2026-november", "2026-december",
+    "2027-january", "2027-february", "2027-march", "2027-april", "2027-may",
+  ];
+  for (const e of ELEMENTS) {
+    for (const m of MONTHS) {
+      urls.push({
+        loc: `${SITE_URL}/elements/${e}/${m}`,
+        lastmod: "2026-05-19",
+        changefreq: "monthly",
+        priority: "0.7",
+      });
+    }
+  }
+
   // Article pages
   try {
     const metadata = JSON.parse(fs.readFileSync(ARTICLES_JSON, "utf-8"));
@@ -108,7 +136,7 @@ ${urls.map((u) => `  <url>
   routePaths.push("/articles");
   for (var i = 0; i < urls.length; i++) {
     var p = urls[i].loc.replace(SITE_URL, "");
-    if (p && (p.includes("/articles/") || p.includes("/compatibility/elements/"))) {
+    if (p && (p.includes("/articles/") || p.includes("/compatibility/elements/") || p.includes("/elements/"))) {
       routePaths.push(p);
     }
   }

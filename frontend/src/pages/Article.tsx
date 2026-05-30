@@ -3,6 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import { MarkdownRenderer } from "../components/MarkdownRenderer";
+import { Breadcrumbs } from "../components/Breadcrumbs";
+import { RelatedArticles } from "../components/RelatedArticles";
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
 const apiBase = import.meta.env.PROD ? "" : (import.meta.env.VITE_API_URL || "");
@@ -143,6 +145,12 @@ export default function ArticlePage() {
         </script>
       </Helmet>
 
+      <Breadcrumbs items={[
+        { label: "Home", path: "/" },
+        { label: "Articles", path: "/articles" },
+        { label: article.title },
+      ]} />
+
       {/* Reading progress bar */}
       <div className="article-progress" style={{ width: `${progress}%` }} />
 
@@ -200,6 +208,9 @@ export default function ArticlePage() {
           &#10024; Get Your Free Reading
         </a>
       </div>
+
+      {/* Related Articles */}
+      <RelatedArticles slugs={article.related_articles} title="Related Articles" />
 
       {/* Back link */}
       <div className="article-back">

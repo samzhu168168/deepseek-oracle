@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 
+import { Breadcrumbs } from "../components/Breadcrumbs";
 import { InkButton } from "../components/InkButton";
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
@@ -70,6 +71,13 @@ export default function CompatibilityPage() {
         <meta name="twitter:description" content={description} />
         <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
       </Helmet>
+
+      <Breadcrumbs items={[
+        { label: "Home", path: "/" },
+        { label: "Compatibility", path: "/" },
+        { label: `${sign1} & ${sign2}` },
+      ]} />
+
       <section className="landing-hero">
         <span className="landing-hero__badge">Compatibility Blueprint</span>
         <h1 className="landing-hero__title">{title}</h1>

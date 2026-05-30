@@ -36,6 +36,7 @@ except ImportError:
 # Backend imports
 from app.config import Config
 from app.llm_providers import create_provider
+from app.llm_providers.deepseek import DeepSeekProvider
 
 ARTICLES_DIR = BACKEND_DIR / "app" / "data" / "articles"
 METADATA_PATH = ARTICLES_DIR / "metadata.json"
@@ -45,7 +46,7 @@ PROMPT_TEMPLATE = """You are an expert SEO content writer for Elemental Bond, a 
 Generate a complete article in JSON format. The output MUST be ONLY valid JSON â€” no markdown fences, no explanation before or after.
 
 ## Output JSON Schema
-{
+{{
   "id": "kebab-case-slug",
   "slug": "kebab-case-slug",
   "title": "Article title (max 60 chars)",
@@ -56,22 +57,22 @@ Generate a complete article in JSON format. The output MUST be ONLY valid JSON â
   "updated": "{today}",
   "author": "Elemental Bond Oracle",
   "reading_time_minutes": 7,
-  "meta": {
+  "meta": {{
     "title": "SEO title (max 60 chars, include | Elemental Bond)",
     "description": "SEO description (max 160 chars)",
     "keywords": "comma, separated, keywords, 5-8"
-  },
-  "content": {
+  }},
+  "content": {{
     "hook": "One compelling opening paragraph that hooks the reader. 2-3 sentences.",
     "body_sections": [
-      {"heading": "Section Heading", "body": "Section body in markdown. Use **bold** for emphasis. 2-4 paragraphs. Include specific BaZi terminology and practical insights."},
-      {"heading": "Next Section", "body": "..."}
+      {{"heading": "Section Heading", "body": "Section body in markdown. Use **bold** for emphasis. 2-4 paragraphs. Include specific BaZi terminology and practical insights."}},
+      {{"heading": "Next Section", "body": "..."}}
     ],
     "key_insight": "One powerful closing insight. 1-2 sentences.",
     "cta": "Call to action inviting the reader to get their free BaZi reading. 1 sentence."
-  },
+  }},
   "related_articles": []
-}
+}}
 
 ## Article Content Rules
 - Tone: Authoritative but warm. Like a knowledgeable mentor, not a salesman.
@@ -143,9 +144,17 @@ def generate_article(
     print(f"[generate] Calling LLM for: {topic}")
 
     try:
-        provider = create_provider("fallback", Config)
-        response = provider.generate(prompt, max_tokens=4096)
-        article = _extract_json(response)
+        api_key = os.environ.get("DEEPSEEK_API_KEY", "")
+        if not api_key:
+            print("[generate] ERROR: DEEPSEEK_API_KEY not set", file=sys.stderr)
+            return None
+        provider = DeepSeekProvider(
+            api_key=api_key,
+            base_url=os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1"),
+            model="deepseek-chat",
+        )
+        result = provider.generate(prompt, timeout_s=120)
+        article = _extract_json(result.content)
 
         # Validate required fields
         required = ["id", "slug", "title", "description", "category", "content"]

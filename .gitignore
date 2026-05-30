@@ -64,3 +64,13 @@ scripts/ziwei_dataset/*.zip
 scripts/ziwei_dataset/samples/
 
 .env*.local
+
+# 本地素材资源（视频/截图，不入版本库）
+素材/
+截图/
+营销资料/
+
+# 大型二进制文件
+*.mp4
+*.mov
+*.avi

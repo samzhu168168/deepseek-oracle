@@ -23,6 +23,70 @@ const CATEGORY_LABELS: Record<string, string> = {
   "element-guide": "Element Guides",
 };
 
+/** Fallback articles when API is unavailable */
+const FALLBACK_ARTICLES: ArticleMeta[] = [
+  {
+    id: "bazi-five-elements-guide",
+    slug: "bazi-five-elements-guide",
+    title: "The Complete Guide to the Five Elements in BaZi Astrology",
+    description: "Everything you need to know about Wood, Fire, Earth, Metal, and Water in your birth chart. Understand the generative and controlling cycles.",
+    category: "bazi-guide",
+    tags: ["bazi", "five-elements", "wu-xing", "beginners-guide", "elemental-theory"],
+    published: "2026-05-04",
+    reading_time_minutes: 10,
+  },
+  {
+    id: "understanding-day-master-bazi",
+    slug: "understanding-day-master-bazi",
+    title: "Understanding Your Day Master in BaZi — The Core of Your Chart",
+    description: "Your Day Master (日主) represents your core self in BaZi. Learn what each of the 10 Day Master types reveals about your personality and strengths.",
+    category: "bazi-guide",
+    tags: ["day-master", "bazi", "four-pillars", "personality", "self-discovery"],
+    published: "2026-05-05",
+    reading_time_minutes: 9,
+  },
+  {
+    id: "four-pillars-bazi-explained",
+    slug: "four-pillars-bazi-explained",
+    title: "The Four Pillars of Destiny Explained — Your Complete BaZi Birth Chart",
+    description: "The Four Pillars (Year, Month, Day, Hour) form your BaZi destiny code. Understand each pillar's role in shaping your personality, career, relationships, and life path.",
+    category: "bazi-guide",
+    tags: ["four-pillars", "bazi", "birth-chart", "destiny", "heavenly-stems", "earthly-branches"],
+    published: "2026-05-13",
+    reading_time_minutes: 11,
+  },
+  {
+    id: "wood-fire-compatibility-bazi",
+    slug: "wood-fire-compatibility-bazi",
+    title: "Wood and Fire Element Compatibility in BaZi",
+    description: "Discover how the Wood-Fire elemental dynamic creates passion, growth, and creative tension in relationships. A complete BaZi compatibility guide.",
+    category: "element-compatibility",
+    tags: ["wood", "fire", "bazi", "five-elements", "compatibility"],
+    published: "2026-05-01",
+    reading_time_minutes: 7,
+  },
+  {
+    id: "wood-element-personality-bazi",
+    slug: "wood-element-personality-bazi",
+    title: "The Wood Element in BaZi — Personality, Relationships, and Life Path",
+    description: "Wood-type personalities are visionary, growth-oriented, and expansive. Discover what makes a Wood Day Master tick, and who they match best with.",
+    category: "element-guide",
+    tags: ["wood", "bazi", "personality", "day-master", "jia-yi"],
+    published: "2026-05-08",
+    reading_time_minutes: 7,
+  },
+  {
+    id: "2026-snake-year-bazi-element-types",
+    slug: "2026-snake-year-bazi-element-types",
+    title: "2026 Snake Year: What Each BaZi Element Should Know",
+    description: "Discover how the 2026 Bing Wu Snake Year affects each BaZi Element type. Learn which Day Masters thrive and how to navigate the fire energy.",
+    category: "bazi-guide",
+    tags: ["2026 snake year", "bazi elements", "bing wu", "day master", "element luck", "five elements"],
+    published: "2026-05-17",
+    reading_time_minutes: 7,
+  },
+];
+
 export default function ArticleListPage() {
   const [articles, setArticles] = useState<ArticleMeta[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,9 +100,15 @@ export default function ArticleListPage() {
     fetch(url)
       .then((r) => r.json())
       .then((data) => {
-        if (data.success) setArticles(data.articles);
+        if (data.success && data.articles?.length > 0) {
+          setArticles(data.articles);
+        } else {
+          setArticles(FALLBACK_ARTICLES);
+        }
       })
-      .catch(() => {})
+      .catch(() => {
+        setArticles(FALLBACK_ARTICLES);
+      })
       .finally(() => setLoading(false));
   }, [activeCategory, apiBase]);
 

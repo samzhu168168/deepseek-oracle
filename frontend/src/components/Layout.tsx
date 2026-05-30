@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 import { ZiweiBackground } from "./ZiweiBackground";
+import { ExitIntentModal } from "./ExitIntentModal";
 
 export function Layout() {
   const location = useLocation();
@@ -42,13 +43,17 @@ export function Layout() {
 
   const navLinks = [
     { to: "/", label: "Compatibility" },
+    { to: "/elements/wood", label: "Elements" },
     { to: "/bazi", label: "BaZi Reading" },
     { to: "/articles", label: "Articles" },
   ];
 
+  // Only animate the galaxy background on result/reading pages for visual impact
+  const shouldAnimateBg = location.pathname === "/result" || location.pathname === "/bazi";
+
   return (
     <div className="app-shell">
-      <ZiweiBackground activeIndex={activeConstellationIndex} />
+      <ZiweiBackground activeIndex={activeConstellationIndex} animate={shouldAnimateBg} />
       <div className="app-chroma-line" aria-hidden="true">
         <span />
       </div>
@@ -121,16 +126,19 @@ export function Layout() {
       <footer className="app-footer">
         <p>Elemental Bond · Ancient Chinese Compatibility Oracle</p>
         <nav className="app-footer__social" aria-label="Social media">
-          <a href="https://twitter.com/elementalbond" target="_blank" rel="noopener noreferrer">X / Twitter</a>
-          <a href="https://instagram.com/elementalbond" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <span style={{ color: "var(--oracle-text-muted)" }}>Social coming soon</span>
         </nav>
         <nav className="app-footer__nav">
           <a href="/">BaZi Compatibility</a>
+          <a href="/elements/wood">Element Personalities</a>
           <a href="/bazi">BaZi Reading</a>
           <a href="/articles">Articles</a>
-          <a href="/compatibility/aries-and-taurus">Element Compatibility</a>
+          <a href="/about">About</a>
+          <a href="/compatibility/elements/wood-and-fire">Element Compatibility</a>
         </nav>
       </footer>
+
+      <ExitIntentModal />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 // Email gate component - appears after teaser to collect email and unlock preview
 
 import { useState, useEffect } from 'react'
+import { getPreviewUnlockCount } from '../utils/counters'
 
 interface EmailGateModalProps {
   isOpen: boolean
@@ -21,6 +22,7 @@ export function EmailGateModal({
   const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [previewCount] = useState(() => getPreviewUnlockCount())
 
   // Reset state when closing
   useEffect(() => {
@@ -174,7 +176,7 @@ export function EmailGateModal({
         {/* Social proof */}
         <div className="email-gate-social">
           <span>✨</span>
-          <span><strong>2,847</strong> souls unlocked their preview this month</span>
+          <span><strong>{previewCount.toLocaleString()}</strong> souls unlocked their preview this month</span>
         </div>
       </div>
     </div>

@@ -128,18 +128,18 @@ export default function BaZiPage() {
     }
   };
 
-  // Auto-open email gate 3 seconds after reading loads
+  // Auto-open email gate 6 seconds after reading loads
   useEffect(() => {
     if (reading && !emailUnlocked && !emailModalOpen) {
-      const timer = setTimeout(() => setEmailModalOpen(true), 3000);
+      const timer = setTimeout(() => setEmailModalOpen(true), 6000);
       return () => clearTimeout(timer);
     }
   }, [reading, emailUnlocked, emailModalOpen]);
 
-  // Show paywall 8 seconds after reading loads
+  // Show paywall 15 seconds after reading loads
   useEffect(() => {
     if (reading && !showPaywall) {
-      const timer = setTimeout(() => setShowPaywall(true), 8000);
+      const timer = setTimeout(() => setShowPaywall(true), 15000);
       return () => clearTimeout(timer);
     }
   }, [reading, showPaywall]);

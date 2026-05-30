@@ -17,8 +17,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ["react", "react-dom", "react-router-dom"],
-          charts: ["echarts", "echarts-for-react"],
-          graphics: ["pixi.js"],
           imaging: ["html-to-image"],
         },
       },

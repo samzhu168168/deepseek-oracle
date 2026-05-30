@@ -5,7 +5,13 @@
     "title": "Wood and Fire Element Compatibility in BaZi",
     "description": "Discover how the Wood-Fire elemental dynamic creates passion, growth, and creative tension in relationships. A complete BaZi compatibility guide.",
     "category": "element-compatibility",
-    "tags": ["wood", "fire", "bazi", "five-elements", "compatibility"],
+    "tags": [
+      "wood",
+      "fire",
+      "bazi",
+      "five-elements",
+      "compatibility"
+    ],
     "published": "2026-05-01",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -17,7 +23,13 @@
     "title": "Water and Metal Element Compatibility — Deep Wisdom of BaZi",
     "description": "Water and Metal create a naturally supportive BaZi pairing. Learn how Metal generates Water energy and what this means for your relationship.",
     "category": "element-compatibility",
-    "tags": ["water", "metal", "bazi", "five-elements", "compatibility"],
+    "tags": [
+      "water",
+      "metal",
+      "bazi",
+      "five-elements",
+      "compatibility"
+    ],
     "published": "2026-05-02",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -29,7 +41,13 @@
     "title": "Earth and Fire — The Nurturing Flame in BaZi Relationships",
     "description": "Earth and Fire form a generative cycle in BaZi. Fire creates Earth, and together they build stability, warmth, and lasting connection.",
     "category": "element-compatibility",
-    "tags": ["earth", "fire", "bazi", "five-elements", "compatibility"],
+    "tags": [
+      "earth",
+      "fire",
+      "bazi",
+      "five-elements",
+      "compatibility"
+    ],
     "published": "2026-05-03",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -41,7 +59,13 @@
     "title": "The Complete Guide to the Five Elements in BaZi Astrology",
     "description": "Everything you need to know about Wood, Fire, Earth, Metal, and Water in your birth chart. Understand the generative and controlling cycles.",
     "category": "bazi-guide",
-    "tags": ["bazi", "five-elements", "wu-xing", "beginners-guide", "elemental-theory"],
+    "tags": [
+      "bazi",
+      "five-elements",
+      "wu-xing",
+      "beginners-guide",
+      "elemental-theory"
+    ],
     "published": "2026-05-04",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -53,7 +77,13 @@
     "title": "Understanding Your Day Master in BaZi — The Core of Your Chart",
     "description": "Your Day Master (日主) represents your core self in BaZi. Learn what each of the 10 Day Master types reveals about your personality, strengths, and relationship patterns.",
     "category": "bazi-guide",
-    "tags": ["day-master", "bazi", "four-pillars", "personality", "self-discovery"],
+    "tags": [
+      "day-master",
+      "bazi",
+      "four-pillars",
+      "personality",
+      "self-discovery"
+    ],
     "published": "2026-05-05",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -65,7 +95,13 @@
     "title": "BaZi Element Remedy — How to Balance Your Five Elements",
     "description": "Is your chart missing an element? Learn how to use element remedies — colors, crystals, directions, and lifestyle adjustments — to restore harmony in your life.",
     "category": "bazi-guide",
-    "tags": ["element-remedy", "bazi", "five-elements", "balance", "feng-shui"],
+    "tags": [
+      "element-remedy",
+      "bazi",
+      "five-elements",
+      "balance",
+      "feng-shui"
+    ],
     "published": "2026-05-06",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -77,7 +113,13 @@
     "title": "BaZi Luck Phases and Relationship Timing — When Love Blossoms",
     "description": "Your BaZi chart reveals not just who you are, but when your relationship luck peaks. Learn to read your 10-year luck cycles and annual energies for love.",
     "category": "bazi-guide",
-    "tags": ["luck-phases", "bazi", "relationship-timing", "ten-year-cycles", "annual-fortune"],
+    "tags": [
+      "luck-phases",
+      "bazi",
+      "relationship-timing",
+      "ten-year-cycles",
+      "annual-fortune"
+    ],
     "published": "2026-05-07",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -89,7 +131,13 @@
     "title": "The Wood Element in BaZi — Personality, Relationships, and Life Path",
     "description": "Wood-type personalities are visionary, growth-oriented, and expansive. Discover what makes a Wood Day Master tick, and who they match best with.",
     "category": "element-guide",
-    "tags": ["wood", "bazi", "personality", "day-master", "jia-yi"],
+    "tags": [
+      "wood",
+      "bazi",
+      "personality",
+      "day-master",
+      "jia-yi"
+    ],
     "published": "2026-05-08",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -101,7 +149,13 @@
     "title": "The Fire Element in BaZi — Passion, Expression, and Relationship Dynamics",
     "description": "Fire personalities radiate warmth, charisma, and creative power. Learn about Fire Day Masters and their elemental compatibility in relationships.",
     "category": "element-guide",
-    "tags": ["fire", "bazi", "personality", "day-master", "bing-ding"],
+    "tags": [
+      "fire",
+      "bazi",
+      "personality",
+      "day-master",
+      "bing-ding"
+    ],
     "published": "2026-05-09",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -113,7 +167,13 @@
     "title": "The Metal Element in BaZi — Structure, Determination, and Love",
     "description": "Metal personalities are precise, strong-willed, and value integrity above all. Explore the inner world of Metal Day Masters and their perfect elemental match.",
     "category": "element-guide",
-    "tags": ["metal", "bazi", "personality", "day-master", "geng-xin"],
+    "tags": [
+      "metal",
+      "bazi",
+      "personality",
+      "day-master",
+      "geng-xin"
+    ],
     "published": "2026-05-10",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -125,7 +185,13 @@
     "title": "The Water Element in BaZi — Depth, Intuition, and Emotional Wisdom",
     "description": "Water personalities are deep, intuitive, and emotionally intelligent. Uncover the mysteries of Water Day Masters and their relationship compatibility.",
     "category": "element-guide",
-    "tags": ["water", "bazi", "personality", "day-master", "ren-gui"],
+    "tags": [
+      "water",
+      "bazi",
+      "personality",
+      "day-master",
+      "ren-gui"
+    ],
     "published": "2026-05-11",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -137,7 +203,13 @@
     "title": "The Earth Element in BaZi — Stability, Nurturing, and Relationship Harmony",
     "description": "Earth personalities are grounded, reliable, and deeply nurturing. Learn about Earth Day Masters and which elements create their strongest bonds.",
     "category": "element-guide",
-    "tags": ["earth", "bazi", "personality", "day-master", "wu-ji"],
+    "tags": [
+      "earth",
+      "bazi",
+      "personality",
+      "day-master",
+      "wu-ji"
+    ],
     "published": "2026-05-12",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
@@ -149,10 +221,209 @@
     "title": "The Four Pillars of Destiny Explained — Your Complete BaZi Birth Chart",
     "description": "The Four Pillars (Year, Month, Day, Hour) form your BaZi destiny code. Understand each pillar's role in shaping your personality, career, relationships, and life path.",
     "category": "bazi-guide",
-    "tags": ["four-pillars", "bazi", "birth-chart", "destiny", "heavenly-stems", "earthly-branches"],
+    "tags": [
+      "four-pillars",
+      "bazi",
+      "birth-chart",
+      "destiny",
+      "heavenly-stems",
+      "earthly-branches"
+    ],
     "published": "2026-05-13",
     "updated": "2026-05-16",
     "author": "Elemental Bond Oracle",
     "reading_time_minutes": 11
+  },
+  {
+    "id": "water-wood-bazi-compatibility",
+    "slug": "water-wood-bazi-compatibility",
+    "title": "Water and Wood BaZi Compatibility: The Nourishing Bond",
+    "description": "Discover how Water and Wood Day Masters connect in BaZi. Explore strengths, challenges, and tips for nurturing this flowing, growth-oriented relationship.",
+    "category": "element-compatibility",
+    "tags": [
+      "water compatibility",
+      "wood compatibility",
+      "BaZi relationships",
+      "five elements love",
+      "elemental bond"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
+  },
+  {
+    "id": "fire-and-earth-bazi-compatibility",
+    "slug": "fire-and-earth-bazi-compatibility",
+    "title": "Fire and Earth BaZi Compatibility: Passion That Becomes Stability",
+    "description": "Discover how Fire and Earth Day Masters create a powerful, grounded relationship in BaZi compatibility. Learn the Five Element dynamics that turn passion into lasting stability.",
+    "category": "element-compatibility",
+    "tags": [
+      "fire day master",
+      "earth day master",
+      "bazi compatibility",
+      "five elements",
+      "relationship patterns",
+      "chinese metaphysics"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
+  },
+  {
+    "id": "metal-fire-bazi-compatibility-controlling-cycle",
+    "slug": "metal-fire-bazi-compatibility-controlling-cycle",
+    "title": "Metal and Fire BaZi: The Controlling Cycle in Love",
+    "description": "Explore how the controlling cycle of Fire over Metal shapes relationships in BaZi. Practical insights for Day Masters seeking harmony.",
+    "category": "element-compatibility",
+    "tags": [
+      "Metal Day Master",
+      "Fire Day Master",
+      "Controlling Cycle",
+      "Five Elements",
+      "BaZi Compatibility"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
+  },
+  {
+    "id": "wood-earth-bazi-compatibility",
+    "slug": "wood-earth-bazi-compatibility",
+    "title": "Wood and Earth BaZi Compatibility: Growth Meets Grounding",
+    "description": "Discover how Wood and Earth Day Masters interact in BaZi. Explore harmony, friction, and how this elemental bond creates lasting balance.",
+    "category": "element-compatibility",
+    "tags": [
+      "Wood Earth compatibility",
+      "BaZi elements",
+      "Five Element theory",
+      "relationship patterns",
+      "Day Master analysis"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
+  },
+  {
+    "id": "water-fire-bazi-compatibility-clash-pair",
+    "slug": "water-fire-bazi-compatibility-clash-pair",
+    "title": "Water and Fire in BaZi: The Challenging Clash Pair",
+    "description": "Explore Water and Fire BaZi compatibility — the dynamic clash of passion and control. Learn how the Five Elements shape your love life in 2026.",
+    "category": "element-compatibility",
+    "tags": [
+      "water fire compatibility",
+      "bazi elements clash",
+      "five elements love",
+      "day master compatibility",
+      "relationship dynamics"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
+  },
+  {
+    "id": "2026-snake-year-bazi-element-types",
+    "slug": "2026-snake-year-bazi-element-types",
+    "title": "2026 Snake Year: What Each BaZi Element Should Know",
+    "description": "Discover how the 2026 Bing Wu Snake Year affects each BaZi Element type. Learn which Day Masters thrive and how to navigate the fire energy.",
+    "category": "bazi-guide",
+    "tags": [
+      "2026 snake year",
+      "bazi elements",
+      "bing wu",
+      "day master",
+      "element luck",
+      "five elements"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
+  },
+  {
+    "id": "identify-partner-day-master-without-time",
+    "slug": "identify-partner-day-master-without-time",
+    "title": "Find Partner's Day Master Without Birth Time",
+    "description": "No birth time? No problem. Learn how to identify your partner's BaZi Day Master and unlock relationship insights using just the date of birth.",
+    "category": "bazi-guide",
+    "tags": [
+      "Day Master",
+      "BaZi without time",
+      "partner compatibility",
+      "Four Pillars",
+      "relationship astrology"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
+  },
+  {
+    "id": "bazi-element-slowest-breakup-recovery",
+    "slug": "bazi-element-slowest-breakup-recovery",
+    "title": "Which BaZi Element Recovers Slowest From a Breakup?",
+    "description": "Discover which BaZi element struggles most with heartbreak and how the Five Elements shape post-breakup recovery patterns.",
+    "category": "element-guide",
+    "tags": [
+      "bazi breakup recovery",
+      "five elements heartbreak",
+      "element personality breakup",
+      "day master recovery",
+      "wood element breakup",
+      "yin yang breakup"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
+  },
+  {
+    "id": "metal-wood-bazi-compatibility",
+    "slug": "metal-wood-bazi-compatibility",
+    "title": "Metal and Wood BaZi Compatibility: Carving and Shaping",
+    "description": "Discover the intense, transformative dynamic between Metal and Wood Day Masters in BaZi. Learn how the controlling cycle fuels growth and balance.",
+    "category": "element-compatibility",
+    "tags": [
+      "Metal Day Master",
+      "Wood Day Master",
+      "Controlling Cycle",
+      "BaZi Compatibility",
+      "Five Elements",
+      "Relationship Dynamics"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
+  },
+  {
+    "id": "earth-water-bazi-compatibility-containment-flow",
+    "slug": "earth-water-bazi-compatibility-containment-flow",
+    "title": "Earth and Water BaZi: The Power of Containment & Flow",
+    "description": "Discover how Earth and Water interact in BaZi compatibility. Learn how the Controlling Cycle creates both stability and emotional depth.",
+    "category": "element-compatibility",
+    "tags": [
+      "earth",
+      "water",
+      "bazi compatibility",
+      "controlling cycle",
+      "relationship dynamics",
+      "five elements"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
+  },
+  {
+    "id": "heavenly-stems-love-and-fight",
+    "slug": "heavenly-stems-love-and-fight",
+    "title": "The 10 Heavenly Stems in Love: How Each One Loves and Fights",
+    "description": "Discover how each Heavenly Stem shapes your love language and conflict style. Unlock BaZi insights for deeper relationships.",
+    "category": "bazi-guide",
+    "tags": [
+      "Heavenly Stems",
+      "BaZi love compatibility",
+      "Day Master romance",
+      "Five Elements in relationships",
+      "Chinese astrology love"
+    ],
+    "published": "2026-05-17",
+    "updated": "2026-05-17",
+    "reading_time_minutes": 7
   }
 ]
