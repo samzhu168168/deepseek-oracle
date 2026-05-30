@@ -185,12 +185,22 @@ export default function ResultPage() {
   const [emailGateModalOpen, setEmailGateModalOpen] = useState(false);
   const [emailUnlocked, setEmailUnlocked] = useState(false);
   const [previewData, setPreviewData] = useState<string | null>(null);
-  const [paywallModalOpen, setPaywallModalOpen] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [paypalLoading, setPaypalLoading] = useState(false);
   const [, setShareImageUrl] = useState(`${SITE_URL}/og-image.png`);
   const [postPaymentFlow, setPostPaymentFlow] = useState(false);
   const shareCardRef = useRef<HTMLDivElement | null>(null);
+
+  // ── Preload PayPal SDK so button renders instantly when modal opens ──
+  useEffect(() => {
+    const clientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+    if (!clientId || document.getElementById("paypal-sdk")) return;
+    const script = document.createElement("script");
+    script.id = "paypal-sdk";
+    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD`;
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
 
   // ── Detect Gumroad post-payment redirect ──
   useEffect(() => {
@@ -368,7 +378,7 @@ export default function ResultPage() {
     setPreviewData(teaserText ? `${teaserText}${patternDetail}` : patternDetail);
 
     setTimeout(() => {
-      setPaywallModalOpen(true);
+      setPaymentModalOpen(true);
     }, 15000);
   };
 
@@ -506,51 +516,32 @@ export default function ResultPage() {
           }}
         />
       )}
-      {paywallModalOpen ? (
-        <div className="paywall-modal">
-          <div className="paywall-modal__backdrop" onClick={() => setPaywallModalOpen(false)} />
-          <div className="paywall-modal__panel" role="dialog" aria-modal="true">
-            <button className="paywall-modal__close" type="button" onClick={() => setPaywallModalOpen(false)}>
-              ×
-            </button>
-            <p className="paywall-modal__title">Your Full Blueprint Is Ready</p>
-            <p className="paywall-modal__subtitle">One-time payment. Instant delivery to your email.</p>
-            <p className="paywall-modal__score">Soul Resonance Score: {averageScore} / 100</p>
-            <ul className="paywall-modal__list">
-              <li>800-word personalized BaZi analysis</li>
-              <li>2026 timing windows for your relationship</li>
-              <li>Specific action steps for your element pair</li>
-            </ul>
-            <a
-              className="paywall-modal__cta"
-              href="https://samzhu168.gumroad.com/l/bhpmxr"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Yes, Reveal My Blueprint — $24.90
-            </a>
-            <p className="paywall-modal__note">Secure payment via Gumroad</p>
-          </div>
-        </div>
-      ) : null}
-
-      {/* --- Payment Method Modal (Gumroad + PayPal) --- */}
+      {/* --- Payment Modal (single unified path — Gumroad + PayPal) --- */}
       {paymentModalOpen ? (
         <div className="paywall-modal paywall-modal--payment">
           <div className="paywall-modal__backdrop" onClick={() => setPaymentModalOpen(false)} />
           <div className="paywall-modal__panel paywall-modal__panel--sm" role="dialog" aria-modal="true">
             <button className="paywall-modal__close" type="button" onClick={() => setPaymentModalOpen(false)}>
-              x
+              ×
             </button>
             <p className="paywall-modal__title">Unlock Your Full Blueprint</p>
-            <p className="paywall-modal__subtitle">Choose your payment method</p>
-            <p className="paywall-modal__score">Soul Resonance Score: {averageScore} / 100</p>
+
+            {/* Price anchor */}
+            <div className="paywall-price-anchor">
+              <span className="paywall-price-was">Usually $49</span>
+              <span className="paywall-price-now">$24.90 today</span>
+            </div>
+            <p className="paywall-price-compare">vs. $150–$300 for one coaching session</p>
+
+            <p className="paywall-modal__score">
+              Your Soul Resonance Score: <strong>{averageScore} / 100</strong>
+            </p>
 
             {/* Option 1: Gumroad (Credit Card) */}
             <div className="payment-option">
               <h4 className="payment-option__title">Credit Card / Debit Card</h4>
               <p className="payment-option__text">
-                Securely processed via Gumroad. License key emailed to you.
+                Secure checkout via Gumroad. License key sent to your email instantly.
               </p>
               <button
                 className="payment-option__btn"
@@ -560,10 +551,10 @@ export default function ResultPage() {
                   setPaymentModalOpen(false);
                 }}
               >
-                Pay with Card — $24.90
+                Pay with Card — $24.90 →
               </button>
               <p className="payment-option__footer">
-                Visa, Mastercard, Amex accepted
+                Visa, Mastercard, Amex · One-time charge, no subscription
               </p>
             </div>
 

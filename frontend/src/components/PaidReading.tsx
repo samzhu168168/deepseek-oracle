@@ -75,21 +75,28 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
             <h3 className="unlock-card-title">Complete Reading</h3>
           </div>
           <div className="unlock-card-price">
-            <span className="price-currency">$</span>
-            <span className="price-amount">24.90</span>
+            <span className="price-was">Usually $49</span>
+            <div className="price-main">
+              <span className="price-currency">$</span>
+              <span className="price-amount">24.90</span>
+            </div>
+            <span className="price-label">one-time · instant access</span>
           </div>
           <ul className="unlock-card-features">
-            <li>✓ Full pattern analysis</li>
-            <li>✓ 2026 timeline guidance</li>
-            <li>✓ Specific action steps</li>
-            <li>✓ Instant access with license key</li>
+            <li>✓ Full pattern analysis (800 words)</li>
+            <li>✓ 2026 month-by-month timeline</li>
+            <li>✓ 5 specific action steps</li>
+            <li>✓ Your unique elemental edge</li>
           </ul>
           <button
             className="unlock-btn unlock-btn-premium"
             onClick={onUnlock}
           >
-            Unlock Full Reading
+            Unlock Full Reading →
           </button>
+          <p className="unlock-value-compare">
+            One coaching session: $150–$300 · This reading: $24.90, yours forever.
+          </p>
         </div>
       </div>
 
