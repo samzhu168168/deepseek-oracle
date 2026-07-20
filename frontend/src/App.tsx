@@ -14,6 +14,12 @@ import HomePage from "./pages/Home";
 import QuizPage from "./pages/Quiz";
 import ThankYouPage from "./pages/ThankYou";
 import ResultPage from "./pages/Result";
+import EmotionallyUnavailablePage from "./pages/faq/emotionally-unavailable";
+import RelationshipPatternPage from "./pages/faq/relationship-pattern";
+import ChemistryVsCompatibilityPage from "./pages/faq/chemistry-vs-compatibility";
+import FamiliarVsSafePage from "./pages/faq/familiar-vs-safe";
+import BirthDatePatternPage from "./pages/faq/birth-date-relationship-pattern";
+import GroundhoggingDatingPage from "./pages/faq/groundhogging-dating";
 export default function App() {
   return (
     <HelmetProvider>
@@ -32,6 +38,12 @@ export default function App() {
             <Route path="/result" element={<ResultPage />} />
             <Route path="/quiz" element={<QuizPage />} />
             <Route path="/thank-you" element={<ThankYouPage />} />
+            <Route path="/faq/emotionally-unavailable" element={<EmotionallyUnavailablePage />} />
+            <Route path="/faq/relationship-pattern" element={<RelationshipPatternPage />} />
+            <Route path="/faq/chemistry-vs-compatibility" element={<ChemistryVsCompatibilityPage />} />
+            <Route path="/faq/familiar-vs-safe" element={<FamiliarVsSafePage />} />
+            <Route path="/faq/birth-date-relationship-pattern" element={<BirthDatePatternPage />} />
+            <Route path="/faq/groundhogging-dating" element={<GroundhoggingDatingPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
