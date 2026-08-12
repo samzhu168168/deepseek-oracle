@@ -527,7 +527,7 @@ export default function ResultPage() {
             <p className="paywall-modal__title">Unlock Your Pattern Breaker Report</p>
 
             <div className="paywall-price-anchor">
-              <span className="paywall-price-now">$24.90</span>
+              <span className="paywall-price-now">$24.90 USD</span>
             </div>
 
             <p className="paywall-modal__score">
@@ -537,7 +537,7 @@ export default function ResultPage() {
             <div className="payment-option">
               <h4 className="payment-option__title">Credit Card / Debit Card</h4>
               <p className="payment-option__text">
-                Secure checkout via Gumroad. One-time payment, instant access.
+                Secure checkout via Gumroad. Gumroad may display the equivalent amount in your local currency.
               </p>
               <button
                 className="payment-option__btn"
@@ -547,7 +547,7 @@ export default function ResultPage() {
                   setPaymentModalOpen(false);
                 }}
               >
-                Unlock Your Pattern Breaker Report — $24.90
+                Unlock Your Pattern Breaker Report — $24.90 USD
               </button>
               <p className="payment-option__footer">
                 Visa, Mastercard, Amex · One-time charge, no subscription
