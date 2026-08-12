@@ -179,11 +179,11 @@ export default function ElementPersonalityPage() {
         </ul>
       </section>
 
-      {/* ── 2026 Snake Year Outlook ── */}
+      {/* ── 2026 Fire Horse Year Outlook ── */}
       <section className="element-personality-section">
         <h2 className="element-personality-section__title">
           <span className="oracle-symbol" aria-hidden="true">◈</span>
-          2026 Snake Year Outlook for {label}
+          2026 Fire Horse Year Outlook for {label}
         </h2>
         <div className="element-personality-2026-card">
           <p className="element-personality-2026-card__outlook">

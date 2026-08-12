@@ -390,6 +390,7 @@ a:hover { color: var(--oracle-text); }
   justify-content: center;
   gap: var(--space-sm);
   padding: 14px 32px;
+  min-height: 48px;
   border: none;
   border-radius: var(--radius-md);
   font-family: var(--font-body);

@@ -81,7 +81,7 @@ export default function AboutPage() {
             No two people get the same reading.
           </div>
           <div className="about-section__item">
-            <strong>Timing matters.</strong> 2026 is a Yi Wood Snake year (乙巳年) — a powerful
+            <strong>Timing matters.</strong> 2026 is a Bing Wu Fire Horse year (丙午年) — a powerful
             window for relationship transformation. Our readings include this timing.
           </div>
           <div className="about-section__item">

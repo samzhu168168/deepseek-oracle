@@ -78,10 +78,10 @@ const FALLBACK_ARTICLES: ArticleMeta[] = [
   {
     id: "2026-snake-year-bazi-element-types",
     slug: "2026-snake-year-bazi-element-types",
-    title: "2026 Snake Year: What Each BaZi Element Should Know",
-    description: "Discover how the 2026 Bing Wu Snake Year affects each BaZi Element type. Learn which Day Masters thrive and how to navigate the fire energy.",
+    title: "2026 Fire Horse Year: What Each BaZi Element Should Know",
+    description: "Discover how the 2026 Bing Wu Fire Horse Year affects each BaZi Element type. Learn which Day Masters thrive and how to navigate the fire energy.",
     category: "bazi-guide",
-    tags: ["2026 snake year", "bazi elements", "bing wu", "day master", "element luck", "five elements"],
+    tags: ["2026 fire horse year", "bazi elements", "bing wu", "day master", "element luck", "five elements"],
     published: "2026-05-17",
     reading_time_minutes: 7,
   },

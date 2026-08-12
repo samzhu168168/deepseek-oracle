@@ -24,7 +24,7 @@ const FALLBACK_ARTICLES: ArticleMeta[] = [
   { slug: "water-element-personality-bazi", title: "The Water Element in BaZi — Depth, Intuition, and Emotional Wisdom", description: "Water personalities are deep, intuitive, and emotionally intelligent.", reading_time_minutes: 7 },
   { slug: "wood-fire-compatibility-bazi", title: "Wood and Fire Element Compatibility in BaZi", description: "Discover how the Wood-Fire elemental dynamic creates passion and growth.", reading_time_minutes: 7 },
   { slug: "understanding-day-master-bazi", title: "Understanding Your Day Master in BaZi", description: "Your Day Master represents your core self in BaZi.", reading_time_minutes: 9 },
-  { slug: "2026-snake-year-bazi-element-types", title: "2026 Snake Year: What Each BaZi Element Should Know", description: "Discover how the 2026 Snake Year affects each BaZi Element type.", reading_time_minutes: 7 },
+  { slug: "2026-snake-year-bazi-element-types", title: "2026 Fire Horse Year: What Each BaZi Element Should Know", description: "Discover how the 2026 Fire Horse Year affects each BaZi Element type.", reading_time_minutes: 7 },
 ];
 
 export function RelatedArticles({ slugs, title = "Related Articles" }: RelatedArticlesProps) {

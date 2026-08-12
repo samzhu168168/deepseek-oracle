@@ -13,7 +13,7 @@ type PersonInput = {
 const LOADING_MESSAGES = [
   "Reading the elemental pattern...",
   "Calculating karmic resonance...",
-  "Mapping your 2026 Snake Year windows...",
+  "Mapping your 2026 Fire Horse Year windows...",
   "The Oracle is preparing your Blueprint...",
 ];
 

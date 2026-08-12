@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toPng } from "html-to-image";
 import { Helmet } from "react-helmet-async";
@@ -11,10 +11,7 @@ import { EmailGateModal } from "../components/EmailGateModal";
 import { TeaserReading } from "../components/TeaserReading";
 import { PreviewReading } from "../components/PreviewReading";
 import { PaidReading } from "../components/PaidReading";
-import { LicenseKeyGuide } from "../components/LicenseKeyGuide";
-import { PayPalButton } from "../components/PayPalButton";
 import { ShareButtons } from "../components/ShareButtons";
-import { InlineEmailCapture } from "../components/InlineEmailCapture";
 import type { BondAnalysisRequest, BondAnalysisResponse } from "../types";
 
 type StoredReport = {
@@ -22,9 +19,6 @@ type StoredReport = {
   report: any;
 };
 
-const EMAIL_CAPTURE_STORAGE_KEY = "bond:email_forecast_submissions";
-const EMAIL_CAPTURE_COUNT_KEY = "bond:email_forecast_count";
-const DEFAULT_FORECAST_COUNT = 247;
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
 
 const RADAR_DIMENSIONS = [
@@ -99,82 +93,6 @@ const getRelationshipLabel = (score: number) => {
   return "Karmic Challenge Pair";
 };
 
-const readForecastCount = () => {
-  if (typeof window === "undefined") {
-    return DEFAULT_FORECAST_COUNT;
-  }
-  const stored = window.localStorage.getItem(EMAIL_CAPTURE_COUNT_KEY);
-  const parsed = stored ? Number(stored) : DEFAULT_FORECAST_COUNT;
-  return Number.isFinite(parsed) ? parsed : DEFAULT_FORECAST_COUNT;
-};
-
-const EmailCapture = () => {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [forecastCount, setForecastCount] = useState(DEFAULT_FORECAST_COUNT);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setForecastCount(readForecastCount());
-  }, []);
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const normalized = email.trim();
-    if (!normalized) {
-      setError("Please enter your email address.");
-      return;
-    }
-    setError(null);
-    try {
-      const raw = window.localStorage.getItem(EMAIL_CAPTURE_STORAGE_KEY);
-      const items = raw ? (JSON.parse(raw) as Array<{ email: string }>) : [];
-      const entry = { email: normalized, submitted_at: new Date().toISOString() };
-      items.push(entry);
-      window.localStorage.setItem(EMAIL_CAPTURE_STORAGE_KEY, JSON.stringify(items));
-      const nextCount = (readForecastCount() || DEFAULT_FORECAST_COUNT) + 1;
-      window.localStorage.setItem(EMAIL_CAPTURE_COUNT_KEY, String(nextCount));
-      setForecastCount(nextCount);
-      setSubmitted(true);
-      setEmail("");
-    } catch {
-      setSubmitted(true);
-    }
-    // Fire-and-forget server capture so we actually build an email list
-    fetch('/api/capture-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: normalized, source: 'forecast_signup' }),
-    }).catch(() => {});
-  };
-
-  return (
-    <div className="email-capture">
-      <p className="email-capture__count">{forecastCount} souls already received their forecast</p>
-      {submitted ? (
-        <p className="email-capture__success">
-          Your forecast is being prepared. Check your inbox in 24 hours.
-        </p>
-      ) : (
-        <form className="email-capture__form" onSubmit={handleSubmit}>
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="Enter your email address"
-            required
-          />
-          <InkButton type="submit">Send My Forecast </InkButton>
-          {error ? <p className="error-text">{error}</p> : null}
-          <p className="email-capture__note">
-            No spam. One email. Your cosmic timing, decoded.
-          </p>
-        </form>
-      )}
-    </div>
-  );
-};
-
 export default function ResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -187,21 +105,9 @@ export default function ResultPage() {
   const [emailUnlocked, setEmailUnlocked] = useState(false);
   const [previewData, setPreviewData] = useState<string | null>(null);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
-  const [paypalLoading, setPaypalLoading] = useState(false);
-  const [, setShareImageUrl] = useState(`${SITE_URL}/og-image.png`);
+  const [shareCardStatus, setShareCardStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [postPaymentFlow, setPostPaymentFlow] = useState(false);
   const shareCardRef = useRef<HTMLDivElement | null>(null);
-
-  // ── Preload PayPal SDK so button renders instantly when modal opens ──
-  useEffect(() => {
-    const clientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
-    if (!clientId || document.getElementById("paypal-sdk")) return;
-    const script = document.createElement("script");
-    script.id = "paypal-sdk";
-    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD`;
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
 
   // ── Detect Gumroad post-payment redirect ──
   useEffect(() => {
@@ -322,6 +228,42 @@ export default function ResultPage() {
 
   const shareText = `My Soul Resonance Score: ${averageScore}/100\nElemental Bond: ${elementCombo}\nDiscover yours at ${shareUrl}`;
 
+  const patternCard = useMemo(() => {
+    const [primaryElement = "Water", secondaryElement = "Wood"] = elementPair.split("-").map((s) => s.trim());
+    const elementsLabel = `${primaryElement} x ${secondaryElement}`;
+
+    if (averageScore >= 75) {
+      return {
+        slug: "chemistry-trap",
+        name: "Chemistry Trap",
+        headline: "The spark is real. So is the pattern.",
+        body: "Your nervous system may be recognizing the same ending before your mind names it.",
+        cue: "Same pull. Same panic. Different person.",
+        elements: elementsLabel,
+      };
+    }
+
+    if (averageScore >= 55) {
+      return {
+        slug: "familiar-tension-loop",
+        name: "Familiar Tension Loop",
+        headline: "It feels familiar because your pattern knows the route.",
+        body: "One part of you wants closeness. Another part is already bracing for the repeat.",
+        cue: "Same comfort. Same doubt. Different face.",
+        elements: elementsLabel,
+      };
+    }
+
+    return {
+      slug: "different-language-loop",
+      name: "Different Language Loop",
+      headline: "You are not too much. You are speaking different elemental languages.",
+      body: "What feels natural to one of you can land like distance to the other.",
+      cue: "Same ache. Same silence. Different person.",
+      elements: elementsLabel,
+    };
+  }, [averageScore, elementPair]);
+
   const generateShareImage = async () => {
     if (!shareCardRef.current) {
       return null;
@@ -334,24 +276,33 @@ export default function ResultPage() {
       const dataUrl = await Promise.race([
         toPng(shareCardRef.current, {
           cacheBust: true,
-          pixelRatio: 2,
-          width: 1080,
-          height: 1920,
-          style: {
-            width: "1080px",
-            height: "1920px",
-          },
+          pixelRatio: 3,
+          backgroundColor: "#090711",
         }),
         timeoutPromise,
       ]);
-      if (dataUrl) {
-        setShareImageUrl(dataUrl);
-      }
       return dataUrl;
     } catch (err) {
       console.error('Failed to generate share image:', err);
       return null;
     }
+  };
+
+  const handleSavePatternCard = async () => {
+    setShareCardStatus("saving");
+    const dataUrl = await generateShareImage();
+
+    if (!dataUrl) {
+      setShareCardStatus("error");
+      return;
+    }
+
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = `elemental-bond-${patternCard.slug}.png`;
+    link.click();
+    setShareCardStatus("saved");
+    window.setTimeout(() => setShareCardStatus("idle"), 2200);
   };
 
   const handleLicenseSuccess = (data: FullReportData | { licenseKey: string }) => {
@@ -392,13 +343,6 @@ export default function ResultPage() {
       return () => clearTimeout(timer);
     }
   }, [emailUnlocked, normalizedReport]);
-
-  useEffect(() => {
-    const updateOgImage = async () => {
-      await generateShareImage();
-    };
-    updateOgImage();
-  }, [averageScore, elementCombo]);
 
   if (!payload || !normalizedReport) {
     return (
@@ -467,6 +411,68 @@ export default function ResultPage() {
         </div>
       </section>
 
+      <section className="pattern-card-section" aria-labelledby="pattern-card-title">
+        <div className="pattern-card-section__intro">
+          <p className="pattern-card-section__eyebrow">Your shareable pattern card</p>
+          <h2 id="pattern-card-title">Save this before the pattern talks you out of it.</h2>
+          <p>
+            Screenshot it for yourself, or share it when you want someone to understand the loop without the whole story.
+          </p>
+        </div>
+
+        <div className="pattern-card-frame">
+          <div ref={shareCardRef} className="pattern-card" aria-label={`Elemental Bond pattern card: ${patternCard.name}`}>
+            <div className="pattern-card__glow pattern-card__glow--top" />
+            <div className="pattern-card__glow pattern-card__glow--bottom" />
+            <div className="pattern-card__grain" />
+
+            <div className="pattern-card__topline">
+              <span>ELEMENTAL BOND</span>
+              <span>BAZI PATTERN READING</span>
+            </div>
+
+            <div className="pattern-card__score" aria-label={`Pattern score ${averageScore} out of 100`}>
+              <span>{averageScore}</span>
+              <small>/100</small>
+            </div>
+
+            <div className="pattern-card__pattern">
+              <p>Your Pattern</p>
+              <h3>{patternCard.name}</h3>
+            </div>
+
+            <p className="pattern-card__headline">{patternCard.headline}</p>
+            <p className="pattern-card__body">{patternCard.body}</p>
+            <div className="pattern-card__cue">{patternCard.cue}</div>
+
+            <div className="pattern-card__footer">
+              <span>{patternCard.elements}</span>
+              <span>Free 60-second reading: elemental.bond</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="pattern-card-actions">
+          <button
+            type="button"
+            className="oracle-button oracle-cta-button"
+            onClick={handleSavePatternCard}
+            disabled={shareCardStatus === "saving"}
+          >
+            {shareCardStatus === "saving"
+              ? "Creating card..."
+              : shareCardStatus === "saved"
+              ? "Saved"
+              : "Save Pattern Card"}
+          </button>
+          <p className={`pattern-card-actions__status pattern-card-actions__status--${shareCardStatus}`}>
+            {shareCardStatus === "error"
+              ? "Image save failed. Screenshot the card directly."
+              : "9:16 format for Stories, Shorts, and TikTok replies."}
+          </p>
+        </div>
+      </section>
+
       {/* Conditional rendering: show different components based on unlock status */}
       {!emailUnlocked && !isUnlocked && (
         <TeaserReading 
@@ -482,17 +488,6 @@ export default function ResultPage() {
           elementPair={elementPair}
           score={averageScore}
         />
-      )}
-
-      {!isUnlocked && (
-        <LicenseKeyGuide
-          onOpenModal={() => setLicenseModalOpen(true)}
-          postPayment={postPaymentFlow}
-        />
-      )}
-
-      {!isUnlocked && (
-        <InlineEmailCapture score={averageScore} elementPair={elementPair} />
       )}
 
       {isUnlocked ? (
@@ -521,7 +516,7 @@ export default function ResultPage() {
           }}
         />
       )}
-      {/* --- Payment Modal (single unified path — Gumroad + PayPal) --- */}
+      {/* --- Payment Modal (single unified path: Gumroad) --- */}
       {paymentModalOpen ? (
         <div className="paywall-modal paywall-modal--payment">
           <div className="paywall-modal__backdrop" onClick={() => setPaymentModalOpen(false)} />
@@ -529,24 +524,20 @@ export default function ResultPage() {
             <button className="paywall-modal__close" type="button" onClick={() => setPaymentModalOpen(false)}>
               ×
             </button>
-            <p className="paywall-modal__title">Unlock Your Full Blueprint</p>
+            <p className="paywall-modal__title">Unlock Your Pattern Breaker Report</p>
 
-            {/* Price anchor */}
             <div className="paywall-price-anchor">
-              <span className="paywall-price-was">Usually $49</span>
-              <span className="paywall-price-now">$24.90 today</span>
+              <span className="paywall-price-now">$24.90</span>
             </div>
-            <p className="paywall-price-compare">vs. $150–$300 for one coaching session</p>
 
             <p className="paywall-modal__score">
               Your Soul Resonance Score: <strong>{averageScore} / 100</strong>
             </p>
 
-            {/* Option 1: Gumroad (Credit Card) */}
             <div className="payment-option">
               <h4 className="payment-option__title">Credit Card / Debit Card</h4>
               <p className="payment-option__text">
-                Secure checkout via Gumroad. License key sent to your email instantly.
+                Secure checkout via Gumroad. One-time payment, instant access.
               </p>
               <button
                 className="payment-option__btn"
@@ -556,49 +547,11 @@ export default function ResultPage() {
                   setPaymentModalOpen(false);
                 }}
               >
-                Pay with Card — $24.90 →
+                Unlock Your Pattern Breaker Report — $24.90
               </button>
               <p className="payment-option__footer">
                 Visa, Mastercard, Amex · One-time charge, no subscription
               </p>
-            </div>
-
-            {/* Option 2: PayPal */}
-            <div className="payment-option">
-              <h4 className="payment-option__title">PayPal</h4>
-              <p className="payment-option__text">
-                Pay with your PayPal account. Report unlocked instantly.
-              </p>
-              {paypalLoading ? (
-                <p className="payment-option__loading">
-                  Processing payment...
-                </p>
-              ) : (
-                <PayPalButton
-                  price="24.90"
-                  person1={{
-                    date: payload.person_a?.date || "",
-                    time: payload.person_a?.time || "",
-                    gender: payload.person_a?.gender || "Male",
-                  }}
-                  person2={{
-                    date: payload.person_b?.date || "",
-                    time: payload.person_b?.time || "",
-                    gender: payload.person_b?.gender || "Male",
-                  }}
-                  score={averageScore}
-                  elementPair={elementPair}
-                  onSuccess={(report) => {
-                    setFullReportData({...report, licenseKey: "paypal"});
-                    setPaymentModalOpen(false);
-                  }}
-                  onError={(msg) => {
-                    console.error("PayPal error:", msg);
-                  }}
-                  onStart={() => setPaypalLoading(true)}
-                  onFinish={() => setPaypalLoading(false)}
-                />
-              )}
             </div>
 
             <p className="payment-modal-footer">
@@ -607,120 +560,6 @@ export default function ResultPage() {
           </div>
         </div>
       ) : null}
-
-      <section className="result-email-capture">
-        <div className="email-capture__intro">
-          <p>Not ready yet?</p>
-          <p>Get your free 2026 Karmic Forecast delivered to your inbox.</p>
-        </div>
-        <EmailCapture />
-      </section>
-
-      <div
-        ref={shareCardRef}
-        style={{
-          position: "fixed",
-          left: "-9999px",
-          top: 0,
-          width: "1080px",
-          height: "1920px",
-          background:
-            "radial-gradient(920px circle at 50% -18%, rgba(143, 96, 214, 0.32), transparent 60%), radial-gradient(840px circle at 20% 20%, rgba(92, 56, 132, 0.38), transparent 60%), radial-gradient(520px circle at 80% 82%, rgba(139, 98, 186, 0.24), transparent 60%), linear-gradient(180deg, #0a0a16 0%, #151124 55%, #0e0b1a 100%)",
-          color: "#f7f2ff",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "120px 90px",
-          textAlign: "center",
-          gap: "40px",
-          borderRadius: "48px",
-          border: "1px solid rgba(210, 187, 255, 0.18)",
-          boxShadow: "0 40px 120px rgba(5, 2, 16, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.04)",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: "28px",
-            borderRadius: "40px",
-            border: "1px solid rgba(255, 255, 255, 0.08)",
-            boxShadow: "inset 0 0 60px rgba(111, 76, 154, 0.25)",
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(520px circle at 50% 12%, rgba(187, 143, 255, 0.18), transparent 60%), radial-gradient(460px circle at 18% 62%, rgba(104, 70, 168, 0.24), transparent 60%)",
-            opacity: 0.9,
-            pointerEvents: "none",
-            mixBlendMode: "screen",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0px, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 3px)",
-            opacity: 0.16,
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.12) 0.5px, transparent 1.2px), radial-gradient(circle at 86% 22%, rgba(255, 255, 255, 0.14) 0.6px, transparent 1.4px), radial-gradient(circle at 32% 78%, rgba(255, 255, 255, 0.1) 0.5px, transparent 1.3px)",
-            opacity: 0.35,
-            pointerEvents: "none",
-          }}
-        />
-        <div style={{ minHeight: "220px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          {averageScore > 80 ? (
-            <div style={{ fontSize: "72px", fontWeight: 700, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
-              Rare Cosmic Match 🪐
-            </div>
-          ) : averageScore < 60 ? (
-            <div style={{ fontSize: "72px", fontWeight: 700, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
-              Karmic Lesson Detected 🌪</div>
-          ) : (
-            <div style={{ fontSize: "64px", fontWeight: 600, letterSpacing: "1px", textShadow: "0 10px 40px rgba(140, 90, 220, 0.55)" }}>
-              Cosmic Connection
-            </div>
-          )}
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", zIndex: 1 }}>
-          <div style={{ fontSize: "28px", letterSpacing: "3px", textTransform: "uppercase", opacity: 0.8 }}>
-            Magnetic Connection          </div>
-          <div style={{ fontSize: "160px", fontWeight: 700, textShadow: "0 24px 80px rgba(70, 32, 120, 0.6)" }}>
-            {averageScore}
-          </div>
-          <div style={{ fontSize: "36px", letterSpacing: "2px", opacity: 0.8 }}>{elementCombo}</div>
-        </div>
-        <div
-          style={{
-            width: "100%",
-            padding: "26px 32px",
-            borderRadius: "999px",
-            background:
-              "linear-gradient(90deg, rgba(116, 73, 168, 0.95), rgba(186, 142, 255, 0.95))",
-            color: "#0b0714",
-            fontSize: "26px",
-            fontWeight: 600,
-            letterSpacing: "0.5px",
-            boxShadow: "0 24px 60px rgba(20, 8, 35, 0.55), inset 0 0 24px rgba(255, 255, 255, 0.2)",
-            zIndex: 1,
-          }}
-        >
-          Curious about your person? Decode your dynamic at elemental.bond
-        </div>
-      </div>
 
       <section className="result-testimonials">
         <div className="result-testimonials__card">

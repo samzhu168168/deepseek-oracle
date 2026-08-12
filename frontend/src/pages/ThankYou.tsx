@@ -7,8 +7,8 @@ export default function ThankYouPage() {
   return (
     <div className="landing-page fade-in">
       <Helmet>
-        <title>You're In — Your 2026 Snake Year Love Forecast | Elemental Bond</title>
-        <meta name="description" content="Your free 2026 Snake Year Love Forecast is on its way." />
+        <title>You're In — Your 2026 Fire Horse Year Love Forecast | Elemental Bond</title>
+        <meta name="description" content="Your free 2026 Fire Horse Year Love Forecast is on its way." />
         <link rel="canonical" href={`${SITE_URL}/thank-you`} />
         <meta name="robots" content="noindex" />
       </Helmet>
@@ -20,7 +20,7 @@ export default function ThankYouPage() {
         </h1>
         <div className="hero-divider" />
         <p className="oracle-hero-subtitle" style={{ maxWidth: "480px", textAlign: "center" }}>
-          Your <strong>2026 Snake Year Love Forecast</strong> is on its way to your inbox.
+          Your <strong>2026 Fire Horse Year Love Forecast</strong> is on its way to your inbox.
           Check your spam folder if it doesn't arrive within a few minutes.
         </p>
         <p className="hero-explainer" style={{ maxWidth: "420px", textAlign: "center" }}>
