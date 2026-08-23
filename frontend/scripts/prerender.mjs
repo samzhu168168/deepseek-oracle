@@ -20,27 +20,97 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
-const DIST = path.resolve(ROOT, "dist");
 const PUBLIC = path.resolve(ROOT, "public");
-const ROUTES_FILE = path.resolve(PUBLIC, "routes.json");
+
+function readArgument(name, fallback) {
+  const index = process.argv.indexOf(name);
+  return index >= 0 && process.argv[index + 1] ? process.argv[index + 1] : fallback;
+}
+
+const DIST = path.resolve(ROOT, readArgument("--serve-dir", "dist"));
+const ROUTES_FILE = path.resolve(ROOT, readArgument("--routes", "public/routes.json"));
 const OUTPUT_DIR = path.resolve(DIST, "__prerendered__");
 
 // ── Configuration ──
 const PORT = 4173;
-const CONCURRENCY = 3;
-const TIMEOUT = 15000;
-const STRICT = false;
+const CONCURRENCY = Number(readArgument("--concurrency", "3"));
+const TIMEOUT = Number(readArgument("--timeout", "15000"));
+const STRICT = process.argv.includes("--strict");
 
 const ARTICLES_DIR = path.resolve(ROOT, "..", "backend", "app", "data", "articles");
 
 // ── Content selectors to wait for (route prefix → CSS selector) ──
 const WAIT_FOR = [
+  { prefix: "/compare/", selector: ".comparison-table" },
+  { prefix: "/faq", selector: ".content-page" },
+  { prefix: "/compatibility", selector: ".compact-page" },
   { prefix: "/articles/", selector: ".article-content" },
   { prefix: "/compatibility/elements/", selector: ".landing-hero" },
   { prefix: "/elements/", selector: ".element-personality-hero" },
   { prefix: "/articles", selector: ".article-grid" },
   { prefix: "/", selector: ".bond-hero" },
 ];
+
+const FAQ_ENTRIES = [
+  ["What is a BaZi / five-element compatibility test?", "A BaZi compatibility test compares patterns derived from two birth records using concepts from the Chinese Five Elements and Four Pillars traditions. Elemental Bond first provides a simplified element-level preview; a full traditional chart would also consider year, month, day, hour, and their interactions."],
+  ["How is this different from Western astrology compatibility?", "Western astrology commonly compares planetary placements and zodiac signs. BaZi uses a Chinese calendrical framework organized around heavenly stems, earthly branches, yin-yang, and the Five Elements. The systems use different inputs and interpretive rules, so their results are not directly interchangeable."],
+  ["Do I need my exact birth time?", "No. The free core-element and relationship previews can run from birth dates alone. An exact birth time supplies the hour pillar in a full BaZi chart, so time-dependent interpretations are necessarily less specific when the hour is unknown."],
+  ["Is this based on real Chinese astrology methodology?", "The product vocabulary and relationship framework draw from BaZi and Five Elements traditions. The instant free result is deliberately simplified and should not be represented as a complete professional Four Pillars calculation. It is an interpretive reflection tool, not a scientifically validated assessment."],
+  ["How accurate is elemental.bond compared to Co-Star or The Pattern?", "There is no independent accuracy dataset that supports a numerical comparison among these products. Co-Star is associated with Western astrology, The Pattern presents astrology-based personality and timing content, and Elemental Bond uses a BaZi-inspired Five Elements framework. Their outputs should be compared by method and scope, not by an unsupported accuracy score."],
+];
+
+const STATIC_META = {
+  "/": {
+    title: "Five-Element Personality Test — Free BaZi-Inspired Reading",
+    description: "What does your birth date suggest about your relationship patterns? Get a free five-element personality reading without creating an account.",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: "Elemental Bond Five-Element Personality Test",
+      applicationCategory: "LifestyleApplication",
+      operatingSystem: "Web",
+      url: "https://elemental.bond/",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
+  },
+  "/compatibility": {
+    title: "BaZi Compatibility Test — Free Five-Element Relationship Preview",
+    description: "Enter another birth date to see a free five-element relationship dynamic, then choose whether to unlock the full report.",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: "Elemental Bond Full Compatibility Report",
+      description: "A one-time full five-element relationship compatibility report.",
+      brand: { "@type": "Brand", name: "Elemental Bond" },
+      offers: {
+        "@type": "Offer",
+        price: "24.90",
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+        url: "https://samzhu168.gumroad.com/l/bhpmxr?wanted=true",
+      },
+    },
+  },
+  "/faq": {
+    title: "What Is BaZi Compatibility? — Five-Element Test FAQ",
+    description: "What is BaZi compatibility, is birth time required, and how does a five-element test differ from Western astrology apps? Direct, factual answers.",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQ_ENTRIES.map(([name, text]) => ({ "@type": "Question", name, acceptedAnswer: { "@type": "Answer", text } })),
+    },
+  },
+  "/compare/co-star-vs-elemental-bond": {
+    title: "Co-Star vs Elemental Bond — Method, Free Access, and Price",
+    description: "A neutral comparison of Co-Star and Elemental Bond by method, free access, subscription status, and disclosed price.",
+    schema: { "@context": "https://schema.org", "@type": "WebPage", name: "Co-Star vs Elemental Bond", about: ["Co-Star", "Elemental Bond", "astrology compatibility"] },
+  },
+  "/compare/the-pattern-vs-elemental-bond": {
+    title: "The Pattern vs Elemental Bond — Method, Free Access, and Price",
+    description: "A neutral comparison of The Pattern and Elemental Bond by method, free access, subscription status, and disclosed price.",
+    schema: { "@context": "https://schema.org", "@type": "WebPage", name: "The Pattern vs Elemental Bond", about: ["The Pattern", "Elemental Bond", "relationship compatibility"] },
+  },
+};
 
 function getWaitSelector(route) {
   for (const w of WAIT_FOR) {
@@ -64,6 +134,19 @@ function createPreviewServer() {
 
   return createServer((req, res) => {
     const url = new URL(req.url, `http://localhost:${PORT}`);
+
+    // Build-time hydration verification: serve a completed prerender at its
+    // public route while keeping normal prerender requests on the SPA shell.
+    if (url.searchParams.get("__prerendered") === "1") {
+      const prerenderedPath = url.pathname === "/"
+        ? path.join(OUTPUT_DIR, "index.html")
+        : path.join(OUTPUT_DIR, `${url.pathname.slice(1)}.html`);
+      if (existsSync(prerenderedPath)) {
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        res.end(readFileSync(prerenderedPath));
+        return;
+      }
+    }
 
     // ── API mock: articles list ──
     if (url.pathname === "/api/content/articles") {
@@ -213,19 +296,21 @@ async function prerender() {
         const url = `http://127.0.0.1:${PORT}${route}`;
         console.log(`[prerender] [${idx + 1}/${routes.length}] ${route}`);
 
-        await page.goto(url, { waitUntil: "networkidle0", timeout: TIMEOUT });
+        // Analytics and other third-party scripts can keep connections open.
+        // The page-specific selector below is the reliable readiness signal.
+        await page.goto(url, { waitUntil: "domcontentloaded", timeout: TIMEOUT });
 
         // Wait for content-specific selector
         const selector = getWaitSelector(route);
         if (selector) {
           try {
-            await page.waitForSelector(selector, { timeout: 8000 });
+            await page.waitForSelector(selector, { timeout: TIMEOUT });
           } catch {
-            console.warn(`[prerender] WARNING: Selector "${selector}" not found for ${route}`);
+            throw new Error(`Required selector "${selector}" not found`);
           }
         }
 
-        const html = await page.content();
+        const html = injectStaticMetadata(await page.content(), route);
         writePrerenderedFile(route, html);
 
         successCount++;
@@ -241,6 +326,10 @@ async function prerender() {
   const workers = Array.from({ length: Math.min(CONCURRENCY, routes.length) }, () => processRoute());
   await Promise.all(workers);
 
+  if (STRICT && failCount === 0 && routes.includes("/") && routes.includes("/compatibility")) {
+    await verifyHydration(browser);
+  }
+
   await browser.close();
   server.close();
 
@@ -249,6 +338,79 @@ async function prerender() {
   if (failCount > 0 && STRICT) {
     process.exit(1);
   }
+}
+
+async function verifyHydration(browser) {
+  const page = await browser.newPage();
+  const hydrationErrors = [];
+  page.setDefaultTimeout(TIMEOUT);
+  page.on("console", (message) => {
+    if (message.type() === "error" && /hydrat|mismatch/i.test(message.text())) {
+      hydrationErrors.push(message.text());
+    }
+  });
+  page.on("pageerror", (error) => {
+    if (/hydrat|mismatch/i.test(error.message)) hydrationErrors.push(error.message);
+  });
+
+  try {
+    await page.goto(`http://127.0.0.1:${PORT}/?__prerendered=1`, {
+      waitUntil: "domcontentloaded",
+      timeout: TIMEOUT,
+    });
+    await page.waitForSelector('.funnel-form input[type="date"]');
+    await setReactInputValue(page, '.funnel-form input[type="date"]', "1990-01-15");
+    await page.click('.funnel-form button[type="submit"]');
+    await page.waitForSelector(".funnel-result");
+    const closeButton = await page.$(".optional-email__close");
+    if (closeButton) await closeButton.click();
+    await page.click('a[href="/compatibility"]');
+    await page.waitForSelector(".funnel-form");
+    await setReactInputValue(page, '.funnel-form input[type="date"]', "1992-04-20");
+    await page.click(".funnel-form button");
+    await page.waitForSelector(".paywall-grid");
+
+    if (hydrationErrors.length > 0) {
+      throw new Error(`Hydration mismatch detected: ${hydrationErrors.join(" | ")}`);
+    }
+    console.log("[prerender] Hydration smoke test passed: home form -> result -> compatibility form -> paywall");
+  } finally {
+    await page.close();
+  }
+}
+
+async function setReactInputValue(page, selector, value) {
+  await page.$eval(selector, (input, nextValue) => {
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value").set;
+    setter.call(input, nextValue);
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  }, value);
+}
+
+function escapeHtml(value) {
+  return value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+}
+
+function injectStaticMetadata(html, route) {
+  const meta = STATIC_META[route];
+  if (!meta) return html;
+
+  const canonical = `https://elemental.bond${route}`;
+  const cleanHtml = html
+    .replace(/<title>[\s\S]*?<\/title>/i, "")
+    .replace(/<meta\s+name=["']description["'][^>]*>/gi, "")
+    .replace(/<link\s+rel=["']canonical["'][^>]*>/gi, "")
+    .replace(/<script\s+type=["']application\/ld\+json["'][^>]*>[\s\S]*?<\/script>/gi, "");
+
+  const head = [
+    `<title>${escapeHtml(meta.title)}</title>`,
+    `<meta name="description" content="${escapeHtml(meta.description)}">`,
+    `<link rel="canonical" href="${canonical}">`,
+    `<script type="application/ld+json">${JSON.stringify(meta.schema).replaceAll("<", "\\u003c")}</script>`,
+  ].join("\n    ");
+
+  return cleanHtml.replace("</head>", `    ${head}\n  </head>`);
 }
 
 function writePrerenderedFile(route, html) {

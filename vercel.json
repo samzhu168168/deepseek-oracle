@@ -43,6 +43,35 @@
       "dest": "/frontend/robots.txt"
     },
     {
+      "src": "/llms.txt",
+      "dest": "/frontend/llms.txt"
+    },
+    {
+      "src": "/",
+      "headers": { "cache-control": "public, max-age=0, s-maxage=86400" },
+      "dest": "/frontend/__prerendered__/index.html"
+    },
+    {
+      "src": "/compatibility/?",
+      "headers": { "cache-control": "public, max-age=0, s-maxage=86400" },
+      "dest": "/frontend/__prerendered__/compatibility.html"
+    },
+    {
+      "src": "/faq/?",
+      "headers": { "cache-control": "public, max-age=0, s-maxage=86400" },
+      "dest": "/frontend/__prerendered__/faq.html"
+    },
+    {
+      "src": "/compare/co-star-vs-elemental-bond/?",
+      "headers": { "cache-control": "public, max-age=0, s-maxage=86400" },
+      "dest": "/frontend/__prerendered__/compare/co-star-vs-elemental-bond.html"
+    },
+    {
+      "src": "/compare/the-pattern-vs-elemental-bond/?",
+      "headers": { "cache-control": "public, max-age=0, s-maxage=86400" },
+      "dest": "/frontend/__prerendered__/compare/the-pattern-vs-elemental-bond.html"
+    },
+    {
       "src": "/og-image.png",
       "dest": "/frontend/og-image.png"
     },

@@ -42,7 +42,8 @@ export function Layout() {
   }, [mobileMenuOpen, handleKeyDown]);
 
   const navLinks = [
-    { to: "/", label: "Compatibility" },
+    { to: "/", label: "Free Reading" },
+    { to: "/compatibility", label: "Compatibility" },
     { to: "/elements/wood", label: "Elements" },
     { to: "/bazi", label: "BaZi Reading" },
     { to: "/articles", label: "Articles" },
@@ -134,6 +135,7 @@ export function Layout() {
           <a href="/bazi">BaZi Reading</a>
           <a href="/articles">Articles</a>
           <a href="/about">About</a>
+          <a href="/faq">FAQ</a>
           <a href="/compatibility/elements/wood-and-fire">Element Compatibility</a>
         </nav>
       </footer>

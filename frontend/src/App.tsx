@@ -8,6 +8,9 @@ import ArticlePage from "./pages/Article";
 import AboutPage from "./pages/About";
 import BaZiPage from "./pages/BaZi";
 import CompatibilityPage from "./pages/Compatibility";
+import CompatibilityTestPage from "./pages/CompatibilityTest";
+import FaqPage from "./pages/Faq";
+import ComparisonPage from "./pages/Comparison";
 import ElementCompatibilityPage from "./pages/ElementCompatibility";
 import ElementPersonalityPage from "./pages/ElementPersonality";
 import MonthlyHoroscopePage from "./pages/MonthlyHoroscope";
@@ -28,8 +31,11 @@ export default function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/compatibility" element={<CompatibilityTestPage />} />
             <Route path="/compatibility/elements/:element1-and-:element2" element={<ElementCompatibilityPage />} />
             <Route path="/compatibility/:sign1-and-:sign2" element={<CompatibilityPage />} />
+            <Route path="/faq" element={<FaqPage />} />
+            <Route path="/compare/:comparison" element={<ComparisonPage />} />
             <Route path="/elements/:element" element={<ElementPersonalityPage />} />
             <Route path="/elements/:element/:slug" element={<MonthlyHoroscopePage />} />
             <Route path="/bazi" element={<BaZiPage />} />

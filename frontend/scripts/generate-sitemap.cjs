@@ -29,6 +29,10 @@ const ELEMENTS = ["wood", "fire", "earth", "metal", "water"];
 
 const STATIC_URLS = [
   { loc: "/", priority: "1.0" },
+  { loc: "/compatibility", priority: "1.0" },
+  { loc: "/faq", priority: "0.9" },
+  { loc: "/compare/co-star-vs-elemental-bond", priority: "0.8" },
+  { loc: "/compare/the-pattern-vs-elemental-bond", priority: "0.8" },
   { loc: "/result", priority: "0.8" },
   { loc: "/bazi", priority: "0.9" },
   { loc: "/articles", priority: "0.9" },

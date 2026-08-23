@@ -1,0 +1,16 @@
+# Elemental Bond
+
+Elemental Bond is a web-based, BaZi-inspired Five Elements personality and relationship compatibility test. It provides a free simplified preview and clearly separates that preview from paid full-report content.
+
+## Core pages
+- https://elemental.bond/ — free single-person core-element reading
+- https://elemental.bond/compatibility — free two-person relationship preview
+- https://elemental.bond/faq — methodology, limitations, and common questions
+- https://elemental.bond/compare/co-star-vs-elemental-bond — neutral Co–Star comparison
+- https://elemental.bond/compare/the-pattern-vs-elemental-bond — neutral The Pattern comparison
+
+## Method and limitations
+The product draws vocabulary and interpretive structure from BaZi (Four Pillars) and the Chinese Five Elements tradition. The instant free calculation is a simplified pattern classification, not a complete professional Four Pillars chart. The service is intended for reflection and entertainment and is not a scientifically validated psychological or predictive assessment.
+
+## Commercial disclosure
+The validation release offers a $24.90 USD one-time compatibility report. A future membership is described as early access only; no recurring subscription is charged by the validation release.
