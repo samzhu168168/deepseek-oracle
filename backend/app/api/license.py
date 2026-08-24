@@ -74,6 +74,76 @@ def _license_error_response(error_code: str):
     }), status
 
 
+def _generate_report_text(prompt: str) -> str:
+    from app.llm_providers import create_provider
+
+    provider_name = str(current_app.config.get("LLM_PROVIDER", "fallback"))
+    model = str(current_app.config.get("LLM_MODEL", "claude-sonnet-4-6"))
+    provider = create_provider(provider_name, model, app_config=current_app.config)
+    result = provider.generate(prompt, timeout_s=60)
+    return (result.content or "").strip()
+
+
+def _provider_error_response(error: Exception):
+    status_code = getattr(error, 'status_code', None)
+    if status_code is None:
+        response = getattr(error, 'response', None)
+        status_code = getattr(response, 'status_code', None)
+
+    error_name = error.__class__.__name__.lower()
+    if isinstance(error, TimeoutError) or 'timeout' in error_name:
+        error_code, http_status = 'provider_timeout', 504
+    elif status_code == 429:
+        error_code, http_status = 'provider_rate_limited', 503
+    elif status_code in {401, 403}:
+        error_code, http_status = 'provider_authentication_failed', 502
+    else:
+        error_code, http_status = 'provider_unavailable', 502
+
+    return jsonify({
+        'success': False,
+        'error_code': error_code,
+        'error': 'Unable to generate the report right now. Please try again.',
+    }), http_status
+
+
+def _parse_report(raw_text: str) -> dict:
+    if not raw_text:
+        raise ValueError('empty provider response')
+
+    clean = raw_text.strip()
+    if clean.startswith('```'):
+        lines = clean.splitlines()
+        if len(lines) < 3 or not lines[-1].strip().startswith('```'):
+            raise ValueError('malformed fenced response')
+        clean = '\n'.join(lines[1:-1]).strip()
+
+    report = json.loads(clean)
+    if not isinstance(report, dict):
+        raise ValueError('report must be an object')
+
+    required_strings = ('fullAnalysis', 'elementAdvice')
+    if any(not isinstance(report.get(field), str) or not report[field].strip() for field in required_strings):
+        raise ValueError('required report text is missing')
+
+    nested_fields = {
+        'palaceReadings': ('person1', 'person2', 'combined'),
+        'timingWindows': ('q2_2026', 'q3_2026', 'q4_2026'),
+    }
+    for field, children in nested_fields.items():
+        value = report.get(field)
+        if not isinstance(value, dict):
+            raise ValueError(f'{field} must be an object')
+        if any(not isinstance(value.get(child), str) or not value[child].strip() for child in children):
+            raise ValueError(f'{field} is incomplete')
+
+    protocol = report.get('karmicProtocol')
+    if not isinstance(protocol, list) or not protocol or any(not isinstance(item, str) or not item.strip() for item in protocol):
+        raise ValueError('karmicProtocol is incomplete')
+
+    return report
+
+
 # ── Route 1: 验证 Gumroad License Key ───────────────────
 @license_bp.route('/api/verify-license', methods=['POST', 'OPTIONS'])
 @cross_origin(origins='*', allow_headers=['Content-Type'], methods=['POST', 'OPTIONS'])
@@ -129,40 +199,19 @@ def generate_full_report():
 
     # ── 调用 LLM (通过统一的 provider 系统，自动享受 fallback) ──
     try:
-        from app.llm_providers import create_provider
-
-        provider_name = str(current_app.config.get("LLM_PROVIDER", "fallback"))
-        model = str(current_app.config.get("LLM_MODEL", "claude-sonnet-4-6"))
-        provider = create_provider(provider_name, model, app_config=current_app.config)
-        result = provider.generate(prompt, timeout_s=60)
-        raw_text = (result.content or "").strip()
-    except Exception as e:
-        return jsonify({'success': False, 'error': f'Report generation failed: {str(e)}'}), 500
+        raw_text = _generate_report_text(prompt)
+    except Exception as error:
+        return _provider_error_response(error)
 
     # ── 解析 AI 返回的 JSON ──
     try:
-        # Claude 会返回 JSON，去掉可能的 markdown fence
-        clean = raw_text.strip()
-        if clean.startswith('```'):
-            clean = clean.split('\n', 1)[1].rsplit('```', 1)[0].strip()
-        report = json.loads(clean)
-    except (json.JSONDecodeError, IndexError):
-        # 降级：把全文放进 fullAnalysis
-        report = {
-            'fullAnalysis': raw_text,
-            'palaceReadings': {
-                'person1': 'See full analysis above.',
-                'person2': 'See full analysis above.',
-                'combined': 'See full analysis above.',
-            },
-            'timingWindows': {
-                'q2_2026': 'See full analysis above.',
-                'q3_2026': 'See full analysis above.',
-                'q4_2026': 'See full analysis above.',
-            },
-            'karmicProtocol': [raw_text],
-            'elementAdvice': '',
-        }
+        report = _parse_report(raw_text)
+    except (json.JSONDecodeError, ValueError):
+        return jsonify({
+            'success': False,
+            'error_code': 'invalid_provider_response',
+            'error': 'Unable to generate the report right now. Please try again.',
+        }), 502
 
     # ── 写入缓存 ──
     _report_cache[cache_key] = report
