@@ -46,6 +46,8 @@ const ARTICLES_DIR = path.resolve(ROOT, "..", "backend", "app", "data", "article
 
 // ── Content selectors to wait for (route prefix → CSS selector) ──
 const WAIT_FOR = [
+  { prefix: "/relationship-patterns/", selector: '[data-prerender-ready="relationship-pattern-article"]' },
+  { prefix: "/methodology", selector: '[data-prerender-ready="methodology"]' },
   { prefix: "/compare/", selector: ".comparison-table" },
   { prefix: "/faq", selector: ".content-page" },
   { prefix: "/compatibility", selector: ".compact-page" },
@@ -479,10 +481,29 @@ async function verifyHydration(browser) {
     activeSelector = ".compact-page > .funnel-form";
     await submitHydratedForm(page, activeSelector, ".paywall-grid");
 
+    const contentRoutes = [
+      "/relationship-patterns/why-do-i-keep-attracting-the-same-type-of-partner",
+      "/relationship-patterns/why-do-i-always-care-more",
+      "/relationship-patterns/why-does-he-pull-away-when-we-get-close",
+      "/methodology",
+    ];
+    for (const route of contentRoutes) {
+      const marker = route === "/methodology"
+        ? '[data-prerender-ready="methodology"]'
+        : '[data-prerender-ready="relationship-pattern-article"]';
+      const contentUrl = `http://127.0.0.1:${PORT}${route}?__prerendered=1`;
+      console.log(`[hydration] route: ${route}`);
+      console.log(`[hydration] URL: ${contentUrl}`);
+      activeSelector = marker;
+      await page.goto(contentUrl, { waitUntil: "domcontentloaded", timeout: TIMEOUT });
+      await page.waitForFunction(() => document.readyState === "complete", { timeout: TIMEOUT });
+      await page.waitForSelector(marker, { visible: true, timeout: TIMEOUT });
+    }
+
     if (hydrationErrors.length > 0) {
       throw new Error(`Hydration mismatch detected: ${hydrationErrors.join(" | ")}`);
     }
-    console.log("[prerender] Hydration smoke test passed: home form -> result -> compatibility form -> paywall");
+    console.log("[prerender] Hydration smoke test passed: funnel interactions + content page markers");
   } catch (error) {
     await logHydrationDiagnostics(page, activeSelector);
     throw error;

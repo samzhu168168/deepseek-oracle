@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 import { calculateElementProfile, getRelationshipSummary, type ElementProfile } from "../utils/elementProfile";
+import { trackFunnelEvent } from "../utils/analytics";
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
 const GUMROAD_URL = "https://samzhu168.gumroad.com/l/bhpmxr?wanted=true";
@@ -24,8 +25,14 @@ export default function CompatibilityTestPage() {
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSecond(calculateElementProfile(date, time, place));
+    const nextSecond = calculateElementProfile(date, time, place);
+    setSecond(nextSecond);
+    trackFunnelEvent("compatibility_start", { element_pair: `${first?.element || "unknown"}-${nextSecond.element}`, cta_location: "compatibility_form" });
   };
+
+  useEffect(() => {
+    if (first && second) trackFunnelEvent("paywall_view", { element_pair: `${first.element}-${second.element}` });
+  }, [first, second]);
 
   const join = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,7 +63,7 @@ export default function CompatibilityTestPage() {
       {second && <section className="compatibility-preview" aria-live="polite"><p className="funnel-eyebrow">Free preview · {first.element} + {second.element}</p><h2>Your relationship dynamic</h2><p>{getRelationshipSummary(first.element, second.element)}</p>
         <div className="paywall-grid">
           <article className="paywall-card paywall-card--primary"><p className="paywall-badge">PRIMARY OPTION · EARLY ACCESS</p><h3>Relationship Timing Membership</h3><p>Full compatibility report, monthly timing updates, saved comparisons, and history when membership launches.</p><p className="paywall-disclosure">No charge today. Final monthly price will be shown before any billing begins.</p>{joined ? <p>You're on the early-access list.</p> : <form className="waitlist-form" onSubmit={join}><input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Email for launch access" maxLength={254} required /><button className="oracle-button">Join Early Access</button></form>}</article>
-          <article className="paywall-card"><p className="paywall-badge">ONE REPORT · AVAILABLE NOW</p><h3>Full Compatibility Report</h3><p className="paywall-price">$24.90 USD <span>one time</span></p><p>Choose this only if you want one complete report without a membership.</p><a className="oracle-button" href={GUMROAD_URL} target="_blank" rel="noopener noreferrer">Buy One Report — $24.90 USD</a><p className="paywall-disclosure">Checkout is handled by Gumroad. It may show a local-currency equivalent.</p></article>
+          <article className="paywall-card"><p className="paywall-badge">ONE REPORT · AVAILABLE NOW</p><h3>Full Compatibility Report</h3><p className="paywall-price">$24.90 USD <span>one time</span></p><p>Choose this only if you want one complete report without a membership.</p><a className="oracle-button" href={GUMROAD_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackFunnelEvent("checkout_start", { element_pair: `${first.element}-${second.element}`, cta_location: "compatibility_paywall" })}>Buy One Report — $24.90 USD</a><p className="paywall-disclosure">Checkout is handled by Gumroad. It may show a local-currency equivalent.</p></article>
         </div>
       </section>}
     </div>

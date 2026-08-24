@@ -3,6 +3,8 @@ import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 import { calculateElementProfile, type ElementProfile } from "../utils/elementProfile";
+import { getEmotionalInsight } from "../utils/emotionalInsights";
+import { trackFunnelEvent } from "../utils/analytics";
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
 const PROFILE_KEY = "bond:free_profile";
@@ -33,6 +35,7 @@ export default function HomePage() {
     const nextProfile = calculateElementProfile(date, time, place);
     window.sessionStorage.setItem(PROFILE_KEY, JSON.stringify({ ...nextProfile, birthDate: "", birthTime: "", birthPlace: "" }));
     setProfile(nextProfile);
+    trackFunnelEvent("reading_complete", { element: nextProfile.element });
     window.setTimeout(() => {
       resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       if (!window.sessionStorage.getItem("bond:email_prompt_seen")) {
@@ -75,6 +78,7 @@ export default function HomePage() {
       acceptedAnswer: { "@type": "Answer", text: answer },
     })),
   };
+  const emotionalInsight = profile ? getEmotionalInsight(profile.element) : null;
 
   return (
     <div className="funnel-page fade-in">
@@ -98,17 +102,62 @@ export default function HomePage() {
         </form>
       </section>
 
-      {profile && (
+      {profile && emotionalInsight && (
         <section ref={resultRef} className="funnel-result" aria-live="polite">
-          <p className="funnel-eyebrow">Your core pattern</p>
-          <h2>You are {profile.element}-dominant.</h2>
-          <div className="funnel-result__copy">{profile.description.map((line) => <p key={line}>{line}</p>)}</div>
-          <p className="funnel-surface">This is just the surface reading. Your full chart — including how you handle conflict, what drains you, and what you're naturally drawn to — is below.</p>
-          <div className="locked-preview" aria-label="Full reading preview">
-            <p>THE FULL VERSION INCLUDES</p>
-            <div>Core emotional operating system</div><div>Conflict and repair pattern</div><div>What drains and restores you</div><div>Relationship timing overview</div>
+          <header className="emotional-result__hero">
+            <p className="funnel-eyebrow">Your Relationship Pattern · {profile.element} lens</p>
+            <h2>{emotionalInsight.patternTitle}</h2>
+            <p>{emotionalInsight.patternSummary}</p>
+          </header>
+
+          <section className="emotional-result__section">
+            <h3>Why This Feels Familiar</h3>
+            <p>You may notice that you...</p>
+            <ul className="emotional-observation-list">
+              {emotionalInsight.familiarPattern.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </section>
+
+          <section className="emotional-screenshot-card emotional-screenshot-card--need" aria-label="What you actually need">
+            <p className="funnel-eyebrow">What You Actually Need</p>
+            <h3>{emotionalInsight.hiddenNeed.label}</h3>
+            <p>{emotionalInsight.hiddenNeed.explanation}</p>
+            <span>Elemental Bond · relationship reflection</span>
+          </section>
+
+          <section className="emotional-screenshot-card emotional-screenshot-card--chemistry" aria-label="What you may mistake for chemistry">
+            <p className="funnel-eyebrow">What You May Mistake for Chemistry</p>
+            <h3>{emotionalInsight.chemistryTrap.headline}</h3>
+            <p>{emotionalInsight.chemistryTrap.explanation}</p>
+            <span>Elemental Bond · relationship reflection</span>
+          </section>
+
+          <section className="emotional-result__section emotional-element-lens">
+            <p className="funnel-eyebrow">Your Elemental Lens</p>
+            <h3>You are {profile.element}-dominant.</h3>
+            <div className="funnel-result__copy">{profile.description.map((line) => <p key={line}>{line}</p>)}</div>
+            <p className="emotional-lens-note">Five Elements is used here as a symbolic reflection lens, not as a psychological diagnosis or scientific prediction.</p>
+          </section>
+
+          <section className="emotional-result__section">
+            <h3>What To Notice Next</h3>
+            <ol className="emotional-next-list">
+              {emotionalInsight.nextMove.map((item) => <li key={item}>{item}</li>)}
+            </ol>
+          </section>
+
+          <div className="decode-connection">
+            <p className="funnel-eyebrow">Decode This Connection</p>
+            <h3>See why this relationship feels the way it does.</h3>
+            <p>Add their birth date to compare your two elemental patterns.</p>
+            <Link
+              className="oracle-button oracle-cta-button funnel-primary-link"
+              to="/compatibility"
+              onClick={() => trackFunnelEvent("compatibility_start", { element: profile.element, cta_location: "free_result" })}
+            >
+              Decode This Connection
+            </Link>
           </div>
-          <Link className="oracle-button oracle-cta-button funnel-primary-link" to="/compatibility">See How You Match With Someone</Link>
         </section>
       )}
 

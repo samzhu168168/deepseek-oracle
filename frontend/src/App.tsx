@@ -24,6 +24,8 @@ import ChemistryVsCompatibilityPage from "./pages/faq/chemistry-vs-compatibility
 import FamiliarVsSafePage from "./pages/faq/familiar-vs-safe";
 import BirthDatePatternPage from "./pages/faq/birth-date-relationship-pattern";
 import GroundhoggingDatingPage from "./pages/faq/groundhogging-dating";
+import RelationshipPatternArticlePage from "./pages/RelationshipPatternArticle";
+import MethodologyPage from "./pages/Methodology";
 export default function App() {
   return (
     <HelmetProvider>
@@ -51,6 +53,10 @@ export default function App() {
             <Route path="/faq/familiar-vs-safe" element={<FamiliarVsSafePage />} />
             <Route path="/faq/birth-date-relationship-pattern" element={<BirthDatePatternPage />} />
             <Route path="/faq/groundhogging-dating" element={<GroundhoggingDatingPage />} />
+            <Route path="/relationship-patterns/why-do-i-keep-attracting-the-same-type-of-partner" element={<RelationshipPatternArticlePage slug="why-do-i-keep-attracting-the-same-type-of-partner" />} />
+            <Route path="/relationship-patterns/why-do-i-always-care-more" element={<RelationshipPatternArticlePage slug="why-do-i-always-care-more" />} />
+            <Route path="/relationship-patterns/why-does-he-pull-away-when-we-get-close" element={<RelationshipPatternArticlePage slug="why-does-he-pull-away-when-we-get-close" />} />
+            <Route path="/methodology" element={<MethodologyPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
