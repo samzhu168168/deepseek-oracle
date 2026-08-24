@@ -105,11 +105,6 @@
       "dest": "/frontend/index.html"
     }
   ],
-  "functions": {
-    "api/index.py": {
-      "maxDuration": 60
-    }
-  },
   "env": {
     "DATABASE_PATH": "/tmp/data.db",
     "REDIS_URL": "",
