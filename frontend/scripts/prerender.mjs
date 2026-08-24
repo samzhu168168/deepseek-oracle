@@ -301,6 +301,8 @@ async function prerender() {
           }
         }
 
+        await waitForRouteMetadata(page, route);
+
         const html = injectStaticMetadata(await page.content(), route);
         writePrerenderedFile(route, html);
 
@@ -354,6 +356,38 @@ async function prerender() {
       `Strict prerender failed: requested=${routes.length}, rendered=${successCount}, failed=${failCount}, missing=${missingOutputs.length}`,
     );
   }
+}
+
+async function waitForRouteMetadata(page, route) {
+  if (!route.startsWith("/relationship-patterns/") && route !== "/methodology") return;
+
+  const canonical = `https://elemental.bond${route}`;
+  const requiredSchemaTypes = route === "/methodology"
+    ? ["WebPage"]
+    : ["Article", "BreadcrumbList"];
+
+  await page.waitForFunction(
+    ({ expectedCanonical, schemaTypes }) => {
+      const canonicals = Array.from(document.querySelectorAll('link[rel="canonical"]'));
+      if (canonicals.length !== 1 || canonicals[0].href !== expectedCanonical) return false;
+
+      const schemas = Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
+        .map((script) => {
+          try {
+            return JSON.parse(script.textContent || "{}");
+          } catch {
+            return null;
+          }
+        })
+        .filter(Boolean);
+
+      return schemaTypes.every(
+        (schemaType) => schemas.filter((schema) => schema["@type"] === schemaType).length === 1,
+      );
+    },
+    { timeout: TIMEOUT },
+    { expectedCanonical: canonical, schemaTypes: requiredSchemaTypes },
+  );
 }
 
 async function launchBrowser() {
