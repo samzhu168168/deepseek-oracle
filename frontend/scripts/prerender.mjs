@@ -238,6 +238,7 @@ async function prerender() {
     throw new Error(`[prerender] Routes file must contain at least one route: ${ROUTES_FILE}`);
   }
   console.log(`[prerender] Routes to render: ${routes.length}`);
+  console.log(`[prerender] routes requested: ${routes.length}`);
 
   // Ensure output directory
   mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -247,45 +248,11 @@ async function prerender() {
   await new Promise((resolve) => server.listen(PORT, "127.0.0.1", resolve));
   console.log(`[prerender] Preview server at http://127.0.0.1:${PORT}`);
 
-  // Try to load Puppeteer
   let browser;
   try {
-    const puppeteer = await import("puppeteer");
-
-    // Try known Chromium paths (Vercel, local, etc.)
-    const possiblePaths = [
-      process.env.CHROME_PATH,
-      process.env.CHROMIUM_PATH,
-      "/usr/bin/chromium",
-      "/usr/bin/chromium-browser",
-      "/usr/bin/google-chrome",
-      "/usr/bin/google-chrome-stable",
-    ].filter(Boolean);
-
-    const launchOpts = {
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
-    };
-
-    // Try each path, or Puppeteer's bundled browser
-    for (const execPath of possiblePaths) {
-      try {
-        browser = await puppeteer.default.launch({ ...launchOpts, executablePath: execPath });
-        console.log(`[prerender] browser executable: ${execPath}`);
-        console.log("[prerender] Browser launched with configured Chrome");
-        break;
-      } catch {
-        // Try next path
-      }
-    }
-
-    if (!browser) {
-      console.log(`[prerender] browser executable: ${puppeteer.default.executablePath()}`);
-      browser = await puppeteer.default.launch(launchOpts);
-      console.log("[prerender] Browser launched with Puppeteer-managed Chrome");
-    }
+    browser = await launchBrowser();
   } catch (e) {
-    const message = `[prerender] Puppeteer not available (${e.message})`;
+    const message = `[prerender] Browser provider failed (${e.message})`;
     await closeServer(server);
     if (STRICT) {
       throw new Error(`${message}. Strict mode requires a working browser.`);
@@ -374,6 +341,81 @@ async function prerender() {
       `Strict prerender failed: requested=${routes.length}, rendered=${successCount}, failed=${failCount}, missing=${missingOutputs.length}`,
     );
   }
+}
+
+async function launchBrowser() {
+  const isVercel = Boolean(process.env.VERCEL);
+  console.log(`[prerender] environment: ${isVercel ? "vercel" : "local"}`);
+
+  if (isVercel) {
+    console.log("[prerender] browser provider: sparticuz");
+    const [{ default: puppeteer }, { default: chromium }] = await Promise.all([
+      import("puppeteer-core"),
+      import("@sparticuz/chromium"),
+    ]);
+    const executablePath = await chromium.executablePath();
+    console.log(`[prerender] executablePath: ${executablePath}`);
+    const browser = await puppeteer.launch({
+      args: await puppeteer.defaultArgs({ args: chromium.args, headless: "shell" }),
+      executablePath,
+      headless: "shell",
+    });
+    console.log("[prerender] browser launched");
+    return browser;
+  }
+
+  console.log("[prerender] browser provider: local");
+  const { default: puppeteer } = await import("puppeteer");
+  const possiblePaths = getLocalBrowserPaths();
+  const launchOptions = {
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"],
+  };
+
+  for (const executablePath of possiblePaths) {
+    if (!existsSync(executablePath)) continue;
+    try {
+      console.log(`[prerender] executablePath: ${executablePath}`);
+      const browser = await puppeteer.launch({ ...launchOptions, executablePath });
+      console.log("[prerender] browser launched");
+      return browser;
+    } catch (error) {
+      console.warn(`[prerender] Local browser launch failed at ${executablePath}: ${error.message}`);
+    }
+  }
+
+  const executablePath = puppeteer.executablePath();
+  console.log(`[prerender] executablePath: ${executablePath}`);
+  const browser = await puppeteer.launch(launchOptions);
+  console.log("[prerender] browser launched");
+  return browser;
+}
+
+function getLocalBrowserPaths() {
+  const paths = [process.env.CHROME_PATH, process.env.CHROMIUM_PATH];
+
+  if (process.platform === "win32") {
+    if (process.env.PROGRAMFILES) {
+      paths.push(path.join(process.env.PROGRAMFILES, "Google", "Chrome", "Application", "chrome.exe"));
+    }
+    if (process.env["PROGRAMFILES(X86)"]) {
+      paths.push(path.join(process.env["PROGRAMFILES(X86)"], "Google", "Chrome", "Application", "chrome.exe"));
+    }
+    if (process.env.LOCALAPPDATA) {
+      paths.push(path.join(process.env.LOCALAPPDATA, "Google", "Chrome", "Application", "chrome.exe"));
+    }
+  } else if (process.platform === "darwin") {
+    paths.push("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
+  } else {
+    paths.push(
+      "/usr/bin/chromium",
+      "/usr/bin/chromium-browser",
+      "/usr/bin/google-chrome",
+      "/usr/bin/google-chrome-stable",
+    );
+  }
+
+  return paths.filter(Boolean);
 }
 
 function closeServer(server) {
