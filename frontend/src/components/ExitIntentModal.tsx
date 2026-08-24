@@ -1,5 +1,5 @@
 /** ExitIntentModal — Two modes:
- *  /result page: purchase-recovery with the main $24.90 offer
+ *  /result page: purchase-recovery with the main $14.90 offer
  *  Other pages: email capture for 2026 forecast
  *  Triggers on mouse leaving top of viewport. Once per session.
  */
@@ -115,13 +115,13 @@ export function ExitIntentModal({ mountDelay = 8000 }: ExitIntentModalProps) {
                 : "Your full reading reveals the pattern, the 2026 timeline, and 5 specific action steps."}
             </p>
             <a
-              href="https://samzhu168.gumroad.com/l/bhpmxr"
+              href="https://samzhu168.gumroad.com/l/decode-this-connection"
               target="_blank"
               rel="noopener noreferrer"
               className="oracle-button oracle-cta-button exit-intent-submit"
               onClick={() => setVisible(false)}
             >
-              Unlock Your Pattern Breaker Report — $24.90
+              Decode This Connection — $14.90
             </a>
             <button
               type="button"

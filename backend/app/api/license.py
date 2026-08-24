@@ -20,11 +20,58 @@ def cross_origin(*args, **kwargs):
 license_bp = Blueprint('license', __name__)
 
 # ── 配置 ────────────────────────────────────────────────
-GUMROAD_PRODUCT_ID = os.getenv('GUMROAD_PRODUCT_ID', 'bhpmxr')  # 从你的 Gumroad URL 取
+GUMROAD_PRODUCT_ID = os.getenv('GUMROAD_PRODUCT_ID', '').strip()
 GUMROAD_PRODUCT_ID_BAZI = os.getenv('GUMROAD_PRODUCT_ID_BAZI', 'swpdpb')  # BaZi personal reading
 
 # 简单内存缓存（生产环境换成 Redis 或数据库）
 _report_cache: dict[str, dict] = {}
+
+
+def _verify_gumroad_license(license_key: str) -> tuple[bool, str, dict]:
+    """Verify entitlement with Gumroad without consuming a license use."""
+    if not GUMROAD_PRODUCT_ID:
+        return False, 'configuration_error', {}
+
+    try:
+        response = requests.post(
+            'https://api.gumroad.com/v2/licenses/verify',
+            data={
+                'product_id': GUMROAD_PRODUCT_ID,
+                'license_key': license_key,
+                'increment_uses_count': 'false',
+            },
+            timeout=10,
+        )
+        response.raise_for_status()
+        result = response.json()
+    except (requests.RequestException, ValueError):
+        return False, 'verification_unavailable', {}
+
+    if not result.get('success'):
+        return False, 'invalid_license', {}
+
+    purchase = result.get('purchase') or {}
+    if str(purchase.get('product_id') or '') != GUMROAD_PRODUCT_ID:
+        return False, 'invalid_license', {}
+    if purchase.get('refunded') or purchase.get('disputed') or purchase.get('chargebacked'):
+        return False, 'purchase_revoked', {}
+
+    return True, '', purchase
+
+
+def _license_error_response(error_code: str):
+    messages = {
+        'configuration_error': 'Purchase verification is not configured yet.',
+        'invalid_license': 'Invalid license key.',
+        'purchase_revoked': 'This purchase has been refunded or disputed.',
+        'verification_unavailable': 'Unable to verify right now. Please try again.',
+    }
+    status = 503 if error_code in {'configuration_error', 'verification_unavailable'} else 200
+    return jsonify({
+        'success': False,
+        'error_code': error_code,
+        'error': messages[error_code],
+    }), status
 
 
 # ── Route 1: 验证 Gumroad License Key ───────────────────
@@ -40,39 +87,9 @@ def verify_license():
     if not license_key:
         return jsonify({'success': False, 'error': 'License key is required.'}), 400
 
-    # 支持传入 product_id，用于多产品（如 BaZi 用 swpdpb，兼容性用 bhpmxr）
-    raw_pid = (data.get('product_id') or '').strip()
-    if raw_pid == 'bazi':
-        product_id = GUMROAD_PRODUCT_ID_BAZI
-    elif raw_pid:
-        product_id = raw_pid
-    else:
-        product_id = GUMROAD_PRODUCT_ID
-
-    try:
-        resp = requests.post(
-            'https://api.gumroad.com/v2/licenses/verify',
-            data={
-                'product_id': product_id,
-                'license_key': license_key,
-                'increment_uses_count': 'false',  # 不消耗使用次数
-            },
-            timeout=10,
-        )
-        result = resp.json()
-    except requests.RequestException as e:
-        return jsonify({'success': False, 'error': 'Could not reach Gumroad. Try again.'}), 502
-
-    if not result.get('success'):
-        return jsonify({
-            'success': False,
-            'error': 'License key not found. Check your Gumroad confirmation email.',
-        }), 200
-
-    # 验证通过，检查是否已退款/取消
-    purchase = result.get('purchase', {})
-    if purchase.get('refunded') or purchase.get('chargebacked'):
-        return jsonify({'success': False, 'error': 'This purchase has been refunded.'}), 200
+    valid, error_code, purchase = _verify_gumroad_license(license_key)
+    if not valid:
+        return _license_error_response(error_code)
 
     return jsonify({'success': True, 'purchase_id': purchase.get('id', '')})
 
@@ -90,28 +107,15 @@ def generate_full_report():
     if not license_key:
         return jsonify({'success': False, 'error': 'License key is required.'}), 400
 
-    # ── 检查缓存（同一个 key 不重复调用 AI）──
+    # ── 再次验证 license（防止绕过 /verify-license 直接调这个接口）──
+    valid, error_code, _purchase = _verify_gumroad_license(license_key)
+    if not valid:
+        return _license_error_response(error_code)
+
+    # ── 验证通过后检查缓存（同一个 key 不重复调用 AI）──
     cache_key = hashlib.sha256(license_key.encode()).hexdigest()
     if cache_key in _report_cache:
         return jsonify({'success': True, 'report': _report_cache[cache_key]})
-
-    # ── 再次验证 license（防止绕过 /verify-license 直接调这个接口）──
-    try:
-        verify_resp = requests.post(
-            'https://api.gumroad.com/v2/licenses/verify',
-            data={
-                'product_id': GUMROAD_PRODUCT_ID,
-                'license_key': license_key,
-                'increment_uses_count': 'true',  # 这里才真正标记已使用
-            },
-            timeout=10,
-        )
-        verify_result = verify_resp.json()
-    except requests.RequestException:
-        return jsonify({'success': False, 'error': 'Verification failed. Please try again.'}), 502
-
-    if not verify_result.get('success'):
-        return jsonify({'success': False, 'error': 'Invalid license key.'}), 200
 
     # ── 提取用户输入 ──
     person1 = data.get('person1', {})

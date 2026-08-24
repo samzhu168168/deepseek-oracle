@@ -72,12 +72,12 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
         <div className="unlock-card unlock-card-premium">
           <div className="unlock-card-header">
             <span className="unlock-card-icon">📖</span>
-            <h3 className="unlock-card-title">Pattern Breaker Report</h3>
+            <h3 className="unlock-card-title">Decode This Connection</h3>
           </div>
           <div className="unlock-card-price">
             <div className="price-main">
               <span className="price-currency">$</span>
-              <span className="price-amount">24.90 USD</span>
+              <span className="price-amount">14.90 USD</span>
             </div>
             <span className="price-label">one-time · instant access</span>
           </div>
@@ -91,10 +91,10 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
             className="unlock-btn unlock-btn-premium"
             onClick={onUnlock}
           >
-            Unlock Your Pattern Breaker Report — $24.90 USD
+            Decode This Connection — $14.90 USD
           </button>
           <p className="unlock-value-compare">
-            One coaching session: $150–$300 · This reading: $24.90, yours forever.
+            One coaching session: $150–$300 · This reading: $14.90, yours forever.
           </p>
         </div>
       </div>

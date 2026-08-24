@@ -524,10 +524,10 @@ export default function ResultPage() {
             <button className="paywall-modal__close" type="button" onClick={() => setPaymentModalOpen(false)}>
               ×
             </button>
-            <p className="paywall-modal__title">Unlock Your Pattern Breaker Report</p>
+            <p className="paywall-modal__title">Decode This Connection</p>
 
             <div className="paywall-price-anchor">
-              <span className="paywall-price-now">$24.90 USD</span>
+              <span className="paywall-price-now">$14.90 USD</span>
             </div>
 
             <p className="paywall-modal__score">
@@ -542,12 +542,11 @@ export default function ResultPage() {
               <button
                 className="payment-option__btn"
                 onClick={() => {
-                  const returnUrl = encodeURIComponent(`${SITE_URL}/result?unlocked=true&ref=gumroad`);
-                  window.open(`https://samzhu168.gumroad.com/l/bhpmxr?wanted=true&return_url=${returnUrl}`, "_blank");
+                  window.open("https://samzhu168.gumroad.com/l/decode-this-connection", "_blank");
                   setPaymentModalOpen(false);
                 }}
               >
-                Unlock Your Pattern Breaker Report — $24.90 USD
+                Decode This Connection — $14.90 USD
               </button>
               <p className="payment-option__footer">
                 Visa, Mastercard, Amex · One-time charge, no subscription

@@ -34,7 +34,8 @@ interface LicenseKeyModalProps {
   productId?: string
 }
 
-type Step = 'input' | 'verifying' | 'generating' | 'error'
+type Step = 'input' | 'verifying' | 'generating' | 'success' | 'error'
+const LICENSE_STORAGE_KEY = 'bond:gumroad_license'
 
 export function LicenseKeyModal({
   isOpen,
@@ -42,7 +43,6 @@ export function LicenseKeyModal({
   onSuccess,
   resultPayload,
   skipReportGeneration = false,
-  productId,
 }: LicenseKeyModalProps) {
   const [step, setStep] = useState<Step>('input')
   const [licenseKey, setLicenseKey] = useState('')
@@ -58,10 +58,12 @@ export function LicenseKeyModal({
   }, [step])
 
   useEffect(() => {
+    if (isOpen) {
+      setLicenseKey(window.localStorage.getItem(LICENSE_STORAGE_KEY) || '')
+    }
     if (!isOpen) {
       setTimeout(() => {
         setStep('input')
-        setLicenseKey('')
         setErrorMsg('')
       }, 300)
     }
@@ -88,7 +90,6 @@ export function LicenseKeyModal({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           license_key: key,
-          ...(productId ? { product_id: productId } : {}),
         }),
         signal: controller1.signal,
       })
@@ -96,25 +97,28 @@ export function LicenseKeyModal({
       clearTimeout(timeoutId1)
 
       if (!verifyRes.ok) {
-        let errorDetail = `HTTP ${verifyRes.status}`
+        let errorCode = 'verification_unavailable'
         try {
           const errorData = await verifyRes.json()
-          errorDetail = errorData.error || errorDetail
+          errorCode = errorData.error_code || errorCode
         } catch { /* ignore */ }
-        throw new Error(`License verification failed: ${errorDetail}`)
+        throw new Error(errorCode)
       }
 
       const verifyData = await verifyRes.json()
 
       if (!verifyData.success) {
         setStep('error')
-        setErrorMsg(verifyData.error || 'Invalid license key. Please check and try again.')
+        setErrorMsg(getLicenseErrorMessage(verifyData.error_code))
         return
       }
 
+      window.localStorage.setItem(LICENSE_STORAGE_KEY, key)
+
       // BaZi scenario — skip AI generation, unlock directly
       if (skipReportGeneration) {
-        onSuccess({ licenseKey: key })
+        setStep('success')
+        window.setTimeout(() => onSuccess({ licenseKey: key }), 500)
         return
       }
 
@@ -161,14 +165,17 @@ export function LicenseKeyModal({
         return
       }
 
-      onSuccess({ ...reportData.report, licenseKey: key })
+      setStep('success')
+      window.setTimeout(() => onSuccess({ ...reportData.report, licenseKey: key }), 500)
     } catch (err: any) {
       setStep('error')
-      let errorMessage = 'Network error. Please check your connection and try again.'
+      let errorMessage = 'Unable to verify right now. Please try again.'
       if (err.name === 'AbortError') {
-        errorMessage = 'Request timeout. Please try again.'
-      } else if (err.message) {
-        errorMessage = err.message
+        errorMessage = 'Unable to verify right now. Please try again.'
+      } else if (err.message === 'purchase_revoked') {
+        errorMessage = 'This purchase has been refunded or disputed.'
+      } else if (err.message === 'invalid_license') {
+        errorMessage = 'Invalid license key.'
       }
       setErrorMsg(errorMessage)
     }
@@ -200,10 +207,9 @@ export function LicenseKeyModal({
           <div onKeyDown={handleKeyDown}>
             <div style={{ marginBottom: '24px' }}>
               <div className="license-modal-badge">ALREADY PURCHASED</div>
-              <h2 className="license-modal-title">Enter Your License Key</h2>
+              <h2 className="license-modal-title">Unlock Your Reading</h2>
               <p className="license-modal-desc">
-                Check your email from Gumroad — your key looks like{' '}
-                <code className="license-modal-code">XXXX-XXXX-XXXX-XXXX</code>
+                Paste the license key from your Gumroad receipt. It stays on this device and is reverified when you unlock.
               </p>
             </div>
 
@@ -227,7 +233,7 @@ export function LicenseKeyModal({
               onClick={handleVerify}
               disabled={!licenseKey.trim()}
             >
-              Unlock My Full Blueprint →
+              Unlock Your Reading →
             </button>
 
             <p className="license-modal-hint">
@@ -264,7 +270,23 @@ export function LicenseKeyModal({
           </div>
         )}
 
+        {step === 'success' && (
+          <div className="license-modal-state" role="status">
+            <div className="license-modal-state-icon">✓</div>
+            <h3 className="license-modal-state-title">Purchase verified</h3>
+            <p className="license-modal-state-sub">Unlocking your connection reading</p>
+          </div>
+        )}
+
       </div>
     </div>
   )
+}
+
+function getLicenseErrorMessage(errorCode?: string) {
+  if (errorCode === 'purchase_revoked') return 'This purchase has been refunded or disputed.'
+  if (errorCode === 'verification_unavailable' || errorCode === 'configuration_error') {
+    return 'Unable to verify right now. Please try again.'
+  }
+  return 'Invalid license key.'
 }

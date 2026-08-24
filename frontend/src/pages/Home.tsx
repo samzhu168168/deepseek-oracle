@@ -8,6 +8,7 @@ import { trackFunnelEvent } from "../utils/analytics";
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://elemental.bond").replace(/\/$/, "");
 const PROFILE_KEY = "bond:free_profile";
+const CONNECTION_PROFILE_KEY = "bond:connection_profile";
 
 export default function HomePage() {
   const [date, setDate] = useState("");
@@ -34,6 +35,7 @@ export default function HomePage() {
     if (!date) return;
     const nextProfile = calculateElementProfile(date, time, place);
     window.sessionStorage.setItem(PROFILE_KEY, JSON.stringify({ ...nextProfile, birthDate: "", birthTime: "", birthPlace: "" }));
+    window.localStorage.setItem(CONNECTION_PROFILE_KEY, JSON.stringify(nextProfile));
     setProfile(nextProfile);
     trackFunnelEvent("reading_complete", { element: nextProfile.element });
     window.setTimeout(() => {

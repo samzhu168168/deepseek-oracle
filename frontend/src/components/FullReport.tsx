@@ -18,7 +18,7 @@ export function FullReport({ data, elementPair, score }: FullReportProps) {
       <div className="full-report-unlock-banner">
         <span className="full-report-unlock-banner__icon">✦</span>
         <div>
-          <div className="full-report-unlock-banner__label">Full Blueprint Unlocked</div>
+          <div className="full-report-unlock-banner__label">Connection Reading Unlocked</div>
           <div className="full-report-unlock-banner__meta">
             {elementPair} Bond · Soul Resonance Score: {score}/100
           </div>
