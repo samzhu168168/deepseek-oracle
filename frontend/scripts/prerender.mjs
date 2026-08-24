@@ -35,6 +35,11 @@ const OUTPUT_DIR = path.resolve(DIST, "__prerendered__");
 const PORT = 4173;
 const CONCURRENCY = Number(readArgument("--concurrency", "3"));
 const TIMEOUT = Number(readArgument("--timeout", "15000"));
+const HYDRATION_VIEWPORT = {
+  width: Number(readArgument("--viewport-width", "1280")),
+  height: Number(readArgument("--viewport-height", "900")),
+  deviceScaleFactor: 1,
+};
 const STRICT = process.argv.includes("--strict");
 
 const ARTICLES_DIR = path.resolve(ROOT, "..", "backend", "app", "data", "articles");
@@ -311,9 +316,15 @@ async function prerender() {
   const workers = Array.from({ length: Math.min(CONCURRENCY, routes.length) }, () => processRoute());
   await Promise.all(workers);
 
+  const staticRenderingPassed = successCount === routes.length && failCount === 0;
+  console.log(
+    `[prerender] Static rendering: ${successCount}/${routes.length} ${staticRenderingPassed ? "PASS" : "FAIL"}`,
+  );
+
   try {
     if (STRICT && failCount === 0 && routes.includes("/") && routes.includes("/compatibility")) {
       await verifyHydration(browser);
+      console.log("[prerender] Hydration: PASS");
     }
   } finally {
     await browser.close();
@@ -427,7 +438,9 @@ function closeServer(server) {
 async function verifyHydration(browser) {
   const page = await browser.newPage();
   const hydrationErrors = [];
+  let activeSelector = "document";
   page.setDefaultTimeout(TIMEOUT);
+  await page.setViewport(HYDRATION_VIEWPORT);
   page.on("console", (message) => {
     if (message.type() === "error" && /hydrat|mismatch/i.test(message.text())) {
       hydrationErrors.push(message.text());
@@ -438,29 +451,113 @@ async function verifyHydration(browser) {
   });
 
   try {
-    await page.goto(`http://127.0.0.1:${PORT}/?__prerendered=1`, {
+    const homeUrl = `http://127.0.0.1:${PORT}/?__prerendered=1`;
+    console.log(`[hydration] route: /`);
+    console.log(`[hydration] URL: ${homeUrl}`);
+    console.log(`[hydration] viewport: ${HYDRATION_VIEWPORT.width}x${HYDRATION_VIEWPORT.height}`);
+    await page.goto(homeUrl, {
       waitUntil: "domcontentloaded",
       timeout: TIMEOUT,
     });
-    await page.waitForSelector('.funnel-form input[type="date"]');
-    await setReactInputValue(page, '.funnel-form input[type="date"]', "1990-01-15");
-    await page.click('.funnel-form button[type="submit"]');
-    await page.waitForSelector(".funnel-result");
-    const closeButton = await page.$(".optional-email__close");
-    if (closeButton) await closeButton.click();
-    await page.click('a[href="/compatibility"]');
-    await page.waitForSelector(".funnel-form");
-    await setReactInputValue(page, '.funnel-form input[type="date"]', "1992-04-20");
-    await page.click(".funnel-form button");
-    await page.waitForSelector(".paywall-grid");
+    await page.waitForFunction(() => document.readyState === "complete", { timeout: TIMEOUT });
+
+    activeSelector = '.bond-hero .funnel-form input[type="date"]';
+    await waitForInteractiveElement(page, activeSelector);
+    await setReactInputValue(page, activeSelector, "1990-01-15");
+    activeSelector = ".bond-hero .funnel-form";
+    await submitHydratedForm(page, activeSelector, ".funnel-result");
+
+    const compatibilityUrl = `http://127.0.0.1:${PORT}/compatibility`;
+    console.log("[hydration] route: /compatibility");
+    console.log(`[hydration] URL: ${compatibilityUrl}`);
+    await page.goto(compatibilityUrl, { waitUntil: "domcontentloaded", timeout: TIMEOUT });
+    await page.waitForFunction(() => document.readyState === "complete", { timeout: TIMEOUT });
+
+    activeSelector = '.compact-page > .funnel-form input[type="date"]';
+    await waitForInteractiveElement(page, activeSelector);
+    await setReactInputValue(page, activeSelector, "1992-04-20");
+    activeSelector = ".compact-page > .funnel-form";
+    await submitHydratedForm(page, activeSelector, ".paywall-grid");
 
     if (hydrationErrors.length > 0) {
       throw new Error(`Hydration mismatch detected: ${hydrationErrors.join(" | ")}`);
     }
     console.log("[prerender] Hydration smoke test passed: home form -> result -> compatibility form -> paywall");
+  } catch (error) {
+    await logHydrationDiagnostics(page, activeSelector);
+    throw error;
   } finally {
     await page.close();
   }
+}
+
+async function waitForInteractiveElement(page, selector) {
+  await page.waitForSelector(selector, { visible: true, timeout: TIMEOUT });
+  await page.waitForFunction(
+    (targetSelector) => {
+      const element = document.querySelector(targetSelector);
+      if (!element) return false;
+      const style = window.getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      const enabled = !("disabled" in element) || !element.disabled;
+      return (
+        enabled &&
+        style.display !== "none" &&
+        style.visibility !== "hidden" &&
+        Number(style.opacity) !== 0 &&
+        rect.width > 0 &&
+        rect.height > 0
+      );
+    },
+    { timeout: TIMEOUT },
+    selector,
+  );
+}
+
+async function submitHydratedForm(page, formSelector, resultSelector) {
+  await waitForInteractiveElement(page, formSelector);
+  await page.$eval(formSelector, (form) => {
+    form.scrollIntoView({ block: "center", inline: "center" });
+    form.requestSubmit();
+  });
+  await page.waitForSelector(resultSelector, { visible: true, timeout: TIMEOUT });
+}
+
+async function logHydrationDiagnostics(page, selector) {
+  let state;
+  try {
+    state = await page.evaluate((targetSelector) => {
+      const element = document.querySelector(targetSelector);
+      if (!element) {
+        return { exists: false, visible: false, enabled: false, boundingBox: null };
+      }
+      const style = window.getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      return {
+        exists: true,
+        visible:
+          style.display !== "none" &&
+          style.visibility !== "hidden" &&
+          Number(style.opacity) !== 0 &&
+          rect.width > 0 &&
+          rect.height > 0,
+        enabled: !("disabled" in element) || !element.disabled,
+        boundingBox: { x: rect.x, y: rect.y, width: rect.width, height: rect.height },
+      };
+    }, selector);
+  } catch (error) {
+    state = { exists: false, visible: false, enabled: false, boundingBox: null, error: error.message };
+  }
+
+  console.error(`[hydration] route: ${new URL(page.url()).pathname}`);
+  console.error(`[hydration] selector: ${selector}`);
+  console.error(`[hydration] exists: ${state.exists}`);
+  console.error(`[hydration] visible: ${state.visible}`);
+  console.error(`[hydration] enabled: ${state.enabled}`);
+  console.error(`[hydration] boundingBox: ${JSON.stringify(state.boundingBox)}`);
+  console.error(`[hydration] viewport: ${JSON.stringify(page.viewport())}`);
+  console.error(`[hydration] currentUrl: ${page.url()}`);
+  console.error(`[hydration] document.readyState: ${await page.evaluate(() => document.readyState).catch(() => "unavailable")}`);
 }
 
 async function setReactInputValue(page, selector, value) {
