@@ -216,16 +216,27 @@ function createPreviewServer() {
 // ── Main prerender function ──
 async function prerender() {
   console.log("[prerender] Starting...");
+  console.log(`[prerender] cwd: ${process.cwd()}`);
+  console.log(`[prerender] distDir: ${DIST}`);
+  console.log(`[prerender] outputDir: ${OUTPUT_DIR}`);
+  console.log(`[prerender] routes: ${ROUTES_FILE}`);
 
   // Read routes
   if (!existsSync(ROUTES_FILE)) {
-    console.warn(`[prerender] WARNING: ${ROUTES_FILE} not found. Run sitemap generation first.`);
+    const message = `[prerender] Routes file not found: ${ROUTES_FILE}. Run sitemap generation first.`;
+    if (STRICT) {
+      throw new Error(message);
+    }
+    console.warn(`[prerender] WARNING: ${message}`);
     console.warn("[prerender] Using default routes (homepage only).");
     writePrerenderedFile("/", "<html><body><p>Prerender placeholder</p></body></html>");
     return;
   }
 
   const routes = JSON.parse(readFileSync(ROUTES_FILE, "utf-8"));
+  if (!Array.isArray(routes) || routes.length === 0) {
+    throw new Error(`[prerender] Routes file must contain at least one route: ${ROUTES_FILE}`);
+  }
   console.log(`[prerender] Routes to render: ${routes.length}`);
 
   // Ensure output directory
@@ -260,7 +271,8 @@ async function prerender() {
     for (const execPath of possiblePaths) {
       try {
         browser = await puppeteer.default.launch({ ...launchOpts, executablePath: execPath });
-        console.log(`[prerender] Launched Chromium at: ${execPath}`);
+        console.log(`[prerender] browser executable: ${execPath}`);
+        console.log("[prerender] Browser launched with configured Chrome");
         break;
       } catch {
         // Try next path
@@ -268,13 +280,18 @@ async function prerender() {
     }
 
     if (!browser) {
+      console.log(`[prerender] browser executable: ${puppeteer.default.executablePath()}`);
       browser = await puppeteer.default.launch(launchOpts);
-      console.log("[prerender] Launched Puppeteer with bundled Chromium");
+      console.log("[prerender] Browser launched with Puppeteer-managed Chrome");
     }
   } catch (e) {
-    console.warn(`[prerender] Puppeteer not available (${e.message})`);
+    const message = `[prerender] Puppeteer not available (${e.message})`;
+    await closeServer(server);
+    if (STRICT) {
+      throw new Error(`${message}. Strict mode requires a working browser.`);
+    }
+    console.warn(message);
     console.warn("[prerender] Skipping prerender — SPA fallback will serve pages.");
-    server.close();
     return;
   }
 
@@ -294,7 +311,7 @@ async function prerender() {
         page.setDefaultTimeout(TIMEOUT);
 
         const url = `http://127.0.0.1:${PORT}${route}`;
-        console.log(`[prerender] [${idx + 1}/${routes.length}] ${route}`);
+        console.log(`[prerender] Rendering: ${route} [${idx + 1}/${routes.length}]`);
 
         // Analytics and other third-party scripts can keep connections open.
         // The page-specific selector below is the reliable readiness signal.
@@ -314,6 +331,7 @@ async function prerender() {
         writePrerenderedFile(route, html);
 
         successCount++;
+        console.log(`[prerender] Rendered: ${route}`);
       } catch (err) {
         failCount++;
         console.error(`[prerender] FAILED [${idx + 1}/${routes.length}] ${route}: ${err.message}`);
@@ -326,18 +344,42 @@ async function prerender() {
   const workers = Array.from({ length: Math.min(CONCURRENCY, routes.length) }, () => processRoute());
   await Promise.all(workers);
 
-  if (STRICT && failCount === 0 && routes.includes("/") && routes.includes("/compatibility")) {
-    await verifyHydration(browser);
+  try {
+    if (STRICT && failCount === 0 && routes.includes("/") && routes.includes("/compatibility")) {
+      await verifyHydration(browser);
+    }
+  } finally {
+    await browser.close();
+    await closeServer(server);
   }
 
-  await browser.close();
-  server.close();
+  const missingOutputs = routes.filter((route) => !existsSync(getPrerenderedFilePath(route)));
 
-  console.log(`\n[prerender] Done. ${successCount} rendered, ${failCount} failed.`);
+  console.log("\n[prerender] Summary:");
+  console.log(`[prerender] requested: ${routes.length}`);
+  console.log(`[prerender] rendered: ${successCount}`);
+  console.log(`[prerender] failed: ${failCount}`);
+  console.log(`[prerender] output: ${OUTPUT_DIR}`);
+  console.log(`[prerender] ${successCount} rendered, ${failCount} failed`);
 
-  if (failCount > 0 && STRICT) {
-    process.exit(1);
+  if (missingOutputs.length > 0) {
+    console.error(`[prerender] Missing output files: ${missingOutputs.join(", ")}`);
   }
+
+  if (
+    STRICT &&
+    (successCount !== routes.length || failCount !== 0 || missingOutputs.length !== 0)
+  ) {
+    throw new Error(
+      `Strict prerender failed: requested=${routes.length}, rendered=${successCount}, failed=${failCount}, missing=${missingOutputs.length}`,
+    );
+  }
+}
+
+function closeServer(server) {
+  return new Promise((resolve, reject) => {
+    server.close((error) => (error ? reject(error) : resolve()));
+  });
 }
 
 async function verifyHydration(browser) {
@@ -414,18 +456,19 @@ function injectStaticMetadata(html, route) {
 }
 
 function writePrerenderedFile(route, html) {
-  // Convert route to file path
-  let filePath;
-  if (route === "/") {
-    filePath = path.join(OUTPUT_DIR, "index.html");
-  } else if (route.endsWith("/")) {
-    filePath = path.join(OUTPUT_DIR, route.slice(1), "index.html");
-  } else {
-    filePath = path.join(OUTPUT_DIR, route.slice(1) + ".html");
-  }
+  const filePath = getPrerenderedFilePath(route);
 
   mkdirSync(path.dirname(filePath), { recursive: true });
   writeFileSync(filePath, html, "utf-8");
+}
+
+function getPrerenderedFilePath(route) {
+  if (route === "/") {
+    return path.join(OUTPUT_DIR, "index.html");
+  } else if (route.endsWith("/")) {
+    return path.join(OUTPUT_DIR, route.slice(1), "index.html");
+  }
+  return path.join(OUTPUT_DIR, route.slice(1) + ".html");
 }
 
 prerender().catch((err) => {
