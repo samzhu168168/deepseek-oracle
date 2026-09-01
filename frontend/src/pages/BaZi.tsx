@@ -463,7 +463,7 @@ export default function BaZiPage() {
           setPostPaymentFlow(false);
         }}
         skipReportGeneration={true}
-        productId="swpdpb"
+        productId="bhpmxr"
       />
     </div>
   );
