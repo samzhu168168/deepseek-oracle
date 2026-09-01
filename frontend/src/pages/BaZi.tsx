@@ -344,12 +344,12 @@ export default function BaZiPage() {
                 personalized element remedies — all based on your unique birth chart.
               </p>
               <a
-                href="https://samzhu168.gumroad.com/l/swpdpb"
+                href="https://samzhu168.gumroad.com/l/decode-this-connection"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="oracle-button oracle-cta-button bazi-paywall-btn"
               >
-                &#10024; Get Full Reading — $24.00
+                &#10024; Get Full Reading — $14.90 USD
               </a>
               <p className="bazi-paywall-footnote">
                 One-time purchase. Lifetime access. Instant delivery.
