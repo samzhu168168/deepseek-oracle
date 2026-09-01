@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toPng } from "html-to-image";
 import { Helmet } from "react-helmet-async";
 
 import { InkButton } from "../components/InkButton";
@@ -188,7 +187,6 @@ export default function ResultPage() {
   const [previewData, setPreviewData] = useState<string | null>(null);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [paypalLoading, setPaypalLoading] = useState(false);
-  const [, setShareImageUrl] = useState(`${SITE_URL}/og-image.png`);
   const [postPaymentFlow, setPostPaymentFlow] = useState(false);
   const shareCardRef = useRef<HTMLDivElement | null>(null);
 
@@ -322,38 +320,6 @@ export default function ResultPage() {
 
   const shareText = `My Soul Resonance Score: ${averageScore}/100\nElemental Bond: ${elementCombo}\nDiscover yours at ${shareUrl}`;
 
-  const generateShareImage = async () => {
-    if (!shareCardRef.current) {
-      return null;
-    }
-    // Timeout guard: abort if image generation takes > 5s
-    const timeoutPromise = new Promise<null>((_, reject) =>
-      setTimeout(() => reject(new Error("share image generation timed out")), 5000)
-    );
-    try {
-      const dataUrl = await Promise.race([
-        toPng(shareCardRef.current, {
-          cacheBust: true,
-          pixelRatio: 2,
-          width: 1080,
-          height: 1920,
-          style: {
-            width: "1080px",
-            height: "1920px",
-          },
-        }),
-        timeoutPromise,
-      ]);
-      if (dataUrl) {
-        setShareImageUrl(dataUrl);
-      }
-      return dataUrl;
-    } catch (err) {
-      console.error('Failed to generate share image:', err);
-      return null;
-    }
-  };
-
   const handleLicenseSuccess = (data: FullReportData | { licenseKey: string }) => {
     if ('fullAnalysis' in data) {
       setFullReportData(data);
@@ -392,13 +358,6 @@ export default function ResultPage() {
       return () => clearTimeout(timer);
     }
   }, [emailUnlocked, normalizedReport]);
-
-  useEffect(() => {
-    const updateOgImage = async () => {
-      await generateShareImage();
-    };
-    updateOgImage();
-  }, [averageScore, elementCombo]);
 
   if (!payload || !normalizedReport) {
     return (
@@ -534,7 +493,7 @@ export default function ResultPage() {
             {/* Price anchor */}
             <div className="paywall-price-anchor">
               <span className="paywall-price-was">Usually $49</span>
-              <span className="paywall-price-now">$24.90 today</span>
+              <span className="paywall-price-now">$14.90 USD</span>
             </div>
             <p className="paywall-price-compare">vs. $150–$300 for one coaching session</p>
 
@@ -551,12 +510,11 @@ export default function ResultPage() {
               <button
                 className="payment-option__btn"
                 onClick={() => {
-                  const returnUrl = encodeURIComponent(`${SITE_URL}/result?unlocked=true&ref=gumroad`);
-                  window.open(`https://samzhu168.gumroad.com/l/bhpmxr?wanted=true&return_url=${returnUrl}`, "_blank");
+                  window.open("https://samzhu168.gumroad.com/l/decode-this-connection", "_blank");
                   setPaymentModalOpen(false);
                 }}
               >
-                Pay with Card — $24.90 →
+                Decode This Connection — $14.90 USD
               </button>
               <p className="payment-option__footer">
                 Visa, Mastercard, Amex · One-time charge, no subscription
@@ -575,7 +533,7 @@ export default function ResultPage() {
                 </p>
               ) : (
                 <PayPalButton
-                  price="24.90"
+                  price="14.90"
                   person1={{
                     date: payload.person_a?.date || "",
                     time: payload.person_a?.time || "",

@@ -78,7 +78,7 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
             <span className="price-was">Usually $49</span>
             <div className="price-main">
               <span className="price-currency">$</span>
-              <span className="price-amount">24.90</span>
+              <span className="price-amount">14.90 USD</span>
             </div>
             <span className="price-label">one-time · instant access</span>
           </div>
@@ -95,7 +95,7 @@ export const PaidReading: React.FC<PaidReadingProps> = ({
             Unlock Full Reading →
           </button>
           <p className="unlock-value-compare">
-            One coaching session: $150–$300 · This reading: $24.90, yours forever.
+            One coaching session: $150–$300 · This reading: $14.90, yours forever.
           </p>
         </div>
       </div>

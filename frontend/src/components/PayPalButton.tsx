@@ -39,7 +39,7 @@ interface PayPalButtonProps {
 }
 
 export function PayPalButton({
-  price = "24.90",
+  price = "14.90",
   person1,
   person2,
   score,

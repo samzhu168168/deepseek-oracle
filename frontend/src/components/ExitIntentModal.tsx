@@ -1,5 +1,5 @@
 /** ExitIntentModal — Two modes:
- *  /result page: purchase-recovery with discount code (STAY20)
+ *  /result page: purchase-recovery with the current Gumroad offer
  *  Other pages: email capture for 2026 forecast
  *  Triggers on mouse leaving top of viewport. Once per session.
  */
@@ -114,22 +114,14 @@ export function ExitIntentModal({ mountDelay = 8000 }: ExitIntentModalProps) {
                 ? `Your ${storedElementPair} reading reveals the pattern, the 2026 timeline, and 5 specific action steps.`
                 : "Your full reading reveals the pattern, the 2026 timeline, and 5 specific action steps."}
             </p>
-            <div className="exit-discount-block">
-              <p className="exit-discount-label">Use code at checkout for 20% off:</p>
-              <p className="exit-discount-code">STAY20</p>
-              <div className="exit-discount-prices">
-                <span className="exit-price-was">$24.90</span>
-                <span className="exit-price-now">$19.90</span>
-              </div>
-            </div>
             <a
-              href="https://samzhu168.gumroad.com/l/bhpmxr?coupon=STAY20"
+              href="https://samzhu168.gumroad.com/l/decode-this-connection"
               target="_blank"
               rel="noopener noreferrer"
               className="oracle-button oracle-cta-button exit-intent-submit"
               onClick={() => setVisible(false)}
             >
-              Unlock My Blueprint — $19.90 →
+              Decode This Connection — $14.90 USD
             </a>
             <button
               type="button"
